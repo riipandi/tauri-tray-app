@@ -44,6 +44,7 @@
             {
                 "fullscreen": false,
                 "resizable": true,
+                "skipTaskbar": true,
                 "title": "tauri-tray-app",
                 "width": 800,
                 "height": 600

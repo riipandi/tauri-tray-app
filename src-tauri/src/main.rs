@@ -16,6 +16,9 @@ fn main() {
     let app = tauri::Builder::default();
 
     app.setup(|app| {
+        // Make the docker NOT to have an active app when started
+        app.set_activation_policy(tauri::ActivationPolicy::Accessory);
+
         let win = app.get_window("main").unwrap();
         // Listen for update messages
         win.listen("tauri://update-status".to_string(), move |msg| {
@@ -26,8 +29,19 @@ fn main() {
     .system_tray(app_tray_menu)
     .on_system_tray_event(|app, event| match event {
         SystemTrayEvent::MenuItemClick { id, .. } => {
-            // let item_handle = app.tray_handle().get_item(&id);
+            let item_handle = app.tray_handle().get_item(&id);
             match id.as_str() {
+                "toggle_window" => {
+                    let window = app.get_window("main").unwrap();
+                    let new_title = if window.is_visible().unwrap() {
+                        window.hide().unwrap();
+                        "Show Window"
+                    } else {
+                        window.show().unwrap();
+                        "Hide Window"
+                    };
+                    item_handle.set_title(new_title).unwrap();
+                }
                 "on_twitter" => {
                     open(&app.shell_scope(), "https://twitter.com/riipandi", None).ok();
                 }
