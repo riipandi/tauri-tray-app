@@ -8,8 +8,3 @@
 pub(crate) fn greet(name: &str) -> String {
     format!("Hello, {}! You've been greeted from Rust!", name)
 }
-
-#[tauri::command]
-pub(crate) fn open_link(href: &str) {
-    println!("Open link: {}", href);
-}
