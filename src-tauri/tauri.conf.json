@@ -7,7 +7,7 @@
         "withGlobalTauri": false
     },
     "package": {
-        "productName": "tauri-tray-app",
+        "productName": "Tray App",
         "version": "0.1.0"
     },
     "tauri": {
@@ -20,6 +20,8 @@
         },
         "bundle": {
             "active": true,
+            "category": "DeveloperTool",
+            "copyright": "Copyright © 2023 Aris Ripandi",
             "icon": [
                 "icons/32x32.png",
                 "icons/128x128.png",
@@ -28,7 +30,22 @@
                 "icons/icon.ico"
             ],
             "identifier": "com.ripandis.tauri-tray-app",
-            "targets": "all"
+            "targets": "all",
+            "macOS": {
+                "entitlements": null,
+                "exceptionDomain": "",
+                "frameworks": [],
+                "providerShortName": null,
+                "signingIdentity": null
+            },
+            "resources": [],
+            "shortDescription": "",
+            "longDescription": "",
+            "windows": {
+                "certificateThumbprint": null,
+                "digestAlgorithm": "sha256",
+                "timestampUrl": ""
+            }
         },
         "security": {
             "csp": null
@@ -36,9 +53,11 @@
         "updater": {
             "active": false
         },
+        "macOSPrivateApi": true,
         "systemTray": {
             "iconPath": "icons/128x128@2x.png",
-            "iconAsTemplate": true
+            "iconAsTemplate": true,
+            "menuOnLeftClick": false
         },
         "windows": [
             {
@@ -46,8 +65,15 @@
                 "resizable": true,
                 "skipTaskbar": true,
                 "title": "tauri-tray-app",
-                "width": 800,
-                "height": 600
+                "width": 400,
+                "height": 500,
+                "visible": false,
+                "hiddenTitle": true,
+                "decorations": false,
+                "transparent": true,
+                "alwaysOnTop": true,
+                "focus": false,
+                "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.2 Safari/605.1.15"
             }
         ]
     }

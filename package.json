@@ -6,6 +6,7 @@
     "scripts": {
         "dev": "vite",
         "build": "tsc && vite build",
+        "format": "prettier --write \"**/*.{ts,tsx}\" && (cd src-tauri && cargo fmt)",
         "preview": "vite preview",
         "tauri": "tauri"
     },
@@ -22,5 +23,13 @@
         "@vitejs/plugin-react": "^3.0.0",
         "typescript": "^4.9.5",
         "vite": "^4.2.1"
+    },
+    "prettier": {
+        "printWidth": 100,
+        "jsxSingleQuote": true,
+        "trailingComma": "es5",
+        "singleQuote": true,
+        "useTabs": false,
+        "semi": false
     }
 }
