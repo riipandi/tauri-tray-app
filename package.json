@@ -14,14 +14,15 @@
     },
     "dependencies": {
         "@tauri-apps/api": "^1.3.0",
+        "react": "^18.2.0",
         "react-dom": "^18.2.0",
-        "react": "^18.2.0"
+        "react-router-dom": "^6.12.0"
     },
     "devDependencies": {
         "@tauri-apps/cli": "^1.3.1",
         "@types/node": "^18.7.10",
-        "@types/react-dom": "^18.0.6",
         "@types/react": "^18.0.15",
+        "@types/react-dom": "^18.0.6",
         "@vitejs/plugin-react": "^3.0.0",
         "typescript": "^4.9.5",
         "vite": "^4.2.1"
@@ -32,6 +33,9 @@
         "trailingComma": "es5",
         "singleQuote": true,
         "useTabs": false,
-        "semi": false
+        "semi": false,
+        "plugins": [
+            "prettier-plugin-tailwindcss"
+        ]
     }
 }
