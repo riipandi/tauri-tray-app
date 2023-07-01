@@ -13,29 +13,29 @@
         "tauri": "tauri"
     },
     "dependencies": {
-        "@tauri-apps/api": "^1.3.0",
-        "react": "^18.2.0",
+        "@tauri-apps/api": "^1.4.0",
         "react-dom": "^18.2.0",
-        "react-router-dom": "^6.12.0"
+        "react": "^18.2.0",
+        "wouter": "^2.11.0"
     },
     "devDependencies": {
-        "@tauri-apps/cli": "^1.3.1",
-        "@types/node": "^18.7.10",
-        "@types/react": "^18.0.15",
-        "@types/react-dom": "^18.0.6",
-        "@vitejs/plugin-react": "^3.0.0",
-        "typescript": "^4.9.5",
-        "vite": "^4.2.1"
+        "@tauri-apps/cli": "^1.4.0",
+        "@types/node": "^20.3.3",
+        "@types/react": "^18.2.14",
+        "@types/react-dom": "^18.2.6",
+        "@vitejs/plugin-react": "^4.0.1",
+        "typescript": "^5.1.6",
+        "vite": "^4.3.9"
     },
     "prettier": {
-        "printWidth": 100,
         "jsxSingleQuote": true,
-        "trailingComma": "es5",
-        "singleQuote": true,
-        "useTabs": false,
+        "arrowParens": "always",
+        "bracketSpacing": true,
+        "printWidth": 100,
+        "quoteProps": "consistent",
         "semi": false,
-        "plugins": [
-            "prettier-plugin-tailwindcss"
-        ]
+        "singleQuote": true,
+        "trailingComma": "es5",
+        "useTabs": false
     }
 }

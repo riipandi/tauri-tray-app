@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { HashRouter,Routes,Route } from "react-router-dom";
+import { Route, Switch } from 'wouter'
 
 import App from './App'
 import './styles.css'
@@ -13,10 +13,9 @@ import './styles.css'
  */
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <HashRouter basename={"/"}>
-      <Routes>
-        <Route path="/" element={<App />} />
-      </Routes>
-    </HashRouter>
+    <Switch>
+      <Route path='/' children={<App />} />
+      <Route>404, Not Found!</Route>
+    </Switch>
   </React.StrictMode>
 )
