@@ -9,6 +9,7 @@
         "build:mac:x64": "tauri build --target x86_64-apple-darwin",
         "build:mac:arm": "tauri build --target aarch64-apple-darwin",
         "format": "prettier --write \"**/*.{ts,tsx}\" && (cd src-tauri && cargo fmt)",
+        "update-deps": "npx --yes npm-check-updates -x typescript --deep --interactive",
         "preview": "vite preview",
         "tauri": "tauri"
     },
