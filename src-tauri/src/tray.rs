@@ -2,32 +2,42 @@
 // SPDX-License-Identifier: Apache-2.0
 // SPDX-License-Identifier: MIT
 
-use tauri::{CustomMenuItem, Icon, SystemTray, SystemTrayMenu, SystemTrayMenuItem};
+use tauri::{api::shell::open, async_runtime::block_on};
+use tauri::{AboutMetadata, AppHandle, Icon, Manager, PhysicalPosition, SystemTrayEvent};
+use tauri::{CustomMenuItem, SystemTray, SystemTrayMenu, SystemTrayMenuItem, SystemTraySubmenu};
 
 #[cfg(target_os = "macos")]
-pub(crate) fn tray(app_version: &str) -> SystemTray {
-    let version = CustomMenuItem::new(
-        "version".to_string(),
-        "Tray App v".to_string() + app_version,
-    );
-    let preferences = CustomMenuItem::new("preferences".to_string(), "Preferences");
-    let on_twitter = CustomMenuItem::new("on_twitter".to_string(), "Follow on Twitter");
-    let send_feedback = CustomMenuItem::new("send_feedback".to_string(), "Send Feedback");
-    let quit = CustomMenuItem::new("quit".to_string(), "Quit Tray App").accelerator("Cmd+Q");
+pub(crate) fn register() -> SystemTray {
+    let app_title = format!("{} v{}", "Tray App", crate::APP_VERSION);
+
+    let version = CustomMenuItem::new("version".to_string(), app_title);
+    let preferences = CustomMenuItem::new("preferences".to_string(), "Preferences")
+        .accelerator("CommandOrControl+,");
+    let check_updates = CustomMenuItem::new("check_updates".to_string(), "Check for Updates")
+        .accelerator("CommandOrControl+R");
+    let quit =
+        CustomMenuItem::new("quit".to_string(), "Quit Tray App").accelerator("CommandOrControl+Q");
+
+    let submenu_help = SystemTrayMenu::new()
+        .add_item(CustomMenuItem::new("on_twitter", "Follow on Twitter"))
+        .add_item(CustomMenuItem::new("send_feedback", "Send Feedback"));
 
     let tray_menu = SystemTrayMenu::new()
         .add_item(version.disabled())
         .add_native_item(SystemTrayMenuItem::Separator)
-        .add_item(on_twitter)
-        .add_item(send_feedback)
-        .add_native_item(SystemTrayMenuItem::Separator)
         .add_item(preferences)
+        .add_item(check_updates)
+        .add_native_item(SystemTrayMenuItem::Separator)
+        .add_item(CustomMenuItem::new("about", "About Tray App"))
+        .add_native_item(SystemTrayMenuItem::Separator)
+        .add_submenu(SystemTraySubmenu::new("Help", submenu_help))
         .add_native_item(SystemTrayMenuItem::Separator)
         .add_item(quit);
 
     return SystemTray::new().with_menu(tray_menu);
 }
 
+#[cfg(target_os = "macos")]
 pub(crate) fn tray_icon() -> Icon {
     Icon::Raw(include_bytes!("../icons/icon.png").to_vec())
 }
@@ -222,4 +232,107 @@ pub(crate) fn tray_icon_loading() -> Vec<Icon> {
         include_bytes!("../assets/images/windows/loading_29.ico").to_vec(),
     ));
     icon_vec
+}
+
+pub(crate) fn tray_event(app: &AppHandle, event: SystemTrayEvent) {
+    match event {
+        SystemTrayEvent::LeftClick { position, size, .. } => {
+            let win: tauri::Window = app.get_window("main").unwrap();
+            let is_visible = win.is_visible().unwrap();
+
+            if is_visible {
+                win.hide().unwrap();
+            } else {
+                let window_size = win.outer_size().unwrap();
+                let physical_pos = PhysicalPosition {
+                    x: position.x as i32 + (size.width as i32 / 2) - (window_size.width as i32 / 2),
+                    y: position.y as i32 - window_size.height as i32,
+                };
+
+                let _ = win.set_position(tauri::Position::Physical(physical_pos));
+                win.show().unwrap();
+                win.set_focus().unwrap();
+            }
+        }
+        SystemTrayEvent::RightClick {
+            position: _,
+            size: _,
+            ..
+        } => {
+            println!("system tray received a right click");
+        }
+        SystemTrayEvent::DoubleClick {
+            position: _,
+            size: _,
+            ..
+        } => {
+            println!("system tray received a double click");
+        }
+        SystemTrayEvent::MenuItemClick { id, .. } => {
+            // let item_handle = app.tray_handle().get_item(&id);
+            match id.as_str() {
+                "about" => {
+                    let about_metadata = AboutMetadata::new()
+                        .version(crate::APP_VERSION)
+                        .authors(vec![env!("CARGO_PKG_REPOSITORY").to_string()])
+                        .website(env!("CARGO_PKG_REPOSITORY"))
+                        .license(env!("CARGO_PKG_LICENSE"));
+
+                    println!("{} {:?}", "Tray App", about_metadata);
+
+                    // @todo - show about dialog
+                }
+                "preferences" => {
+                    println!("tray menu Preferences clicked");
+                }
+                "on_twitter" => {
+                    open(&app.shell_scope(), "https://twitter.com/riipandi", None).ok();
+                }
+                "check_updates" => {
+                    // Trigger loading animation
+                    block_on(set_tray_icon(app.clone())).unwrap();
+                }
+                "send_feedback" => {
+                    open(
+                        &app.shell_scope(),
+                        "https://ripandis.com/feedback?product=tauri-tray-app",
+                        None,
+                    )
+                    .ok();
+                }
+                "quit" => {
+                    app.exit(0);
+                }
+                _ => {}
+            }
+        }
+        _ => {}
+    }
+}
+
+#[tauri::command]
+async fn set_tray_icon(handle: AppHandle) -> Result<(), String> {
+    let ms = 50; // loop interval ms
+    let mut intv = tokio::time::interval(tokio::time::Duration::from_millis(ms));
+    let icon_vec = tray_icon_loading();
+    tokio::spawn(async move {
+        let mut i = 0;
+        let handle = handle.tray_handle();
+        loop {
+            // Wait until next tick.
+            intv.tick().await;
+            #[cfg(target_os = "macos")]
+            handle.set_icon_as_template(false).unwrap();
+            handle.set_icon(icon_vec[i].clone()).unwrap();
+            i = if i >= 29 { 0 } else { i + 1 };
+            // force break for test
+            if i >= 29 {
+                #[cfg(target_os = "macos")]
+                handle.set_icon_as_template(true).unwrap();
+                handle.set_icon(tray_icon()).unwrap();
+                break;
+            }
+        }
+    });
+    Ok(())
 }

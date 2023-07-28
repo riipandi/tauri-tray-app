@@ -9,4 +9,5 @@ package-lock.json
 pnpm-lock.yaml
 yarn.lock
 public/
-src-tauri/
+src-tauri/*
+!src-tauri/tauri.conf.json

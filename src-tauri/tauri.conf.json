@@ -20,32 +20,51 @@
         },
         "bundle": {
             "active": true,
-            "category": "DeveloperTool",
+            "category": "Productivity",
+            "identifier": "com.ripandis.tauri-tray-app",
             "copyright": "Copyright © 2023 Aris Ripandi",
+            "publisher": "Aris Ripandi",
+            "shortDescription": "",
+            "longDescription": "",
+            "resources": [],
+            "targets": ["dmg", "nsis", "deb", "appimage", "updater"],
+            "macOS": {
+                "minimumSystemVersion": "10.13",
+                "frameworks": [],
+                "license": "",
+                "exceptionDomain": "",
+                "entitlements": null,
+                "providerShortName": null,
+                "signingIdentity": null
+            },
+            "windows": {
+                "allowDowngrades": true,
+                "certificateThumbprint": null,
+                "digestAlgorithm": "sha256",
+                "timestampUrl": "",
+                "nsis": {
+                    "template": "",
+                    "license": "",
+                    "headerImage": "",
+                    "sidebarImage": "",
+                    "installMode": "both",
+                    "installerIcon": "icons/icon.ico"
+                }
+            },
+            "deb": {
+                "files": {},
+                "depends": []
+            },
+            "appimage": {
+                "bundleMediaFramework": false
+            },
             "icon": [
                 "icons/32x32.png",
                 "icons/128x128.png",
                 "icons/128x128@2x.png",
                 "icons/icon.icns",
                 "icons/icon.ico"
-            ],
-            "identifier": "com.ripandis.tauri-tray-app",
-            "targets": "all",
-            "macOS": {
-                "entitlements": null,
-                "exceptionDomain": "",
-                "frameworks": [],
-                "providerShortName": null,
-                "signingIdentity": null
-            },
-            "resources": [],
-            "shortDescription": "",
-            "longDescription": "",
-            "windows": {
-                "certificateThumbprint": null,
-                "digestAlgorithm": "sha256",
-                "timestampUrl": ""
-            }
+            ]
         },
         "security": {
             "csp": null

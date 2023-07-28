@@ -1,0 +1,17 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run Development",
+            "type": "node-terminal",
+            "request": "launch",
+            "command": "pnpm tauri dev"
+        },
+        {
+            "name": "Build Release",
+            "type": "node-terminal",
+            "request": "launch",
+            "command": "pnpm tauri build"
+        }
+    ]
+}
