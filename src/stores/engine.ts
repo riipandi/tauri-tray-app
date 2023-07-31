@@ -9,10 +9,10 @@ export const store = new Store('settings.dat')
 export const zustandStorage: StateStorage = {
   getItem: async (name: string): Promise<string | null> => {
     const val: any = await store.get(name)
-    return val || null
+    return JSON.stringify(val) || null
   },
   setItem: async (name: string, value: string): Promise<void> => {
-    await store.set(name, value)
+    await store.set(name, JSON.parse(value))
     // this manually saves the store, otherwise the store
     // is only saved when your app is closed.
     await store.save()

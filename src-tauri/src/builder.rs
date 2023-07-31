@@ -8,6 +8,7 @@ use tauri::api::dialog;
 use tauri::http::{Request, Response};
 use tauri::{AppHandle, Manager, RunEvent, WindowBuilder, WindowEvent, WindowUrl};
 use tauri_plugin_log::{fern::colors::ColoredLevelConfig, LogTarget};
+use tauri_plugin_store::StoreBuilder;
 
 use crate::{command, config, menu, meta, tray, utils};
 
@@ -51,6 +52,26 @@ pub fn initialize() {
         // the app icon from showing on the dock.
         #[cfg(target_os = "macos")]
         app.set_activation_policy(tauri::ActivationPolicy::Regular);
+
+        let config_dir: std::path::PathBuf = handle.path_resolver().app_config_dir().unwrap();
+        let config_path: std::path::PathBuf = config_dir.join("settings.dat");
+        let store = StoreBuilder::new(handle.clone(), config_path).build();
+
+        // note that values must be serd_json::Value to be compatible with JS
+        // store.insert(
+        //     "a".to_string(),
+        //     serde_json::json!({
+        //       "ui_config": {
+        //         "state": {
+        //           "darkmode": false
+        //         },
+        //         "version": 0
+        //       }
+        //     }
+        //     ),
+        // );
+
+        println!("STORE: {:?}", store.has("ui_config"));
 
         // Create main window for the application.
         create_window(&handle, meta::MAIN_WINDOW, "index.html");

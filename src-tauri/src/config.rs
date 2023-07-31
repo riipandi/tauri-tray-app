@@ -7,7 +7,6 @@ use simple_home_dir::*;
 
 use crate::meta;
 
-// $HOME/.config/<app_name>/config.json
 #[derive(Debug, Serialize, Deserialize)]
 pub struct AppConfig {
     #[serde(default)]

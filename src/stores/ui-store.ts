@@ -20,7 +20,7 @@ export const useUIConfigStore = create<UIConfigState>()(
         resetState: () => set({}, true),
       }),
       {
-        name: 'ui-config',
+        name: 'ui_config',
         storage: createJSONStorage(() => zustandStorage),
       }
     )
