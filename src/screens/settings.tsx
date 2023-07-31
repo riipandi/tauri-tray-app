@@ -2,6 +2,7 @@ import { useLocation } from 'wouter'
 import { info } from '@tauri-apps/plugin-log'
 import { message } from '@tauri-apps/api/dialog'
 import { WebviewWindow } from '@tauri-apps/api/window'
+import { invoke } from '@tauri-apps/api/tauri'
 
 import {
   Menu,
@@ -21,19 +22,40 @@ export default function SettingScreen() {
     await message('Not yet implemented', { title: 'Tauri App', type: 'info' })
   }
 
-  const handleInspect = async () => {
-    const webview = new WebviewWindow('external-page', {
-      url: 'https://talk.brave.com/RYPtOrN6vkOJOe-IdD5xkjfarmb4aGRy5PSmpqIZPIc',
-      title: 'External Site',
-      userAgent:
-        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.2 Safari/605.1.15',
-    })
-    webview.once('tauri://created', function () {
-      info('webview window successfully created')
-    })
-    webview.once('tauri://error', function (e) {
-      console.error(e)
-    })
+  const handleOpenWebpage = async () => {
+    const secondWindow = WebviewWindow.getByLabel('second-window')
+    console.log('DEBUG ~ secondWindow', secondWindow)
+
+    if (!secondWindow) {
+      const sizes = [540, 480]
+      const webview = new WebviewWindow('second-window', {
+        tabbingIdentifier: 'tauri-tray-app',
+        url: 'https://browserleaks.com/ip',
+        title: 'External Site',
+        minHeight: sizes[1],
+        minWidth: sizes[2],
+        maxWidth: sizes[1],
+        maxHeight: sizes[2],
+        decorations: true,
+        hiddenTitle: true,
+        skipTaskbar: true,
+        minimizable: false,
+        maximizable: false,
+        resizable: false,
+        center: true,
+        focus: true,
+        userAgent:
+          'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.2 Safari/605.1.15',
+      })
+      webview.once('tauri://created', function () {
+        info('webview window successfully created')
+      })
+      webview.once('tauri://error', function (e) {
+        console.error(e)
+      })
+    }
+
+    secondWindow?.setFocus()
   }
 
   return (
@@ -76,16 +98,24 @@ export default function SettingScreen() {
                 </MenuItem>
                 <MenuSeparator />
                 <MenuItem
-                  id='page-source'
+                  id='sample-dialog'
                   className='hover:bg-gray-100/90 px-2 py-1 rounded cursor-default'
                   onClick={handleContextItem}
                 >
-                  View Source
+                  Open Dialog
                 </MenuItem>
                 <MenuItem
-                  id='duplicate'
+                  id='open-webpage'
                   className='hover:bg-gray-100/90 px-2 py-1 rounded cursor-default'
-                  onClick={handleInspect}
+                  onClick={handleOpenWebpage}
+                >
+                  Open webpage
+                </MenuItem>
+                <MenuSeparator />
+                <MenuItem
+                  id='inspect'
+                  className='hover:bg-gray-100/90 px-2 py-1 rounded cursor-default'
+                  onClick={async () => await invoke('open_devtools')}
                 >
                   Inspect
                 </MenuItem>

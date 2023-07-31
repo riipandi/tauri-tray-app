@@ -18,6 +18,9 @@ pub struct AppConfig {
 
     #[serde(default)]
     pub notification_enabled: bool,
+
+    #[serde(default)]
+    pub exit_to_tray: bool,
 }
 
 impl Default for AppConfig {
@@ -26,6 +29,7 @@ impl Default for AppConfig {
             zoom_factor: 1.0,
             dark_mode_enabled: false,
             notification_enabled: true,
+            exit_to_tray: true,
         };
     }
 }
@@ -41,7 +45,6 @@ impl AppConfig {
 
     fn create_config_dir() {
         let config_dir = Self::config_dir();
-
         if !config_dir.exists() {
             std::fs::create_dir_all(config_dir).unwrap();
         }

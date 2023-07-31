@@ -6,3 +6,10 @@
 pub fn greet(name: &str) -> String {
     format!("Hello, {}! You've been greeted from Rust!", name)
 }
+
+#[tauri::command]
+pub fn open_devtools(window: tauri::Window) {
+    if !window.is_devtools_open() {
+        window.open_devtools()
+    }
+}

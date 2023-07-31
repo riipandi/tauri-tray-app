@@ -3,7 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 use std::path::PathBuf;
-use tauri::{AppHandle, WindowBuilder, WindowEvent, WindowUrl};
+use tauri::{AppHandle, RunEvent, WindowBuilder, WindowEvent, WindowUrl};
 use tauri_plugin_log::{fern::colors::ColoredLevelConfig, LogTarget};
 
 use crate::{command, config, menu, meta, tray, utils};
@@ -60,9 +60,11 @@ pub fn initialize() {
         .on_window_event(|e| {
             match e.event() {
                 WindowEvent::CloseRequested { api, .. } => {
-                    // don't kill the app when the user clicks close. this is important!
-                    e.window().hide().unwrap();
-                    api.prevent_close();
+                    // don't kill the app when the user clicks close.
+                    if e.window().label() == meta::MAIN_WINDOW {
+                        e.window().hide().unwrap();
+                        api.prevent_close();
+                    }
                 }
                 _ => {}
             }
@@ -70,11 +72,14 @@ pub fn initialize() {
 
     // run the application
     builder
-        .invoke_handler(tauri::generate_handler![command::greet])
+        .invoke_handler(tauri::generate_handler![
+            command::greet,
+            command::open_devtools
+        ])
         .build(tauri::generate_context!())
         .expect("error while building tauri application")
         .run(|_app_handle, event| match event {
-            tauri::RunEvent::ExitRequested { api, .. } => {
+            RunEvent::ExitRequested { api, .. } => {
                 api.prevent_exit();
             }
             _ => {}
@@ -93,6 +98,7 @@ fn create_window(app: &AppHandle, label: &str, url: &str) {
     let mut wb = WindowBuilder::new(app, label, window_url);
 
     wb = wb
+        .tabbing_identifier(meta::APP_NAME)
         .initialization_script(JS_INIT_SCRIPT)
         .user_agent(meta::USER_AGENT)
         .min_inner_size(520.0, 680.0)

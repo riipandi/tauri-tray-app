@@ -353,7 +353,6 @@ pub fn handle_tray_event(app: &AppHandle, event: SystemTrayEvent) {
                 }
                 "visit_website" => open_browser(WEBSITE_URL),
                 "send_feedback" => open_browser(FEEDBACK_URL),
-
                 "quit" => {
                     app.exit(0);
                 }

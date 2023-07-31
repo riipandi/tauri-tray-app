@@ -64,8 +64,8 @@ pub fn handle_menu_event(event: WindowMenuEvent) {
             }
         }
         "send_feedback" => utils::open_browser(meta::FEEDBACK_URL),
-        "quit" => std::process::exit(0),
         "close" => event.window().close().unwrap(),
+        "quit" => std::process::exit(0),
         _ => {}
     }
 }
