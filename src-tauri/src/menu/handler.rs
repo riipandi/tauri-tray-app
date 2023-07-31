@@ -15,6 +15,7 @@ pub fn handle_menu_event(event: WindowMenuEvent) {
     match event.menu_item_id() {
         "devtools" => window.open_devtools(),
         "reload" => window.eval("location.reload();").unwrap(),
+        // "check_update" => crate::command::check_update(handle, window),
         "preferences" => {
             let js_script = "window.location.replace('/settings')";
             window.eval(js_script).unwrap();
@@ -27,9 +28,9 @@ pub fn handle_menu_event(event: WindowMenuEvent) {
             app_config.enable_darkmode = !app_config.enable_darkmode;
 
             if app_config.enable_darkmode {
-                window.eval("console.log('Enable Dark Mode');").unwrap();
+                window.eval("console.info('Enable Dark Mode');").unwrap();
             } else {
-                window.eval("console.log('Disable Dark Mode');").unwrap();
+                window.eval("console.info('Disable Dark Mode');").unwrap();
             }
 
             app_config.save();

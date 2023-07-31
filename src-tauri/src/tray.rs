@@ -27,7 +27,7 @@ impl Into<String> for TrayIdentifier {
             TrayIdentifier::Preferences => "preferences".to_owned(),
             TrayIdentifier::Website => "visit_website".to_owned(),
             TrayIdentifier::Feedback => "send_feedback".to_owned(),
-            TrayIdentifier::UpdateCheck => "check_updates".to_owned(),
+            TrayIdentifier::UpdateCheck => "check_update".to_owned(),
             TrayIdentifier::Quit => "quit".to_owned(),
             TrayIdentifier::Unimplemented => "unimplemented".to_owned(),
         }
@@ -41,7 +41,7 @@ impl From<String> for TrayIdentifier {
             "preferences" => TrayIdentifier::Preferences,
             "visit_website" => TrayIdentifier::Website,
             "send_feedback" => TrayIdentifier::Feedback,
-            "check_updates" => TrayIdentifier::UpdateCheck,
+            "check_update" => TrayIdentifier::UpdateCheck,
             "quit" => TrayIdentifier::Quit,
             _ => TrayIdentifier::Unimplemented,
         }
@@ -348,9 +348,10 @@ pub fn handle_tray_event(app: &AppHandle, event: SystemTrayEvent) {
                         win.set_focus().unwrap();
                     }
                 }
-                "check_updates" => {
+                "check_update" => {
                     // Trigger loading animation
                     block_on(set_tray_icon(app.clone())).unwrap();
+                    // crate::command::check_update(app.clone(), win);
                 }
                 "visit_website" => open_browser(WEBSITE_URL),
                 "send_feedback" => open_browser(FEEDBACK_URL),

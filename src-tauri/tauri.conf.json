@@ -20,12 +20,15 @@
             },
             "fs": {
                 "all": true,
-                "scope": ["$HOME/Tauri App", "$HOME/Tauri App/**/*"]
+                "scope": ["$RESOURCE/*", "$HOME/Tauri App", "$HOME/Tauri App/**/*"]
             },
             "http": {
                 "all": false,
                 "request": true,
-                "scope": ["https://github.com/riipandi/tauri-tray-app/*"]
+                "scope": [
+                    "https://github.com/riipandi/tauri-tray-app/*",
+                    "https://raw.githubusercontent.com/riipandi/tauri-tray-app/*"
+                ]
             },
             "notification": {
                 "all": true
@@ -52,7 +55,7 @@
                 "frameworks": [],
                 "license": "",
                 "exceptionDomain": "",
-                "entitlements": null,
+                "entitlements": "Info.plist",
                 "providerShortName": null,
                 "signingIdentity": null
             },
@@ -89,10 +92,16 @@
             "csp": null
         },
         "updater": {
-            "active": false,
-            "dialog": true,
-            "endpoints": ["https://github.com/riipandi/tauri-tray-app/blob/main/updates.json"],
-            "pubkey": ""
+            "active": true,
+            "dialog": false,
+            "endpoints": [
+                "https://raw.githubusercontent.com/riipandi/tauri-tray-app/main/updates.json"
+            ],
+            "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEJBNjI1QzJCNzlCMTEzRjAKUldUd0U3RjVLMXhpdWdvUUxRT1FGQm5tVUJ0QVVJWVRtSXE4Yi9RZFNLUXJOdGtSWWFpQkRWclYK",
+            "windows": {
+                "installMode": "basicUi",
+                "installerArgs": []
+            }
         },
         "macOSPrivateApi": true,
         "systemTray": {

@@ -7,7 +7,6 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-src-tauri/target
 node_modules
 dist
 dist-ssr
@@ -29,4 +28,8 @@ dist-ssr
 
 # envars
 .env*
-!.env.example
+!.env.*example
+
+# Tauri
+.tauri/
+src-tauri/target

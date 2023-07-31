@@ -17,6 +17,9 @@ pub struct AppConfig {
     pub enable_darkmode: bool,
 
     #[serde(default)]
+    pub enable_auto_update: bool,
+
+    #[serde(default)]
     pub exit_to_tray: bool,
 }
 
@@ -25,6 +28,7 @@ impl Default for AppConfig {
         return Self {
             zoom_factor: 1.0,
             enable_darkmode: false,
+            enable_auto_update: true,
             exit_to_tray: true,
         };
     }

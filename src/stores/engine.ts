@@ -2,7 +2,8 @@ import { StateStorage } from 'zustand/middleware'
 import { Store } from '@tauri-apps/plugin-store'
 
 // Initialize Tauri data store
-export const store = new Store('.settings.dat')
+// Stored at: ~/Library/Application Support/<bundle_identifier>
+export const store = new Store('settings.dat')
 
 // Custom storage object for Zustand
 export const zustandStorage: StateStorage = {

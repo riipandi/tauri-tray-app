@@ -125,8 +125,8 @@ export default function WelcomeScreen() {
             </div>
 
             <button
-              type='submit'
-              className='rounded-lg border border-gray-100 dark:bg-gray-100 bg-gray-200 px-5 py-2 text-center text-sm font-medium text-gray-600 transition-all hover:border-gray-200 hover:bg-gray-200 focus:ring focus:ring-gray-50 disabled:border-gray-50 disabled:bg-gray-50 disabled:text-gray-400'
+              type='button'
+              className='rounded-lg border border-gray-300 dark:bg-gray-100 bg-gray-200 px-5 py-2 text-center text-sm font-medium text-gray-600 transition-all hover:border-gray-200 hover:bg-gray-200 focus:ring focus:ring-gray-50 disabled:border-gray-50 disabled:bg-gray-50 disabled:text-gray-400'
             >
               Say Hello
             </button>

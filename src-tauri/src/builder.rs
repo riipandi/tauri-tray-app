@@ -14,11 +14,18 @@ use crate::{command, config, menu, meta, tray, utils};
 #[cfg(debug_assertions)]
 const LOG_TARGETS: [LogTarget; 2] = [LogTarget::Stdout, LogTarget::Webview];
 
+#[cfg(debug_assertions)]
+const LOG_LEVEL: log::LevelFilter = log::LevelFilter::Debug;
+
 #[cfg(not(debug_assertions))]
 const LOG_TARGETS: [LogTarget; 2] = [LogTarget::Stdout, LogTarget::LogDir];
 
+#[cfg(not(debug_assertions))]
+const LOG_LEVEL: log::LevelFilter = log::LevelFilter::Error;
+
 pub fn initialize() {
     let mut builder = tauri::Builder::default();
+    let _app_config = config::AppConfig::load();
 
     // register tauri plugins
     builder = builder
@@ -27,7 +34,7 @@ pub fn initialize() {
                 .targets(LOG_TARGETS)
                 .with_colors(ColoredLevelConfig::default())
                 .level_for("tauri", log::LevelFilter::Info)
-                .level(log::LevelFilter::Debug)
+                .level(LOG_LEVEL)
                 .build(),
         )
         .plugin(tauri_plugin_store::Builder::default().build())
@@ -38,13 +45,15 @@ pub fn initialize() {
 
     // setup and create window
     builder = builder.setup(|app| {
+        let handle = app.handle();
+
         // Set activation policy to `Accessory` to prevent
         // the app icon from showing on the dock.
         #[cfg(target_os = "macos")]
         app.set_activation_policy(tauri::ActivationPolicy::Regular);
 
         // Create main window for the application.
-        create_window(&app.handle(), meta::MAIN_WINDOW, "index.html");
+        create_window(&handle, meta::MAIN_WINDOW, "index.html");
 
         Ok(())
     });
@@ -81,6 +90,7 @@ pub fn initialize() {
             command::greet,
             command::open_devtools,
             command::set_darkmode,
+            command::check_update,
         ])
         .build(tauri::generate_context!())
         .expect("error while building tauri application")
@@ -88,13 +98,44 @@ pub fn initialize() {
             RunEvent::ExitRequested { api, .. } => {
                 api.prevent_exit();
             }
+
+            // if app_config.enable_auto_update {}
+            // RunEvent::Updater(updater_event) => {
+            //     match updater_event {
+            //         tauri::UpdaterEvent::UpdateAvailable {
+            //             body,
+            //             date,
+            //             version,
+            //         } => {
+            //             info!("update available {} {:?} {}", body, date, version);
+            //         }
+            //         // Emitted when the download is about to be started.
+            //         tauri::UpdaterEvent::Pending => info!("update is pending!"),
+            //         tauri::UpdaterEvent::DownloadProgress {
+            //             chunk_length,
+            //             content_length,
+            //         } => {
+            //             info!("downloaded {} of {:?}", chunk_length, content_length);
+            //         }
+            //         // Emitted when the download has finished and the update is about to be installed.
+            //         tauri::UpdaterEvent::Downloaded => info!("update has been downloaded!"),
+            //         // Emitted when the update was installed. You can then ask to restart the app.
+            //         tauri::UpdaterEvent::Updated => info!("app has been updated"),
+            //         // Emitted when the app already has the latest version installed
+            //         // and an update is not needed.
+            //         tauri::UpdaterEvent::AlreadyUpToDate => info!("app is already up to date"),
+            //         // Emitted when there is an error with the updater. We suggest
+            //         // to listen to this event even if the default dialog is enabled.
+            //         tauri::UpdaterEvent::Error(error) => info!("failed to update: {}", error),
+            //     }
+            // }
             _ => {}
         });
 }
 
 const JS_INIT_SCRIPT: &str = r#"
     (function() {
-        console.log('init script: not yet implemented');
+        console.info('init script: not yet implemented');
     })();
 "#;
 
@@ -110,7 +151,8 @@ fn create_window(app: &AppHandle, label: &str, url: &str) {
         .inner_size(940.0, 720.0)
         .resizable(true)
         .enable_clipboard_access()
-        .accept_first_mouse(true);
+        .accept_first_mouse(true)
+        .focused(true);
 
     if app_config.enable_darkmode {
         wb = wb.theme(Some(tauri::Theme::Dark))

@@ -23,6 +23,10 @@ export default function SettingScreen() {
     await message('Not yet implemented', { title: 'Tauri App', type: 'info' })
   }
 
+  const handleCheckUpdate = async () => {
+    await invoke('check_update')
+  }
+
   const handleOpenWebpage = async () => {
     const secondWindow = WebviewWindow.getByLabel('second-window')
     let windowTheme = await appWindow.theme()
@@ -72,6 +76,15 @@ export default function SettingScreen() {
               <p className='leading-8'>
                 Right click on your mouse in this area to see custom context menu.
               </p>
+              <div className='mt-4'>
+                <button
+                  type='submit'
+                  className='rounded-lg border border-gray-300 dark:bg-gray-100 bg-gray-200 px-5 py-2 text-center text-sm font-medium text-gray-600 transition-all hover:border-gray-200 hover:bg-gray-200 focus:ring focus:ring-gray-50 disabled:border-gray-50 disabled:bg-gray-50 disabled:text-gray-400'
+                  onClick={handleCheckUpdate}
+                >
+                  Check for Updates
+                </button>
+              </div>
             </div>
           </MenuContextTrigger>
           <Portal>

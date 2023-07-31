@@ -37,10 +37,13 @@
         "**/*.{md,js,ts}"
     ],
     "files.associations": {
+        "*.yml.example": "yaml",
         "*.css": "tailwindcss",
         "*.plist": "xml"
     },
     "[toml]": {
         "editor.defaultFormatter": "tamasfe.even-better-toml"
-    }
+    },
+    "rust-analyzer.linkedProjects": ["./src-tauri/Cargo.toml"],
+    "rust-analyzer.showUnlinkedFileNotification": false
 }

@@ -100,7 +100,7 @@ pub fn macos_app_menu() -> Submenu {
             .add_native_item(MenuItem::Separator)
             .add_item(CustomMenuItem::new("preferences", "Preferences").accelerator("CmdOrCtrl+,"))
             .add_native_item(MenuItem::Separator)
-            .add_item(CustomMenuItem::new("check_updates", "Check for Updates"))
+            .add_item(CustomMenuItem::new("check_update", "Check for Updates"))
             .add_native_item(MenuItem::Separator)
             .add_native_item(MenuItem::Services)
             .add_native_item(MenuItem::Separator)

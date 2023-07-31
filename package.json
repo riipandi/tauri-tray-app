@@ -6,14 +6,15 @@
     "scripts": {
         "dev": "vite",
         "build": "tsc && vite build",
-        "build:mac:x64": "tauri build --target x86_64-apple-darwin",
-        "build:mac:arm": "tauri build --target aarch64-apple-darwin",
-        "build:mac:universal": "tauri build --target universal-apple-darwin",
+        "preview": "vite preview",
+        "signer:generate": "tauri signer generate -w .tauri/myapp.key",
+        "build:mac:x64": "dotenv -e .env.build tauri build --target x86_64-apple-darwin",
+        "build:mac:arm": "dotenv -e .env.build tauri build --target aarch64-apple-darwin",
+        "build:mac:universal": "dotenv -e .env.build tauri build --target universal-apple-darwin",
         "update-deps": "npx --yes npm-check-updates -x typescript --deep --interactive",
         "format:js": "prettier --write \"**/*.{json,js,jsx,ts,tsx,mdx}\"",
         "format:rs": "(cd src-tauri && cargo fmt)",
         "format": "pnpm format:js && pnpm format:rs",
-        "preview": "vite preview",
         "tauri": "tauri"
     },
     "dependencies": {
@@ -25,8 +26,8 @@
         "@tauri-apps/plugin-store": "2.0.0-alpha.0",
         "@tauri-apps/plugin-updater": "2.0.0-alpha.0",
         "@tauri-apps/plugin-window": "2.0.0-alpha.0",
-        "react-dom": "^18.2.0",
         "react": "^18.2.0",
+        "react-dom": "^18.2.0",
         "tauri-plugin-log-api": "github:tauri-apps/tauri-plugin-log#v1",
         "wouter": "^2.11.0",
         "zustand": "^4.3.9"
@@ -43,6 +44,7 @@
         "@vitejs/plugin-react": "^4.0.3",
         "autoprefixer": "^10.4.14",
         "clsx": "^2.0.0",
+        "dotenv-cli": "^7.2.1",
         "eslint-plugin-simple-import-sort": "^10.0.0",
         "eslint-plugin-tailwindcss": "^3.13.0",
         "postcss": "^8.4.27",

@@ -26,6 +26,7 @@ tauri = { version = "1.4", features = [
   "notification-all",
   "shell-open",
   "system-tray",
+  "updater",
   "window-all",
 ] }
 # tauri-plugin-os = "2.0.0-alpha.0"
