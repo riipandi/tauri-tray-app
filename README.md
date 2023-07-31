@@ -1,6 +1,6 @@
 # Tauri Tray Application
 
-This template should help get you started developing with Tauri, React and Typescript in Vite.
+This template should help get you started developing desktop app with tray status using Tauri, React, Tailwind CSS, Typescript, and Vite.
 
 ![Screenshot](.//screenshot.jpeg)
 
@@ -10,10 +10,14 @@ This template should help get you started developing with Tauri, React and Types
 
 ## Acknowledgements
 
+- [Tauri Examples Repo](https://github.com/tauri-apps/tauri/tree/dev/examples)
 - [Create a Menu Bar App With Tauri](https://betterprogramming.pub/create-menubar-app-with-tauri-510ab7f7c43d)
 - [tauri-tray-app-example](https://github.com/dheater/tauri-tray-app-example)
 - [tauri-tray-icon-animation](https://github.com/rming/tauri-tray-icon-animation)
 - [tauri-tray-menu](https://github.com/rming/tauri-tray-menu)
+- [tauri-window-controls](https://github.com/agmmnn/tauri-controls)
+- [hamza72x/web2app](https://github.com/hamza72x/web2app)
+- [GTK Installation Docs](https://www.gtk.org/docs/installations/macos/)
 
 ## License
 

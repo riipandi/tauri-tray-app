@@ -1,51 +1,42 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import { invoke } from '@tauri-apps/api/tauri'
-import './app.css'
+import { useEffect, useState } from 'react'
+import { platform, type Platform } from '@tauri-apps/api/os'
+import { Route, Switch } from 'wouter'
+
+import { cn, disableBrowserEvents } from './libraries/utils'
+import WindowControls from './components/ui-controls'
+import MainScreen from './screens/default'
+import SettingScreen from './screens/settings'
+import NotFoundScreen from './screens/error404'
+import { TailwindIndicator } from './components/common'
 
 export default function App() {
-  const [greetMsg, setGreetMsg] = useState('')
-  const [name, setName] = useState('')
+  const [osType, setOsType] = useState<Platform>('darwin')
 
-  async function greet() {
-    // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
-    setGreetMsg(await invoke('greet', { name }))
-  }
+  useEffect(() => {
+    disableBrowserEvents('contextmenu')
+    async function fetchOsType() {
+      setOsType(await platform())
+    }
+    fetchOsType()
+  }, [platform, disableBrowserEvents])
 
   return (
-    <div className='container'>
-      <h1>Welcome to Tauri!</h1>
+    <div className={cn('disable-select antialiased bg-gray-100 dark:bg-black')}>
+      <WindowControls
+        platform='darwin'
+        className={cn(
+          osType === 'darwin' ? 'sticky' : 'hidden',
+          'w-full bg-transparent h-7 z-999 absolute top-0'
+        )}
+      />
 
-      <div className='row'>
-        <a href='https://vitejs.dev' target='_blank'>
-          <img src='/vite.svg' className='logo vite' alt='Vite logo' />
-        </a>
-        <a href='https://tauri.app' target='_blank'>
-          <img src='/tauri.svg' className='logo tauri' alt='Tauri logo' />
-        </a>
-        <a href='https://reactjs.org' target='_blank'>
-          <img src={reactLogo} className='logo react' alt='React logo' />
-        </a>
-      </div>
+      <Switch>
+        <Route path='/' children={<MainScreen />} />
+        <Route path='/settings' children={<SettingScreen />} />
+        <Route children={<NotFoundScreen />} />
+      </Switch>
 
-      <p>Click on the Tauri, Vite, and React logos to learn more.</p>
-
-      <div className='row'>
-        <form
-          onSubmit={(e) => {
-            e.preventDefault()
-            greet()
-          }}
-        >
-          <input
-            id='greet-input'
-            onChange={(e) => setName(e.currentTarget.value)}
-            placeholder='Enter a name...'
-          />
-          <button type='submit'>Greet</button>
-        </form>
-      </div>
-      <p>{greetMsg}</p>
+      <TailwindIndicator />
     </div>
   )
 }

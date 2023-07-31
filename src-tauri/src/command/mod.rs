@@ -2,6 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 // SPDX-License-Identifier: MIT
 
-fn main() {
-    tauri_build::build()
-}
+// Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
+
+mod greet;
+
+pub use self::greet::*;

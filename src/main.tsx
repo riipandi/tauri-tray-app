@@ -1,15 +1,14 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { Route, Switch } from 'wouter'
+import { attachConsole } from 'tauri-plugin-log-api'
 
 import App from './app'
 import './styles.css'
 
+attachConsole() // Tauri logging integration
+
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <Switch>
-      <Route path='/' children={<App />} />
-      <Route>404, Not Found!</Route>
-    </Switch>
+    <App />
   </React.StrictMode>
 )

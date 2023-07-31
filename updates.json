@@ -1,0 +1,15 @@
+{
+    "version": "v0.1.0",
+    "notes": "Tauri App v0.1.0",
+    "pub_date": "2023-06-13T19:20:02.626Z",
+    "platforms": {
+        "darwin-aarch64": {
+            "signature": "xxxxxx",
+            "url": "https://github.com/riipandi/tauri-tray-app/releases/download/v0.1.0/Tauri App.app.tar.gz"
+        },
+        "darwin-x86_64": {
+            "signature": "xxxxxx",
+            "url": "https://github.com/riipandi/tauri-tray-app/releases/download/v0.1.0/Tauri App.app.tar.gz"
+        }
+    }
+}

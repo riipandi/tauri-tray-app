@@ -1,4 +1,5 @@
 {
+    "$schema": "https://github.com/tauri-apps/tauri/releases/download/tauri-build-v1.4.0/schema.json",
     "build": {
         "beforeDevCommand": "pnpm dev",
         "beforeBuildCommand": "pnpm build",
@@ -7,7 +8,7 @@
         "withGlobalTauri": false
     },
     "package": {
-        "productName": "Tray App",
+        "productName": "Tauri App",
         "version": "0.1.0"
     },
     "tauri": {
@@ -15,7 +16,13 @@
             "all": false,
             "shell": {
                 "all": false,
-                "open": true
+                "open": "^(.+)/([^/]+)$"
+            },
+            "notification": {
+                "all": true
+            },
+            "window": {
+                "all": true
             }
         },
         "bundle": {
@@ -27,7 +34,7 @@
             "shortDescription": "",
             "longDescription": "",
             "resources": [],
-            "targets": ["dmg", "nsis", "deb", "appimage", "updater"],
+            "targets": ["app", "dmg", "nsis", "deb", "appimage", "updater"],
             "macOS": {
                 "minimumSystemVersion": "10.13",
                 "frameworks": [],
@@ -70,30 +77,17 @@
             "csp": null
         },
         "updater": {
-            "active": false
+            "active": false,
+            "dialog": true,
+            "endpoints": ["https://github.com/riipandi/tauri-tray-app/blob/main/updates.json"],
+            "pubkey": ""
         },
         "macOSPrivateApi": true,
         "systemTray": {
             "iconPath": "icons/128x128@2x.png",
             "iconAsTemplate": true,
-            "menuOnLeftClick": false
+            "menuOnLeftClick": true
         },
-        "windows": [
-            {
-                "fullscreen": false,
-                "resizable": true,
-                "skipTaskbar": true,
-                "title": "tauri-tray-app",
-                "width": 400,
-                "height": 500,
-                "visible": false,
-                "hiddenTitle": true,
-                "decorations": false,
-                "transparent": true,
-                "alwaysOnTop": true,
-                "focus": false,
-                "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.2 Safari/605.1.15"
-            }
-        ]
+        "windows": []
     }
 }

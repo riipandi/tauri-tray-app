@@ -2,33 +2,75 @@
 // SPDX-License-Identifier: Apache-2.0
 // SPDX-License-Identifier: MIT
 
-use tauri::{api::shell::open, async_runtime::block_on};
-use tauri::{AboutMetadata, AppHandle, Icon, Manager, PhysicalPosition, SystemTrayEvent};
-use tauri::{CustomMenuItem, SystemTray, SystemTrayMenu, SystemTrayMenuItem, SystemTraySubmenu};
+use tauri::{async_runtime::block_on, AppHandle, CustomMenuItem, Icon, Manager};
+use tauri::{SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem, SystemTraySubmenu};
+use tauri_plugin_positioner::{Position, WindowExt};
+
+use crate::meta::{APP_TITLE, FEEDBACK_URL, WEBSITE_URL};
+use crate::utils::open_browser;
+
+enum TrayIdentifier {
+    ShowWindow,
+    Preferences,
+    Website,
+    Feedback,
+    UpdateCheck,
+    Quit,
+    Unimplemented,
+}
+
+impl Into<String> for TrayIdentifier {
+    fn into(self) -> String {
+        match self {
+            TrayIdentifier::ShowWindow => "show_window".to_owned(),
+            TrayIdentifier::Preferences => "preferences".to_owned(),
+            TrayIdentifier::Website => "visit_website".to_owned(),
+            TrayIdentifier::Feedback => "send_feedback".to_owned(),
+            TrayIdentifier::UpdateCheck => "check_updates".to_owned(),
+            TrayIdentifier::Quit => "quit".to_owned(),
+            TrayIdentifier::Unimplemented => "unimplemented".to_owned(),
+        }
+    }
+}
+
+impl From<String> for TrayIdentifier {
+    fn from(val: String) -> Self {
+        match val.as_str() {
+            "show_window" => TrayIdentifier::ShowWindow,
+            "preferences" => TrayIdentifier::Preferences,
+            "visit_website" => TrayIdentifier::Website,
+            "send_feedback" => TrayIdentifier::Feedback,
+            "check_updates" => TrayIdentifier::UpdateCheck,
+            "quit" => TrayIdentifier::Quit,
+            _ => TrayIdentifier::Unimplemented,
+        }
+    }
+}
 
 #[cfg(target_os = "macos")]
-pub(crate) fn register() -> SystemTray {
-    let app_title = format!("{} v{}", "Tray App", crate::APP_VERSION);
+pub fn create_tray_menu() -> SystemTray {
+    log::debug!("Registering system tray menu...");
 
-    let version = CustomMenuItem::new("version".to_string(), app_title);
-    let preferences = CustomMenuItem::new("preferences".to_string(), "Preferences")
-        .accelerator("CommandOrControl+,");
-    let check_updates = CustomMenuItem::new("check_updates".to_string(), "Check for Updates")
-        .accelerator("CommandOrControl+R");
-    let quit =
-        CustomMenuItem::new("quit".to_string(), "Quit Tray App").accelerator("CommandOrControl+Q");
+    let main_window =
+        CustomMenuItem::new(TrayIdentifier::ShowWindow, format!("Open {}", APP_TITLE));
+    let preferences =
+        CustomMenuItem::new(TrayIdentifier::Preferences, "Preferences").accelerator("CmdOrCtrl+,");
+    let quit = CustomMenuItem::new(TrayIdentifier::Quit, format!("Quit {}", APP_TITLE))
+        .accelerator("CmdOrCtrl+Q");
 
+    let subitem_website = CustomMenuItem::new(TrayIdentifier::Website, "Follow on Twitter");
+    let subitem_feedback = CustomMenuItem::new(TrayIdentifier::Feedback, "Send Feedback");
+    let subitem_updates = CustomMenuItem::new(TrayIdentifier::UpdateCheck, "Check for Updates");
     let submenu_help = SystemTrayMenu::new()
-        .add_item(CustomMenuItem::new("on_twitter", "Follow on Twitter"))
-        .add_item(CustomMenuItem::new("send_feedback", "Send Feedback"));
+        .add_item(subitem_website)
+        .add_item(subitem_feedback)
+        .add_native_item(SystemTrayMenuItem::Separator)
+        .add_item(subitem_updates);
 
     let tray_menu = SystemTrayMenu::new()
-        .add_item(version.disabled())
+        .add_item(main_window)
         .add_native_item(SystemTrayMenuItem::Separator)
         .add_item(preferences)
-        .add_item(check_updates)
-        .add_native_item(SystemTrayMenuItem::Separator)
-        .add_item(CustomMenuItem::new("about", "About Tray App"))
         .add_native_item(SystemTrayMenuItem::Separator)
         .add_submenu(SystemTraySubmenu::new("Help", submenu_help))
         .add_native_item(SystemTrayMenuItem::Separator)
@@ -37,281 +79,204 @@ pub(crate) fn register() -> SystemTray {
     return SystemTray::new().with_menu(tray_menu);
 }
 
-#[cfg(target_os = "macos")]
-pub(crate) fn tray_icon() -> Icon {
-    Icon::Raw(include_bytes!("../icons/icon.png").to_vec())
+pub fn tray_icon() -> Icon {
+    Icon::Raw(include_bytes!("../icons/128x128@2x.png").to_vec())
 }
 
 #[cfg(target_os = "macos")]
-pub(crate) fn tray_icon_loading() -> Vec<Icon> {
+pub fn tray_icon_loading() -> Vec<Icon> {
     let mut icon_vec: Vec<Icon> = Vec::new();
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/macos/loading_0.png").to_vec(),
+        include_bytes!("../assets/macos/loading_0.png").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/macos/loading_1.png").to_vec(),
+        include_bytes!("../assets/macos/loading_1.png").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/macos/loading_2.png").to_vec(),
+        include_bytes!("../assets/macos/loading_2.png").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/macos/loading_3.png").to_vec(),
+        include_bytes!("../assets/macos/loading_3.png").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/macos/loading_4.png").to_vec(),
+        include_bytes!("../assets/macos/loading_4.png").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/macos/loading_5.png").to_vec(),
+        include_bytes!("../assets/macos/loading_5.png").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/macos/loading_6.png").to_vec(),
+        include_bytes!("../assets/macos/loading_6.png").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/macos/loading_7.png").to_vec(),
+        include_bytes!("../assets/macos/loading_7.png").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/macos/loading_8.png").to_vec(),
+        include_bytes!("../assets/macos/loading_8.png").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/macos/loading_9.png").to_vec(),
+        include_bytes!("../assets/macos/loading_9.png").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/macos/loading_10.png").to_vec(),
+        include_bytes!("../assets/macos/loading_10.png").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/macos/loading_11.png").to_vec(),
+        include_bytes!("../assets/macos/loading_11.png").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/macos/loading_12.png").to_vec(),
+        include_bytes!("../assets/macos/loading_12.png").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/macos/loading_13.png").to_vec(),
+        include_bytes!("../assets/macos/loading_13.png").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/macos/loading_14.png").to_vec(),
+        include_bytes!("../assets/macos/loading_14.png").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/macos/loading_15.png").to_vec(),
+        include_bytes!("../assets/macos/loading_15.png").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/macos/loading_16.png").to_vec(),
+        include_bytes!("../assets/macos/loading_16.png").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/macos/loading_17.png").to_vec(),
+        include_bytes!("../assets/macos/loading_17.png").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/macos/loading_18.png").to_vec(),
+        include_bytes!("../assets/macos/loading_18.png").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/macos/loading_19.png").to_vec(),
+        include_bytes!("../assets/macos/loading_19.png").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/macos/loading_20.png").to_vec(),
+        include_bytes!("../assets/macos/loading_20.png").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/macos/loading_21.png").to_vec(),
+        include_bytes!("../assets/macos/loading_21.png").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/macos/loading_22.png").to_vec(),
+        include_bytes!("../assets/macos/loading_22.png").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/macos/loading_23.png").to_vec(),
+        include_bytes!("../assets/macos/loading_23.png").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/macos/loading_24.png").to_vec(),
+        include_bytes!("../assets/macos/loading_24.png").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/macos/loading_25.png").to_vec(),
+        include_bytes!("../assets/macos/loading_25.png").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/macos/loading_26.png").to_vec(),
+        include_bytes!("../assets/macos/loading_26.png").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/macos/loading_27.png").to_vec(),
+        include_bytes!("../assets/macos/loading_27.png").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/macos/loading_28.png").to_vec(),
+        include_bytes!("../assets/macos/loading_28.png").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/macos/loading_29.png").to_vec(),
+        include_bytes!("../assets/macos/loading_29.png").to_vec(),
     ));
     icon_vec
 }
 
 #[cfg(target_os = "windows")]
-pub(crate) fn tray_icon_loading() -> Vec<Icon> {
+pub fn tray_icon_loading() -> Vec<Icon> {
     let mut icon_vec: Vec<Icon> = Vec::new();
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/windows/loading_0.ico").to_vec(),
+        include_bytes!("../assets/windows/loading_0.ico").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/windows/loading_1.ico").to_vec(),
+        include_bytes!("../assets/windows/loading_1.ico").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/windows/loading_2.ico").to_vec(),
+        include_bytes!("../assets/windows/loading_2.ico").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/windows/loading_3.ico").to_vec(),
+        include_bytes!("../assets/windows/loading_3.ico").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/windows/loading_4.ico").to_vec(),
+        include_bytes!("../assets/windows/loading_4.ico").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/windows/loading_5.ico").to_vec(),
+        include_bytes!("../assets/windows/loading_5.ico").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/windows/loading_6.ico").to_vec(),
+        include_bytes!("../assets/windows/loading_6.ico").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/windows/loading_7.ico").to_vec(),
+        include_bytes!("../assets/windows/loading_7.ico").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/windows/loading_8.ico").to_vec(),
+        include_bytes!("../assets/windows/loading_8.ico").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/windows/loading_9.ico").to_vec(),
+        include_bytes!("../assets/windows/loading_9.ico").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/windows/loading_10.ico").to_vec(),
+        include_bytes!("../assets/windows/loading_10.ico").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/windows/loading_11.ico").to_vec(),
+        include_bytes!("../assets/windows/loading_11.ico").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/windows/loading_12.ico").to_vec(),
+        include_bytes!("../assets/windows/loading_12.ico").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/windows/loading_13.ico").to_vec(),
+        include_bytes!("../assets/windows/loading_13.ico").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/windows/loading_14.ico").to_vec(),
+        include_bytes!("../assets/windows/loading_14.ico").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/windows/loading_15.ico").to_vec(),
+        include_bytes!("../assets/windows/loading_15.ico").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/windows/loading_16.ico").to_vec(),
+        include_bytes!("../assets/windows/loading_16.ico").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/windows/loading_17.ico").to_vec(),
+        include_bytes!("../assets/windows/loading_17.ico").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/windows/loading_18.ico").to_vec(),
+        include_bytes!("../assets/windows/loading_18.ico").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/windows/loading_19.ico").to_vec(),
+        include_bytes!("../assets/windows/loading_19.ico").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/windows/loading_20.ico").to_vec(),
+        include_bytes!("../assets/windows/loading_20.ico").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/windows/loading_21.ico").to_vec(),
+        include_bytes!("../assets/windows/loading_21.ico").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/windows/loading_22.ico").to_vec(),
+        include_bytes!("../assets/windows/loading_22.ico").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/windows/loading_23.ico").to_vec(),
+        include_bytes!("../assets/windows/loading_23.ico").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/windows/loading_24.ico").to_vec(),
+        include_bytes!("../assets/windows/loading_24.ico").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/windows/loading_25.ico").to_vec(),
+        include_bytes!("../assets/windows/loading_25.ico").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/windows/loading_26.ico").to_vec(),
+        include_bytes!("../assets/windows/loading_26.ico").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/windows/loading_27.ico").to_vec(),
+        include_bytes!("../assets/windows/loading_27.ico").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/windows/loading_28.ico").to_vec(),
+        include_bytes!("../assets/windows/loading_28.ico").to_vec(),
     ));
     icon_vec.push(Icon::Raw(
-        include_bytes!("../assets/images/windows/loading_29.ico").to_vec(),
+        include_bytes!("../assets/windows/loading_29.ico").to_vec(),
     ));
     icon_vec
 }
 
-pub(crate) fn tray_event(app: &AppHandle, event: SystemTrayEvent) {
-    match event {
-        SystemTrayEvent::LeftClick { position, size, .. } => {
-            let win: tauri::Window = app.get_window("main").unwrap();
-            let is_visible = win.is_visible().unwrap();
-
-            if is_visible {
-                win.hide().unwrap();
-            } else {
-                let window_size = win.outer_size().unwrap();
-                let physical_pos = PhysicalPosition {
-                    x: position.x as i32 + (size.width as i32 / 2) - (window_size.width as i32 / 2),
-                    y: position.y as i32 - window_size.height as i32,
-                };
-
-                let _ = win.set_position(tauri::Position::Physical(physical_pos));
-                win.show().unwrap();
-                win.set_focus().unwrap();
-            }
-        }
-        SystemTrayEvent::RightClick {
-            position: _,
-            size: _,
-            ..
-        } => {
-            println!("system tray received a right click");
-        }
-        SystemTrayEvent::DoubleClick {
-            position: _,
-            size: _,
-            ..
-        } => {
-            println!("system tray received a double click");
-        }
-        SystemTrayEvent::MenuItemClick { id, .. } => {
-            // let item_handle = app.tray_handle().get_item(&id);
-            match id.as_str() {
-                "about" => {
-                    let about_metadata = AboutMetadata::new()
-                        .version(crate::APP_VERSION)
-                        .authors(vec![env!("CARGO_PKG_REPOSITORY").to_string()])
-                        .website(env!("CARGO_PKG_REPOSITORY"))
-                        .license(env!("CARGO_PKG_LICENSE"));
-
-                    println!("{} {:?}", "Tray App", about_metadata);
-
-                    // @todo - show about dialog
-                }
-                "preferences" => {
-                    println!("tray menu Preferences clicked");
-                }
-                "on_twitter" => {
-                    open(&app.shell_scope(), "https://twitter.com/riipandi", None).ok();
-                }
-                "check_updates" => {
-                    // Trigger loading animation
-                    block_on(set_tray_icon(app.clone())).unwrap();
-                }
-                "send_feedback" => {
-                    open(
-                        &app.shell_scope(),
-                        "https://ripandis.com/feedback?product=tauri-tray-app",
-                        None,
-                    )
-                    .ok();
-                }
-                "quit" => {
-                    app.exit(0);
-                }
-                _ => {}
-            }
-        }
-        _ => {}
-    }
-}
-
 #[tauri::command]
-async fn set_tray_icon(handle: AppHandle) -> Result<(), String> {
+pub async fn set_tray_icon(handle: AppHandle) -> Result<(), String> {
     let ms = 50; // loop interval ms
     let mut intv = tokio::time::interval(tokio::time::Duration::from_millis(ms));
     let icon_vec = tray_icon_loading();
@@ -335,4 +300,66 @@ async fn set_tray_icon(handle: AppHandle) -> Result<(), String> {
         }
     });
     Ok(())
+}
+
+pub fn handle_tray_event(app: &AppHandle, event: SystemTrayEvent) {
+    tauri_plugin_positioner::on_tray_event(app, &event);
+    match event {
+        SystemTrayEvent::LeftClick {
+            position: _,
+            size: _,
+            ..
+        } => {
+            println!("system tray received a left click");
+        }
+        SystemTrayEvent::RightClick {
+            position: _,
+            size: _,
+            ..
+        } => {
+            println!("system tray received a right click");
+        }
+        SystemTrayEvent::DoubleClick {
+            position: _,
+            size: _,
+            ..
+        } => {
+            println!("system tray received a double click");
+        }
+        SystemTrayEvent::MenuItemClick { id, .. } => {
+            let win: tauri::Window = app.get_window(crate::meta::MAIN_WINDOW).unwrap();
+
+            match id.as_str() {
+                "show_window" => {
+                    if !win.is_visible().unwrap() {
+                        let _ = win.move_window(Position::Center);
+                    }
+                    win.show().unwrap();
+                    win.set_focus().unwrap();
+                }
+                "preferences" => {
+                    if win.is_visible().unwrap() {
+                        win.eval("window.location.replace('/settings')").unwrap();
+                        win.set_focus().unwrap();
+                    } else {
+                        win.show().unwrap();
+                        win.eval("window.location.replace('/settings')").unwrap();
+                        win.set_focus().unwrap();
+                    }
+                }
+                "check_updates" => {
+                    // Trigger loading animation
+                    block_on(set_tray_icon(app.clone())).unwrap();
+                }
+                "visit_website" => open_browser(WEBSITE_URL),
+                "send_feedback" => open_browser(FEEDBACK_URL),
+
+                "quit" => {
+                    app.exit(0);
+                }
+                _ => {}
+            }
+        }
+        _ => {}
+    }
 }
