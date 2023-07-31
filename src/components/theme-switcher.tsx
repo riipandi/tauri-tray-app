@@ -1,6 +1,6 @@
 import { ThemeType, useUIConfigStore } from '../stores/ui-store'
 import { appWindow } from '@tauri-apps/api/window'
-import { info } from 'tauri-plugin-log-api'
+import { invoke } from '@tauri-apps/api/tauri'
 
 export function ThemeSwitcher() {
   const { darkmode, setDarkMode } = useUIConfigStore((state) => state)
@@ -12,10 +12,12 @@ export function ThemeSwitcher() {
     let selectedTheme = e.target.value as ThemeType
 
     if (windowTheme === 'light' && selectedTheme === 'dark') {
-      info(`Theme changed to ${selectedTheme}`)
+      await invoke('set_darkmode', { enable: true })
+      setDarkMode(true)
+    } else {
+      await invoke('set_darkmode', { enable: false })
+      setDarkMode(false)
     }
-
-    setDarkMode(selectedTheme === 'dark')
   }
 
   return (

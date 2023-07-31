@@ -4,6 +4,6 @@
 
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 
-mod greet;
+mod general;
 
-pub use self::greet::*;
+pub use self::general::*;

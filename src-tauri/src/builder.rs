@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // SPDX-License-Identifier: MIT
 
+use log::info;
 use std::path::PathBuf;
 use tauri::api::dialog;
 use tauri::http::{Request, Response};
@@ -78,7 +79,8 @@ pub fn initialize() {
     builder
         .invoke_handler(tauri::generate_handler![
             command::greet,
-            command::open_devtools
+            command::open_devtools,
+            command::set_darkmode,
         ])
         .build(tauri::generate_context!())
         .expect("error while building tauri application")
@@ -110,13 +112,11 @@ fn create_window(app: &AppHandle, label: &str, url: &str) {
         .enable_clipboard_access()
         .accept_first_mouse(true);
 
-    // if app_config.enable_darkmode {
-    //     wb = wb.theme(Some(tauri::Theme::Dark))
-    // } else {
-    //     wb = wb.theme(Some(tauri::Theme::Light))
-    // }
-
-    wb = wb.theme(Some(tauri::Theme::Light));
+    if app_config.enable_darkmode {
+        wb = wb.theme(Some(tauri::Theme::Dark))
+    } else {
+        wb = wb.theme(Some(tauri::Theme::Light))
+    }
 
     #[cfg(target_os = "macos")]
     let window = wb
@@ -137,12 +137,12 @@ fn create_window(app: &AppHandle, label: &str, url: &str) {
         .expect("error while setting window title");
 
     window.listen("tauri://update-status".to_string(), move |msg| {
-        println!("New status: {:?}", msg);
+        info!("New status: {:?}", msg);
     });
 }
 
-pub fn callback(app: &AppHandle, req: &Request) -> Result<Response, Box<dyn std::error::Error>> {
-    println!("Callback URI: {:?}", req.uri());
+fn callback(app: &AppHandle, req: &Request) -> Result<Response, Box<dyn std::error::Error>> {
+    info!("Callback URI: {:?}", req.uri());
     let window = app.get_window(meta::MAIN_WINDOW).unwrap();
     window.show().unwrap();
     window.set_focus().unwrap();

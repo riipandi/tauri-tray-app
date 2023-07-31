@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // SPDX-License-Identifier: MIT
 
+use log::info;
 use tauri::{async_runtime::block_on, AppHandle, CustomMenuItem, Icon, Manager};
 use tauri::{SystemTray, SystemTrayEvent, SystemTrayMenu, SystemTrayMenuItem, SystemTraySubmenu};
 use tauri_plugin_positioner::{Position, WindowExt};
@@ -310,21 +311,21 @@ pub fn handle_tray_event(app: &AppHandle, event: SystemTrayEvent) {
             size: _,
             ..
         } => {
-            println!("system tray received a left click");
+            info!("system tray received a left click");
         }
         SystemTrayEvent::RightClick {
             position: _,
             size: _,
             ..
         } => {
-            println!("system tray received a right click");
+            info!("system tray received a right click");
         }
         SystemTrayEvent::DoubleClick {
             position: _,
             size: _,
             ..
         } => {
-            println!("system tray received a double click");
+            info!("system tray received a double click");
         }
         SystemTrayEvent::MenuItemClick { id, .. } => {
             let win: tauri::Window = app.get_window(crate::meta::MAIN_WINDOW).unwrap();

@@ -1,12 +1,14 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { attachConsole, info } from 'tauri-plugin-log-api'
+import { attachConsole } from 'tauri-plugin-log-api'
 
 import App from './app'
 import './styles.css'
 
-attachConsole() // Tauri logging integration
-info('ui_client_loaded')
+// Tauri logging integration
+if (import.meta.env.DEV) {
+  attachConsole()
+}
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
