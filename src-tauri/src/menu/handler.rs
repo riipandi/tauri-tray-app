@@ -23,9 +23,9 @@ pub fn handle_menu_event(event: WindowMenuEvent) {
             window.eval(js_script).unwrap();
         }
         "darkmode" => {
-            app_config.dark_mode_enabled = !app_config.dark_mode_enabled;
+            app_config.enable_darkmode = !app_config.enable_darkmode;
 
-            if app_config.dark_mode_enabled {
+            if app_config.enable_darkmode {
                 window.eval("console.log('Enable Dark Mode');").unwrap();
             } else {
                 window.eval("console.log('Disable Dark Mode');").unwrap();

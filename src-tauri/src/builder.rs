@@ -28,7 +28,6 @@ pub fn initialize() {
                 .build(),
         )
         .plugin(tauri_plugin_store::Builder::default().build())
-        // .plugin(tauri_plugin_os::init())
         // .plugin(tauri_plugin_window::init())
         // .plugin(tauri_plugin_notification::init())
         // .plugin(tauri_plugin_autostart::init(MacosLauncher::LaunchAgent, Some(vec!["--flag1", "--flag2"])))
@@ -98,17 +97,25 @@ fn create_window(app: &AppHandle, label: &str, url: &str) {
     let mut wb = WindowBuilder::new(app, label, window_url);
 
     wb = wb
-        .tabbing_identifier(meta::APP_NAME)
         .initialization_script(JS_INIT_SCRIPT)
         .user_agent(meta::USER_AGENT)
-        .min_inner_size(520.0, 680.0)
+        .min_inner_size(620.0, 680.0)
         .inner_size(940.0, 720.0)
         .resizable(true)
         .enable_clipboard_access()
         .accept_first_mouse(true);
 
+    // if app_config.enable_darkmode {
+    //     wb = wb.theme(Some(tauri::Theme::Dark))
+    // } else {
+    //     wb = wb.theme(Some(tauri::Theme::Light))
+    // }
+
+    wb = wb.theme(Some(tauri::Theme::Light));
+
     #[cfg(target_os = "macos")]
     let window = wb
+        .tabbing_identifier(meta::APP_NAME)
         .hidden_title(true)
         .title_bar_style(tauri::TitleBarStyle::Overlay)
         .build()

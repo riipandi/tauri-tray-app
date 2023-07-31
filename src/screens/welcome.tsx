@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { invoke } from '@tauri-apps/api/tauri'
-import { info } from '@tauri-apps/plugin-log'
+import { info } from 'tauri-plugin-log-api'
 import { TauriEvent } from '@tauri-apps/api/event'
 import { appWindow } from '@tauri-apps/api/window'
 import { register, unregisterAll } from '@tauri-apps/api/globalShortcut'
@@ -72,7 +72,7 @@ export default function WelcomeScreen() {
           <p>Click on the Tauri, Vite, and React logos to learn more.</p>
           <p>
             Visit{' '}
-            <Link href='/settings' className='font-medium text-blue-500 hover:text-blue-600'>
+            <Link href='/settings' className='font-medium text-blue-800 hover:text-blue-600'>
               this sample page
             </Link>{' '}
             to see if the router is working or not.
@@ -94,7 +94,7 @@ export default function WelcomeScreen() {
                     type='text'
                     ref={inputRef}
                     id='greet-input'
-                    className='block dark:text-gray-900 px-9 font-medium text-sm rounded-md border-gray-300 shadow-sm focus:border-blue-400 focus:ring focus:ring-blue-200 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500'
+                    className='block dark:text-gray-300 dark:bg-background-dark dark:border-gray-700 px-9 font-medium text-sm rounded-md border-gray-300 shadow-sm focus:border-gray-400 focus:ring focus:ring-gray-200 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500'
                     onChange={(e) => setName(e.currentTarget.value)}
                     onKeyDown={handleKeyDown}
                     placeholder='Enter a name...'
@@ -116,7 +116,7 @@ export default function WelcomeScreen() {
                     </svg>
                   </div>
                   <div className='pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5'>
-                    <span className='rounded border px-1.5 text-sm text-gray-400 shadow-sm transition-all group-hover:border-primary-500 group-hover:text-primary-500'>
+                    <span className='rounded border px-1.5 text-sm dark:text-gray-300 dark:bg-background-dark dark:border-gray-700 text-gray-400 shadow-sm transition-all group-hover:border-primary-500 group-hover:text-primary-500'>
                       <kbd>⌘</kbd> <kbd>F</kbd>
                     </span>
                   </div>
@@ -126,7 +126,7 @@ export default function WelcomeScreen() {
 
             <button
               type='submit'
-              className='rounded-lg border border-blue-100 bg-blue-100 px-5 py-2 text-center text-sm font-medium text-blue-600 transition-all hover:border-blue-200 hover:bg-blue-200 focus:ring focus:ring-blue-50 disabled:border-blue-50 disabled:bg-blue-50 disabled:text-blue-400'
+              className='rounded-lg border border-gray-100 dark:bg-gray-100 bg-gray-200 px-5 py-2 text-center text-sm font-medium text-gray-600 transition-all hover:border-gray-200 hover:bg-gray-200 focus:ring focus:ring-gray-50 disabled:border-gray-50 disabled:bg-gray-50 disabled:text-gray-400'
             >
               Say Hello
             </button>

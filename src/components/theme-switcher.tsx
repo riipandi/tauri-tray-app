@@ -1,41 +1,25 @@
-import { ThemesType, useUIConfigStore } from '../stores/ui-store'
-// import { appWindow } from '@tauri-apps/api/window'
+import { ThemeType, useUIConfigStore } from '../stores/ui-store'
+import { appWindow } from '@tauri-apps/api/window'
+import { info } from 'tauri-plugin-log-api'
 
 export function ThemeSwitcher() {
-  const { theme, setTheme } = useUIConfigStore((state) => state)
+  const { darkmode, setDarkMode } = useUIConfigStore((state) => state)
 
   const handleSelect = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     e.preventDefault()
-    setTheme(e.target.value as ThemesType)
 
-    // // document.getElementsByTagName('html')[0].dataset.theme = e.target.value
+    let windowTheme = await appWindow.theme()
+    let selectedTheme = e.target.value as ThemeType
 
-    // // On page load or when changing themes, best to add inline in `head` to avoid FOUC
-    // if (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    //   document.documentElement.classList.add('dark')
-    //   if (e.target.value === 'dark') {
-    //     document.documentElement.classList.add('dark')
-    //   } else {
-    //     document.documentElement.classList.remove('dark')
-    //   }
-    // } else if (!theme && window.matchMedia('(prefers-color-scheme: light)').matches) {
-    //   document.documentElement.classList.remove('dark')
-    //   if (e.target.value === 'light') {
-    //     document.documentElement.classList.remove('dark')
-    //   } else {
-    //     document.documentElement.classList.add('dark')
-    //   }
-    // }
+    if (windowTheme === 'light' && selectedTheme === 'dark') {
+      info(`Theme changed to ${selectedTheme}`)
+    }
 
-    // if (e.target.value === 'dark') {
-    //   document.documentElement.classList.add('dark')
-    // } else {
-    //   document.documentElement.classList.remove('dark')
-    // }
+    setDarkMode(selectedTheme === 'dark')
   }
 
   return (
-    <div className='max-w-[180px]'>
+    <div className='max-w-[160px]'>
       <label htmlFor='theme-switcher' className='sr-only'>
         Language
       </label>
@@ -58,14 +42,13 @@ export function ThemeSwitcher() {
         </div>
         <select
           id='theme-switcher'
-          className='block w-full rounded-md border-gray-300 pl-9 text-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50'
+          className='block w-full rounded-md dark:text-gray-300 dark:bg-background-dark dark:border-gray-700 border-gray-300 pl-9 text-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50'
           onChange={handleSelect}
-          defaultValue={theme}
+          defaultValue={darkmode ? 'dark' : 'light'}
         >
           <option disabled>Select theme</option>
-          <option value='dark'>Dark</option>
-          <option value='light'>Light</option>
-          <option value='system'>System</option>
+          <option value='dark'>Dark Theme</option>
+          <option value='light'>Light Theme</option>
         </select>
       </div>
     </div>

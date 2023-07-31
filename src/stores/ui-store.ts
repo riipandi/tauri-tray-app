@@ -2,11 +2,11 @@ import { create } from 'zustand'
 import { devtools, persist, createJSONStorage } from 'zustand/middleware'
 import { zustandStorage } from './engine'
 
-export type ThemesType = 'dark' | 'light' | 'system'
+export type ThemeType = 'dark' | 'light'
 
 interface UIConfigState {
-  theme: ThemesType
-  setTheme: (val: ThemesType) => void
+  darkmode: boolean
+  setDarkMode: (val: boolean) => void
   resetState: () => void
 }
 
@@ -14,8 +14,8 @@ export const useUIConfigStore = create<UIConfigState>()(
   devtools(
     persist(
       (set) => ({
-        theme: 'system',
-        setTheme: (val) => set(() => ({ theme: val })),
+        darkmode: false,
+        setDarkMode: (val) => set(() => ({ darkmode: val })),
         // clear the entire store and actions states
         resetState: () => set({}, true),
       }),

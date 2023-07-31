@@ -54,22 +54,29 @@ pub fn window_menu() -> Submenu {
 }
 
 pub fn help_menu() -> Submenu {
-    let feedback = CustomMenuItem::new("send_feedback", "Send Feedback");
-    let devtools =
-        CustomMenuItem::new("devtools", "Developer Tools").accelerator("Alt+CmdOrCtrl+J");
+    let menus = Menu::new()
+        .add_item(CustomMenuItem::new("unimplemented", "Documentation"))
+        .add_native_item(MenuItem::Separator)
+        .add_item(CustomMenuItem::new("unimplemented", "Privacy Policy"))
+        .add_item(CustomMenuItem::new("unimplemented", "Terms of Service"));
 
-    Submenu::new(
+    #[cfg(debug_assertions)]
+    let submenu = Submenu::new(
         "Help",
-        Menu::new()
-            .add_item(CustomMenuItem::new("unimplemented", "Documentation"))
+        menus.add_native_item(MenuItem::Separator).add_item(
+            CustomMenuItem::new("devtools", "Developer Tools").accelerator("Alt+CmdOrCtrl+J"),
+        ),
+    );
+
+    #[cfg(not(debug_assertions))]
+    let submenu = Submenu::new(
+        "Help",
+        menus
             .add_native_item(MenuItem::Separator)
-            .add_item(feedback)
-            .add_native_item(MenuItem::Separator)
-            .add_item(CustomMenuItem::new("unimplemented", "Privacy Policy"))
-            .add_item(CustomMenuItem::new("unimplemented", "Terms of Service"))
-            .add_native_item(MenuItem::Separator)
-            .add_item(devtools),
-    )
+            .add_item(CustomMenuItem::new("send_feedback", "Send Feedback")),
+    );
+
+    submenu
 }
 
 #[cfg(target_os = "macos")]

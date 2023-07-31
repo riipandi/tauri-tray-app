@@ -8,16 +8,13 @@ use simple_home_dir::*;
 use crate::meta;
 
 // $HOME/.config/<app_name>/config.json
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct AppConfig {
     #[serde(default)]
     pub zoom_factor: f64,
 
     #[serde(default)]
-    pub dark_mode_enabled: bool,
-
-    #[serde(default)]
-    pub notification_enabled: bool,
+    pub enable_darkmode: bool,
 
     #[serde(default)]
     pub exit_to_tray: bool,
@@ -27,8 +24,7 @@ impl Default for AppConfig {
     fn default() -> Self {
         return Self {
             zoom_factor: 1.0,
-            dark_mode_enabled: false,
-            notification_enabled: true,
+            enable_darkmode: false,
             exit_to_tray: true,
         };
     }
@@ -72,7 +68,7 @@ impl AppConfig {
 
     #[allow(dead_code)]
     pub fn dark_mode_state(&self) -> &'static str {
-        if self.dark_mode_enabled {
+        if self.enable_darkmode {
             return "Disable Dark Mode";
         } else {
             return "Enable Dark Mode";

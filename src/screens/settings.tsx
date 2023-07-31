@@ -1,8 +1,9 @@
 import { useLocation } from 'wouter'
-import { info } from '@tauri-apps/plugin-log'
+import { info } from 'tauri-plugin-log-api'
 import { message } from '@tauri-apps/api/dialog'
 import { WebviewWindow } from '@tauri-apps/api/window'
 import { invoke } from '@tauri-apps/api/tauri'
+import { appWindow } from '@tauri-apps/api/window'
 
 import {
   Menu,
@@ -24,7 +25,7 @@ export default function SettingScreen() {
 
   const handleOpenWebpage = async () => {
     const secondWindow = WebviewWindow.getByLabel('second-window')
-    console.log('DEBUG ~ secondWindow', secondWindow)
+    let windowTheme = await appWindow.theme()
 
     if (!secondWindow) {
       const sizes = [540, 480]
@@ -36,6 +37,7 @@ export default function SettingScreen() {
         minWidth: sizes[2],
         maxWidth: sizes[1],
         maxHeight: sizes[2],
+        theme: windowTheme || 'light',
         decorations: true,
         hiddenTitle: true,
         skipTaskbar: true,
@@ -62,7 +64,7 @@ export default function SettingScreen() {
     <div className='flex h-full w-full min-h-screen flex-col justify-center'>
       <div className='p-8 sm:p-12 lg:p-20 h-full w-full'>
         <Menu>
-          <MenuContextTrigger className='bg-white/50 w-full h-full min-h-[540px] rounded-lg border-2 border-dashed border-gray-300 p-12 text-center flex flex-col justify-center cursor-default items-center'>
+          <MenuContextTrigger className='bg-white/50 dark:bg-gray-800 w-full h-full min-h-[540px] rounded-lg border-2 border-dashed border-gray-300 p-12 text-center flex flex-col justify-center cursor-default items-center'>
             <h1 className='block text-3xl font-bold dark:text-gray-300 dark:text-white sm:text-4xl'>
               Howdy
             </h1>
@@ -74,24 +76,24 @@ export default function SettingScreen() {
           </MenuContextTrigger>
           <Portal>
             <MenuPositioner>
-              <MenuContent className='disable-select w-[140px] bg-white p-2 rounded border border-gray-200 shadow-sm space-y-1 text-sm'>
+              <MenuContent className='disable-select w-[140px] bg-white dark:bg-background-dark p-2 rounded border border-gray-200 dark:border-gray-800 shadow-sm space-y-1 text-sm'>
                 <MenuItem
                   id='back'
-                  className='hover:bg-gray-100/90 px-2 py-1 rounded cursor-default'
+                  className='hover:bg-gray-100/90 dark:hover:bg-gray-700 dark:text-foreground-dark px-2 py-1 rounded cursor-default'
                   onClick={() => navigate('/')}
                 >
                   Back
                 </MenuItem>
                 <MenuItem
                   id='forward'
-                  className='hover:bg-gray-100/90 px-2 py-1 rounded cursor-default text-gray-600'
+                  className='hover:bg-gray-100/90 dark:hover:bg-gray-600 dark:hover:text-gray-500 dark:text-gray-700 px-2 py-1 rounded cursor-default text-gray-600'
                   disabled
                 >
                   Forward
                 </MenuItem>
                 <MenuItem
                   id='reload'
-                  className='hover:bg-gray-100/90 px-2 py-1 rounded cursor-default'
+                  className='hover:bg-gray-100/90 dark:hover:bg-gray-700 dark:text-foreground-dark px-2 py-1 rounded cursor-default'
                   onClick={() => window.location.reload()}
                 >
                   Reload
@@ -99,14 +101,14 @@ export default function SettingScreen() {
                 <MenuSeparator />
                 <MenuItem
                   id='sample-dialog'
-                  className='hover:bg-gray-100/90 px-2 py-1 rounded cursor-default'
+                  className='hover:bg-gray-100/90 dark:hover:bg-gray-700 dark:text-foreground-dark px-2 py-1 rounded cursor-default'
                   onClick={handleContextItem}
                 >
                   Open Dialog
                 </MenuItem>
                 <MenuItem
                   id='open-webpage'
-                  className='hover:bg-gray-100/90 px-2 py-1 rounded cursor-default'
+                  className='hover:bg-gray-100/90 dark:hover:bg-gray-700 dark:text-foreground-dark px-2 py-1 rounded cursor-default'
                   onClick={handleOpenWebpage}
                 >
                   Open webpage
@@ -114,7 +116,7 @@ export default function SettingScreen() {
                 <MenuSeparator />
                 <MenuItem
                   id='inspect'
-                  className='hover:bg-gray-100/90 px-2 py-1 rounded cursor-default'
+                  className='hover:bg-gray-100/90 dark:hover:bg-gray-700 dark:text-foreground-dark px-2 py-1 rounded cursor-default'
                   onClick={async () => await invoke('open_devtools')}
                 >
                   Inspect

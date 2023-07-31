@@ -14,13 +14,7 @@ dependencies:
   '@tauri-apps/plugin-autostart':
     specifier: 2.0.0-alpha.0
     version: 2.0.0-alpha.0
-  '@tauri-apps/plugin-log':
-    specifier: 2.0.0-alpha.0
-    version: 2.0.0-alpha.0
   '@tauri-apps/plugin-notification':
-    specifier: 2.0.0-alpha.0
-    version: 2.0.0-alpha.0
-  '@tauri-apps/plugin-os':
     specifier: 2.0.0-alpha.0
     version: 2.0.0-alpha.0
   '@tauri-apps/plugin-positioner':
@@ -41,6 +35,9 @@ dependencies:
   react-dom:
     specifier: ^18.2.0
     version: 18.2.0(react@18.2.0)
+  tauri-plugin-log-api:
+    specifier: github:tauri-apps/tauri-plugin-log#v1
+    version: github.com/tauri-apps/tauri-plugin-log/9075595196d5a66f8f3265d2aaf7e2ffeb4cb2ab
   wouter:
     specifier: ^2.11.0
     version: 2.11.0(react@18.2.0)
@@ -68,7 +65,7 @@ devDependencies:
     specifier: ^20.4.5
     version: 20.4.5
   '@types/react':
-    specifier: ^18.2.15
+    specifier: ^18.2.17
     version: 18.2.17
   '@types/react-dom':
     specifier: ^18.2.7
@@ -113,7 +110,7 @@ devDependencies:
     specifier: ^5.0.2
     version: 5.1.6
   vite:
-    specifier: ^4.4.4
+    specifier: ^4.4.7
     version: 4.4.7(@types/node@20.4.5)
 
 packages:
@@ -893,20 +890,8 @@ packages:
       '@tauri-apps/api': 2.0.0-alpha.4
     dev: false
 
-  /@tauri-apps/plugin-log@2.0.0-alpha.0:
-    resolution: {integrity: sha512-X1qYM+7EeX7UiPKriwLv/hWYLdixw+LVwfESwWEW0xafyN1hyrb+v4G9o/e3h66CDJFydJ78hGsk66XWJphbNQ==}
-    dependencies:
-      '@tauri-apps/api': 2.0.0-alpha.4
-    dev: false
-
   /@tauri-apps/plugin-notification@2.0.0-alpha.0:
     resolution: {integrity: sha512-n6RkZVUXm8AZTqcxWMiOR/RgNNOX5dfdgW2tNR8K0HjYe0ruNRsJ4B8Ke5iRqQzBJcCbwbAZjz2pIZutZS4Jrg==}
-    dependencies:
-      '@tauri-apps/api': 2.0.0-alpha.4
-    dev: false
-
-  /@tauri-apps/plugin-os@2.0.0-alpha.0:
-    resolution: {integrity: sha512-vHZW/W/5bAvr1UnaXhRg29yDQUkBuCGlxtVDKUEUTvKEdbMrKLlFuzr8RxcczLI9CTDqQ/EP7xzn7XYYQWR82Q==}
     dependencies:
       '@tauri-apps/api': 2.0.0-alpha.4
     dev: false
@@ -2892,4 +2877,12 @@ packages:
     dependencies:
       react: 18.2.0
       use-sync-external-store: 1.2.0(react@18.2.0)
+    dev: false
+
+  github.com/tauri-apps/tauri-plugin-log/9075595196d5a66f8f3265d2aaf7e2ffeb4cb2ab:
+    resolution: {tarball: https://codeload.github.com/tauri-apps/tauri-plugin-log/tar.gz/9075595196d5a66f8f3265d2aaf7e2ffeb4cb2ab}
+    name: tauri-plugin-log-api
+    version: 0.0.0
+    dependencies:
+      '@tauri-apps/api': 1.4.0
     dev: false
