@@ -12,8 +12,8 @@
                 <key>CFBundleURLSchemes</key>
                 <array>
                     <!-- register the myapp:// and myscheme:// schemes -->
+                    <!-- <string>myscheme</string> -->
                     <string>myapp</string>
-                    <string>myscheme</string>
                 </array>
             </dict>
         </array>

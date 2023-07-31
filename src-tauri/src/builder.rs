@@ -3,7 +3,9 @@
 // SPDX-License-Identifier: MIT
 
 use std::path::PathBuf;
-use tauri::{AppHandle, RunEvent, WindowBuilder, WindowEvent, WindowUrl};
+use tauri::api::dialog;
+use tauri::http::{Request, Response};
+use tauri::{AppHandle, Manager, RunEvent, WindowBuilder, WindowEvent, WindowUrl};
 use tauri_plugin_log::{fern::colors::ColoredLevelConfig, LogTarget};
 
 use crate::{command, config, menu, meta, tray, utils};
@@ -68,6 +70,9 @@ pub fn initialize() {
                 _ => {}
             }
         });
+
+    // the deeplink url will be: myapp://x-callback
+    builder = builder.register_uri_scheme_protocol("x-callback", callback);
 
     // run the application
     builder
@@ -134,4 +139,13 @@ fn create_window(app: &AppHandle, label: &str, url: &str) {
     window.listen("tauri://update-status".to_string(), move |msg| {
         println!("New status: {:?}", msg);
     });
+}
+
+pub fn callback(app: &AppHandle, req: &Request) -> Result<Response, Box<dyn std::error::Error>> {
+    println!("Callback URI: {:?}", req.uri());
+    let window = app.get_window(meta::MAIN_WINDOW).unwrap();
+    window.show().unwrap();
+    window.set_focus().unwrap();
+    dialog::message(Some(&window), "Welcome Back", "Not yet implemented!");
+    todo!()
 }
