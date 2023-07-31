@@ -4,7 +4,11 @@
         "dbaeumer.vscode-eslint",
         "EditorConfig.EditorConfig",
         "esbenp.prettier-vscode",
+        "foxundermoon.shell-format",
         "rust-lang.rust-analyzer",
-        "tauri-apps.tauri-vscode"
+        "serayuzgur.crates",
+        "tamasfe.even-better-toml",
+        "tauri-apps.tauri-vscode",
+        "vadimcn.vscode-lldb"
     ]
 }

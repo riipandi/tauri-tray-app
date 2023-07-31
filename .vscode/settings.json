@@ -1,0 +1,44 @@
+{
+    "typescript.tsdk": "node_modules/typescript/lib",
+    "typescript.enablePromptUseWorkspaceTsdk": true,
+    "eslint.workingDirectories": ["./src"],
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.fixAll": true,
+        "source.fixAll.eslint": true
+    },
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "files.exclude": {
+        "**/.tsbuildinfo": true,
+        "**/.turbo/**": true,
+        "**/*.tgz": true,
+        "**/tmp/**": true
+    },
+    "files.watcherExclude": {
+        "**/.github/FUNDING.yml": true,
+        "**/.github/ISSUE_TEMPLATE/**": true,
+        "**/.github/PULL_REQUEST_TEMPLATE.md": true,
+        "**/.tsbuildinfo": true,
+        "**/.turbo/**": true,
+        "**/tmp/*/**": true
+    },
+    "search.exclude": {
+        "**/.tsbuildinfo": true,
+        "**/.turbo/**": true,
+        "**/tmp/*/**": true
+    },
+    "tailwindCSS.files.exclude": [
+        "**/.git/**",
+        "**/.github/**",
+        "**/.vscode/**",
+        "**/node_modules/**",
+        "**/*.{md,js,ts}"
+    ],
+    "files.associations": {
+        "*.css": "tailwindcss",
+        "*.plist": "xml"
+    },
+    "[toml]": {
+        "editor.defaultFormatter": "tamasfe.even-better-toml"
+    }
+}
