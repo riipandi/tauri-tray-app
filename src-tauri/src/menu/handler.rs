@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: MIT
 
 use crate::{meta, utils};
+use tauri::api::dialog;
 use tauri::WindowMenuEvent;
 
 const SCALE_FACTOR: f64 = 1.1;
@@ -63,6 +64,7 @@ pub fn handle_menu_event(event: WindowMenuEvent) {
                 app_config.save();
             }
         }
+        "unimplemented" => dialog::message(Some(&window), "Information", "Not yet implemented!"),
         "send_feedback" => utils::open_browser(meta::FEEDBACK_URL),
         "close" => event.window().close().unwrap(),
         "quit" => std::process::exit(0),
