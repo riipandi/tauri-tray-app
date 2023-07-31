@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  html {
+    @apply bg-background-light dark:bg-background-dark overflow-hidden;
+  }
+
+  body {
+    @apply antialiased text-foreground-light dark:text-foreground-dark;
+  }
+}
+
 /* Disable text selection */
 .disable-select {
   -webkit-touch-callout: none; /* iOS Safari */

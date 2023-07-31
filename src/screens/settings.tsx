@@ -1,83 +1,100 @@
 import { useState } from 'react'
+import { useLocation } from 'wouter'
 import * as Ariakit from '@ariakit/react'
-import { Link } from 'wouter'
+import { info } from '@tauri-apps/plugin-log'
+import { message } from '@tauri-apps/api/dialog'
+import { WebviewWindow } from '@tauri-apps/api/window'
 
 export default function SettingScreen() {
+  const [_location, navigate] = useLocation()
   const [anchorRect, setAnchorRect] = useState({ x: 0, y: 0 })
   const menu = Ariakit.useMenuStore()
 
-  return (
-    <div className='mx-auto flex h-full min-h-screen w-full flex-col'>
-      <header className='mb-auto w-full' aria-hidden></header>
-      <div className='px-4 py-10 text-center sm:px-6 lg:px-8'>
-        <h1 className='block text-7xl font-bold dark:text-gray-300 dark:text-white sm:text-8xl'>
-          Holla!
-        </h1>
-        <div className='mt-6 text-lg dark:text-gray-200 dark:text-gray-400 sm:mt-8'>
-          <p className='leading-8'>This is just an example page.</p>
-        </div>
+  const handleContextMenu = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    setAnchorRect({ x: e.clientX, y: e.clientY })
+    menu.show()
+  }
 
+  const handleContextItem = async () => {
+    info('not yet implemented')
+    await message('Not yet implemented', { title: 'Tauri App', type: 'info' })
+  }
+
+  const handleInspect = async () => {
+    const webview = new WebviewWindow('external-page', {
+      url: 'https://talk.brave.com/RYPtOrN6vkOJOe-IdD5xkjfarmb4aGRy5PSmpqIZPIc',
+      title: 'External Site',
+      userAgent:
+        'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.2 Safari/605.1.15',
+    })
+    webview.once('tauri://created', function () {
+      info('webview window successfully created')
+    })
+    webview.once('tauri://error', function (e) {
+      console.error(e)
+    })
+  }
+
+  return (
+    <div className='flex h-full w-full min-h-screen flex-col justify-center'>
+      <div className='p-8 sm:p-12 lg:p-20 h-full w-full'>
         <div
-          className='flex mt-8 bg-white max-w-sm mx-auto rounded p-4'
-          onContextMenu={(event) => {
-            event.preventDefault()
-            setAnchorRect({ x: event.clientX, y: event.clientY })
-            menu.show()
-          }}
+          className='bg-white/50 w-full h-full min-h-[540px] rounded-lg border-2 border-dashed border-gray-300 p-12 text-center flex flex-col justify-center'
+          onContextMenu={handleContextMenu}
         >
-          Right click here
+          <h1 className='block text-3xl font-bold dark:text-gray-300 dark:text-white sm:text-4xl'>
+            Howdy
+          </h1>
+          <div className='mt-3 text-base sm:text-lg text-gray-700 dark:text-gray-400 sm:mt-4'>
+            <p className='leading-8'>
+              Right click on your mouse in this area to see custom context menu.
+            </p>
+          </div>
+
+          {/* begin context menu */}
           <Ariakit.Menu
             store={menu}
-            modal
             getAnchorRect={() => anchorRect}
-            className='relative flex w-full flex-col bg-white shadow p-2 rounded overflow-auto text-sm'
+            className='disable-select relative flex w-full flex-col bg-white shadow p-2 rounded overflow-auto text-sm'
+            modal
           >
-            <Ariakit.MenuItem className='hover:bg-gray-200 rounded cursor-default py-1 px-2'>
+            <Ariakit.MenuItem
+              className='hover:bg-gray-200 rounded cursor-default py-1 px-2'
+              onClick={() => navigate('/')}
+            >
               Back
             </Ariakit.MenuItem>
             <Ariakit.MenuItem
               className='hover:bg-gray-200 rounded cursor-default py-1 px-2 text-gray-400'
+              onClick={handleContextItem}
               disabled
             >
               Forward
             </Ariakit.MenuItem>
-            <Ariakit.MenuItem className='hover:bg-gray-200 rounded cursor-default py-1 px-2'>
+            <Ariakit.MenuItem
+              className='hover:bg-gray-200 rounded cursor-default py-1 px-2'
+              onClick={() => window.location.reload()}
+            >
               Reload
             </Ariakit.MenuItem>
             <Ariakit.MenuSeparator className='my-1' />
-            <Ariakit.MenuItem className='hover:bg-gray-200 rounded cursor-default py-1 px-2'>
+            <Ariakit.MenuItem
+              className='hover:bg-gray-200 rounded cursor-default py-1 px-2'
+              onClick={handleContextItem}
+            >
               View Page Source
             </Ariakit.MenuItem>
-            <Ariakit.MenuItem className='hover:bg-gray-200 rounded cursor-default py-1 px-2'>
+            <Ariakit.MenuItem
+              className='hover:bg-gray-200 rounded cursor-default py-1 px-2'
+              onClick={handleInspect}
+            >
               Inspect
             </Ariakit.MenuItem>
           </Ariakit.Menu>
-        </div>
-
-        <div className='mt-8 flex flex-col items-center justify-center'>
-          <Link
-            href='/'
-            className='inline-flex w-full items-center justify-center gap-2 rounded-md border border-transparent px-3 py-2 text-sm font-semibold text-blue-500 ring-offset-white transition-all hover:text-blue-600 focus:outline-none focus:ring-1 focus:ring-blue-500 focus:ring-offset-2 dark:ring-offset-slate-900 sm:w-auto'
-          >
-            <svg className='h-2.5 w-2.5' width={20} height={20} viewBox='0 0 16 16' fill='none'>
-              <path
-                d='M11.2792 1.64001L5.63273 7.28646C5.43747 7.48172 5.43747 7.79831 5.63273 7.99357L11.2792 13.64'
-                stroke='currentColor'
-                strokeWidth={2}
-                strokeLinecap='round'
-              />
-            </svg>
-            Back to main page
-          </Link>
+          {/* end context menu */}
         </div>
       </div>
-      <footer className='mt-auto py-5 text-center'>
-        <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
-          <p className='text-sm text-gray-500'>
-            © All Rights Reserved. {new Date().getFullYear()}
-          </p>
-        </div>
-      </footer>
     </div>
   )
 }

@@ -14,10 +14,19 @@ dependencies:
   '@tauri-apps/plugin-autostart':
     specifier: 2.0.0-alpha.0
     version: 2.0.0-alpha.0
+  '@tauri-apps/plugin-log':
+    specifier: 2.0.0-alpha.0
+    version: 2.0.0-alpha.0
   '@tauri-apps/plugin-notification':
     specifier: 2.0.0-alpha.0
     version: 2.0.0-alpha.0
   '@tauri-apps/plugin-os':
+    specifier: 2.0.0-alpha.0
+    version: 2.0.0-alpha.0
+  '@tauri-apps/plugin-positioner':
+    specifier: 2.0.0-alpha.0
+    version: 2.0.0-alpha.0
+  '@tauri-apps/plugin-store':
     specifier: 2.0.0-alpha.0
     version: 2.0.0-alpha.0
   '@tauri-apps/plugin-updater':
@@ -32,15 +41,6 @@ dependencies:
   react-dom:
     specifier: ^18.2.0
     version: 18.2.0(react@18.2.0)
-  tauri-plugin-log-api:
-    specifier: github:tauri-apps/tauri-plugin-log#v1
-    version: github.com/tauri-apps/tauri-plugin-log/9075595196d5a66f8f3265d2aaf7e2ffeb4cb2ab
-  tauri-plugin-positioner-api:
-    specifier: ^0.2.7
-    version: 0.2.7
-  tauri-plugin-store-api:
-    specifier: github:tauri-apps/tauri-plugin-store#v1
-    version: github.com/tauri-apps/tauri-plugin-store/a65ce9bfb168a9a3cd7ed4102b9f22770cc3abfa
   wouter:
     specifier: ^2.11.0
     version: 2.11.0(react@18.2.0)
@@ -865,6 +865,12 @@ packages:
       '@tauri-apps/api': 2.0.0-alpha.4
     dev: false
 
+  /@tauri-apps/plugin-log@2.0.0-alpha.0:
+    resolution: {integrity: sha512-X1qYM+7EeX7UiPKriwLv/hWYLdixw+LVwfESwWEW0xafyN1hyrb+v4G9o/e3h66CDJFydJ78hGsk66XWJphbNQ==}
+    dependencies:
+      '@tauri-apps/api': 2.0.0-alpha.4
+    dev: false
+
   /@tauri-apps/plugin-notification@2.0.0-alpha.0:
     resolution: {integrity: sha512-n6RkZVUXm8AZTqcxWMiOR/RgNNOX5dfdgW2tNR8K0HjYe0ruNRsJ4B8Ke5iRqQzBJcCbwbAZjz2pIZutZS4Jrg==}
     dependencies:
@@ -873,6 +879,18 @@ packages:
 
   /@tauri-apps/plugin-os@2.0.0-alpha.0:
     resolution: {integrity: sha512-vHZW/W/5bAvr1UnaXhRg29yDQUkBuCGlxtVDKUEUTvKEdbMrKLlFuzr8RxcczLI9CTDqQ/EP7xzn7XYYQWR82Q==}
+    dependencies:
+      '@tauri-apps/api': 2.0.0-alpha.4
+    dev: false
+
+  /@tauri-apps/plugin-positioner@2.0.0-alpha.0:
+    resolution: {integrity: sha512-daGAi75wD61YmGhzjtbm3t1/n6sWK2i9eYSn1U2JgB36k8t47nrF5SKamh55/9pRlJxHk3a/O41r5rjCLRzZ2A==}
+    dependencies:
+      '@tauri-apps/api': 2.0.0-alpha.4
+    dev: false
+
+  /@tauri-apps/plugin-store@2.0.0-alpha.0:
+    resolution: {integrity: sha512-l25YCsrafqrEZf6GHkuP8rtaEceJfTXrlVVqmooxjwe8aSPOBwyNNrBxe/RApX/J6xJ/zaMibzadMYq+aDaXzg==}
     dependencies:
       '@tauri-apps/api': 2.0.0-alpha.4
     dev: false
@@ -2135,12 +2153,6 @@ packages:
       - ts-node
     dev: true
 
-  /tauri-plugin-positioner-api@0.2.7:
-    resolution: {integrity: sha512-jwqRHo59UU3aJbffEFkWVhBorjQg1WNeDa4W4eWVnaTqLals+/fqgHdNwTGzG1+LLdaJSS2FUy4XSwEDAWvERQ==}
-    dependencies:
-      '@tauri-apps/api': 1.4.0
-    dev: false
-
   /text-table@0.2.0:
     resolution: {integrity: sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==}
     dev: true
@@ -2306,20 +2318,4 @@ packages:
     dependencies:
       react: 18.2.0
       use-sync-external-store: 1.2.0(react@18.2.0)
-    dev: false
-
-  github.com/tauri-apps/tauri-plugin-log/9075595196d5a66f8f3265d2aaf7e2ffeb4cb2ab:
-    resolution: {tarball: https://codeload.github.com/tauri-apps/tauri-plugin-log/tar.gz/9075595196d5a66f8f3265d2aaf7e2ffeb4cb2ab}
-    name: tauri-plugin-log-api
-    version: 0.0.0
-    dependencies:
-      '@tauri-apps/api': 1.4.0
-    dev: false
-
-  github.com/tauri-apps/tauri-plugin-store/a65ce9bfb168a9a3cd7ed4102b9f22770cc3abfa:
-    resolution: {tarball: https://codeload.github.com/tauri-apps/tauri-plugin-store/tar.gz/a65ce9bfb168a9a3cd7ed4102b9f22770cc3abfa}
-    name: tauri-plugin-store-api
-    version: 0.0.0
-    dependencies:
-      '@tauri-apps/api': 1.4.0
     dev: false

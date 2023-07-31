@@ -17,6 +17,9 @@ tauri-build = { version = "1.4", features = [] }
 [dependencies]
 tauri = { version = "1.4", features = [
   "devtools",
+  "dialog-all",
+  "fs-all",
+  "http-request",
   "icon-ico",
   "icon-png",
   "macos-private-api",

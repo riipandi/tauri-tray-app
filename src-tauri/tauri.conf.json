@@ -18,10 +18,22 @@
                 "all": false,
                 "open": "^(.+)/([^/]+)$"
             },
+            "fs": {
+                "all": true,
+                "scope": ["$HOME/Tauri App", "$HOME/Tauri App/**/*"]
+            },
+            "http": {
+                "all": false,
+                "request": true,
+                "scope": ["https://github.com/riipandi/tauri-tray-app/*"]
+            },
             "notification": {
                 "all": true
             },
             "window": {
+                "all": true
+            },
+            "dialog": {
                 "all": true
             }
         },

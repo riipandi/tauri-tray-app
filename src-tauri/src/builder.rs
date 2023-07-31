@@ -8,14 +8,31 @@ use tauri_plugin_log::{fern::colors::ColoredLevelConfig, LogTarget};
 
 use crate::{command, config, menu, meta, tray, utils};
 
+#[cfg(debug_assertions)]
+const LOG_TARGETS: [LogTarget; 2] = [LogTarget::Stdout, LogTarget::Webview];
+
+#[cfg(not(debug_assertions))]
+const LOG_TARGETS: [LogTarget; 2] = [LogTarget::Stdout, LogTarget::LogDir];
+
 pub fn initialize() {
     let mut builder = tauri::Builder::default();
 
-    #[cfg(debug_assertions)]
-    const LOG_TARGETS: [LogTarget; 2] = [LogTarget::Stdout, LogTarget::Webview];
-
-    #[cfg(not(debug_assertions))]
-    const LOG_TARGETS: [LogTarget; 2] = [LogTarget::Stdout, LogTarget::LogDir];
+    // register tauri plugins
+    builder = builder
+        .plugin(
+            tauri_plugin_log::Builder::default()
+                .targets(LOG_TARGETS)
+                .with_colors(ColoredLevelConfig::default())
+                .level_for("tauri", log::LevelFilter::Info)
+                .level(log::LevelFilter::Debug)
+                .build(),
+        )
+        .plugin(tauri_plugin_store::Builder::default().build())
+        // .plugin(tauri_plugin_os::init())
+        // .plugin(tauri_plugin_window::init())
+        // .plugin(tauri_plugin_notification::init())
+        // .plugin(tauri_plugin_autostart::init(MacosLauncher::LaunchAgent, Some(vec!["--flag1", "--flag2"])))
+        .plugin(tauri_plugin_positioner::init());
 
     // setup and create window
     builder = builder.setup(|app| {
@@ -29,22 +46,6 @@ pub fn initialize() {
 
         Ok(())
     });
-
-    // register tauri plugins
-    builder = builder
-        .plugin(
-            tauri_plugin_log::Builder::default()
-                .targets(LOG_TARGETS)
-                .with_colors(ColoredLevelConfig::default())
-                .level_for("tauri", log::LevelFilter::Info)
-                .level(log::LevelFilter::Debug)
-                .build(),
-        )
-        // .plugin(tauri_plugin_os::init())
-        // .plugin(tauri_plugin_window::init())
-        // .plugin(tauri_plugin_notification::init())
-        // .plugin(tauri_plugin_autostart::init(MacosLauncher::LaunchAgent, Some(vec!["--flag1", "--flag2"])))
-        .plugin(tauri_plugin_positioner::init());
 
     // setup window menu
     builder = builder
@@ -89,27 +90,26 @@ const JS_INIT_SCRIPT: &str = r#"
 fn create_window(app: &AppHandle, label: &str, url: &str) {
     let app_config = config::AppConfig::load();
     let window_url = WindowUrl::App(PathBuf::from(url));
-    let mut builder = WindowBuilder::new(app, label, window_url);
+    let mut wb = WindowBuilder::new(app, label, window_url);
 
-    builder = builder.initialization_script(JS_INIT_SCRIPT);
-
-    builder = builder
+    wb = wb
+        .initialization_script(JS_INIT_SCRIPT)
         .user_agent(meta::USER_AGENT)
-        .min_inner_size(460.0, 680.0)
+        .min_inner_size(520.0, 680.0)
         .inner_size(940.0, 720.0)
         .resizable(true)
         .enable_clipboard_access()
         .accept_first_mouse(true);
 
     #[cfg(target_os = "macos")]
-    let window = builder
+    let window = wb
         .hidden_title(true)
         .title_bar_style(tauri::TitleBarStyle::Overlay)
         .build()
         .expect("error while creating window");
 
     #[cfg(not(target_os = "macos"))]
-    let window = builder.build().expect("error while creating window");
+    let window = wb.build().expect("error while creating window");
 
     // zoom webview
     utils::zoom_webview(&window, app_config.zoom_factor);
@@ -117,4 +117,8 @@ fn create_window(app: &AppHandle, label: &str, url: &str) {
     window
         .set_title(meta::APP_TITLE)
         .expect("error while setting window title");
+
+    window.listen("tauri://update-status".to_string(), move |msg| {
+        println!("New status: {:?}", msg);
+    });
 }

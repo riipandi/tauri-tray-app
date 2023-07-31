@@ -4,9 +4,9 @@ import { Route, Switch } from 'wouter'
 
 import { cn, disableBrowserEvents } from './libraries/utils'
 import WindowControls from './components/ui-controls'
-import MainScreen from './screens/default'
+import WelcomeScreen from './screens/welcome'
 import SettingScreen from './screens/settings'
-import NotFoundScreen from './screens/error404'
+import NotFoundScreen from './screens/not-found'
 import { TailwindIndicator } from './components/common'
 
 export default function App() {
@@ -21,7 +21,7 @@ export default function App() {
   }, [platform, disableBrowserEvents])
 
   return (
-    <div className={cn('disable-select antialiased bg-gray-100 dark:bg-black')}>
+    <div className={cn('disable-select')}>
       <WindowControls
         platform='darwin'
         className={cn(
@@ -31,7 +31,7 @@ export default function App() {
       />
 
       <Switch>
-        <Route path='/' children={<MainScreen />} />
+        <Route path='/' children={<WelcomeScreen />} />
         <Route path='/settings' children={<SettingScreen />} />
         <Route children={<NotFoundScreen />} />
       </Switch>

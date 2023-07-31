@@ -10,7 +10,7 @@ indent_style = space
 indent_size = 2
 max_line_length = 100
 
-[*.{prettierrc,json,jsonc,rs}]
+[*.{prettierrc,json,jsonc,plist,rs}]
 indent_size = 4
 max_line_length = off
 trim_trailing_whitespace = false

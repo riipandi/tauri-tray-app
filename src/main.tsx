@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { attachConsole } from 'tauri-plugin-log-api'
+import { attachConsole } from '@tauri-apps/plugin-log'
 
 import App from './app'
 import './styles.css'
