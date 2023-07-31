@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Button } from '@ariakit/react'
 import { invoke } from '@tauri-apps/api/tauri'
 import { info } from '@tauri-apps/plugin-log'
 
@@ -62,12 +61,12 @@ export default function WelcomeScreen() {
               autoComplete='off'
               autoCorrect='off'
             />
-            <Button
+            <button
               type='submit'
               className='rounded-lg border border-blue-100 bg-blue-100 px-5 py-2 text-center text-sm font-medium text-blue-600 transition-all hover:border-blue-200 hover:bg-blue-200 focus:ring focus:ring-blue-50 disabled:border-blue-50 disabled:bg-blue-50 disabled:text-blue-400'
             >
               Say Hello
-            </Button>
+            </button>
           </form>
         </div>
         <p className={cn(name === '' ? 'hidden' : 'dark:text-gray-100 mt-8 text-center')}>

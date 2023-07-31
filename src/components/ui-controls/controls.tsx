@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { appWindow } from '@tauri-apps/api/window'
-import { Button } from '@ariakit/react'
 
 import { Icons } from './icons'
 import { cn } from '../../libraries/utils'
@@ -33,7 +32,7 @@ export function Windows({ className, ...props }: any) {
 
   return (
     <div className={cn('inline-flex', className)} {...props}>
-      <Button
+      <button
         onClick={minimizeWindow}
         className={cn(
           'items-center justify-center inline-flex',
@@ -41,8 +40,8 @@ export function Windows({ className, ...props }: any) {
         )}
       >
         <Icons.minimizeWin />
-      </Button>
-      <Button
+      </button>
+      <button
         onClick={maximizeWindow}
         className={cn(
           'items-center justify-center inline-flex',
@@ -50,8 +49,8 @@ export function Windows({ className, ...props }: any) {
         )}
       >
         {!isWindowMaximized ? <Icons.maximizeWin /> : <Icons.maximizeRestoreWin />}
-      </Button>
-      <Button
+      </button>
+      <button
         onClick={closeWindow}
         className={cn(
           'items-center justify-center inline-flex',
@@ -59,7 +58,7 @@ export function Windows({ className, ...props }: any) {
         )}
       >
         <Icons.closeWin />
-      </Button>
+      </button>
     </div>
   )
 }
@@ -100,7 +99,7 @@ export function Gnome({ className, ...props }: React.HTMLProps<HTMLDivElement>) 
 
   return (
     <div className={cn('inline-flex gap-4 items-center justify-center px-2', className)} {...props}>
-      <Button
+      <button
         onClick={minimizeWindow}
         className={cn(
           'items-center justify-center inline-flex',
@@ -108,8 +107,8 @@ export function Gnome({ className, ...props }: React.HTMLProps<HTMLDivElement>) 
         )}
       >
         <Icons.minimizeWin className='w-[9px]' />
-      </Button>
-      <Button
+      </button>
+      <button
         onClick={maximizeWindow}
         className={cn(
           'items-center justify-center inline-flex',
@@ -121,8 +120,8 @@ export function Gnome({ className, ...props }: React.HTMLProps<HTMLDivElement>) 
         ) : (
           <Icons.maximizeRestoreWin className='h-[9px] w-[9px]' />
         )}
-      </Button>
-      <Button
+      </button>
+      <button
         onClick={closeWindow}
         className={cn(
           'items-center justify-center inline-flex',
@@ -130,7 +129,7 @@ export function Gnome({ className, ...props }: React.HTMLProps<HTMLDivElement>) 
         )}
       >
         <Icons.closeWin className='h-2 w-2' />
-      </Button>
+      </button>
     </div>
   )
 }

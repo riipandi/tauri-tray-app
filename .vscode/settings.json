@@ -20,11 +20,13 @@
         "**/.github/PULL_REQUEST_TEMPLATE.md": true,
         "**/.tsbuildinfo": true,
         "**/.turbo/**": true,
+        "**/.vscode/**": true,
         "**/tmp/*/**": true
     },
     "search.exclude": {
         "**/.tsbuildinfo": true,
         "**/.turbo/**": true,
+        "**/.vscode/**": true,
         "**/tmp/*/**": true
     },
     "tailwindCSS.files.exclude": [

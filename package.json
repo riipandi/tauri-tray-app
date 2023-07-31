@@ -17,7 +17,7 @@
         "tauri": "tauri"
     },
     "dependencies": {
-        "@ariakit/react": "^0.2.14",
+        "@ark-ui/react": "^0.9.0",
         "@tauri-apps/api": "^1.4.0",
         "@tauri-apps/plugin-autostart": "2.0.0-alpha.0",
         "@tauri-apps/plugin-log": "2.0.0-alpha.0",
