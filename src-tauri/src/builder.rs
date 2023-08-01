@@ -2,15 +2,14 @@
 // SPDX-License-Identifier: Apache-2.0
 // SPDX-License-Identifier: MIT
 
-use log::info;
-use std::path::PathBuf;
 use tauri::api::dialog;
 use tauri::http::{Request, Response};
-use tauri::{AppHandle, Manager, RunEvent, WindowBuilder, WindowEvent, WindowUrl};
+use tauri::{AppHandle, Manager, RunEvent, WindowEvent};
 use tauri_plugin_log::{fern::colors::ColoredLevelConfig, LogTarget};
 use tauri_plugin_store::StoreBuilder;
 
-use crate::{command, config, menu, meta, tray, utils};
+use crate::config::AppConfig;
+use crate::{command, menu, meta, tray, utils};
 
 #[cfg(debug_assertions)]
 const LOG_TARGETS: [LogTarget; 2] = [LogTarget::Stdout, LogTarget::Webview];
@@ -26,7 +25,7 @@ const LOG_LEVEL: log::LevelFilter = log::LevelFilter::Error;
 
 pub fn initialize() {
     let mut builder = tauri::Builder::default();
-    let _app_config = config::AppConfig::load();
+    let _app_config = AppConfig::load();
 
     // register tauri plugins
     builder = builder
@@ -46,35 +45,19 @@ pub fn initialize() {
 
     // setup and create window
     builder = builder.setup(|app| {
-        let handle = app.handle();
-
         // Set activation policy to `Accessory` to prevent
         // the app icon from showing on the dock.
         #[cfg(target_os = "macos")]
         app.set_activation_policy(tauri::ActivationPolicy::Regular);
 
-        let config_dir: std::path::PathBuf = handle.path_resolver().app_config_dir().unwrap();
-        let config_path: std::path::PathBuf = config_dir.join("settings.dat");
-        let store = StoreBuilder::new(handle.clone(), config_path).build();
-
-        // note that values must be serd_json::Value to be compatible with JS
-        // store.insert(
-        //     "a".to_string(),
-        //     serde_json::json!({
-        //       "ui_config": {
-        //         "state": {
-        //           "darkmode": false
-        //         },
-        //         "version": 0
-        //       }
-        //     }
-        //     ),
-        // );
+        let config_dir = app.handle().path_resolver().app_config_dir().unwrap();
+        let config_path = config_dir.join("settings.json");
+        let store = StoreBuilder::new(app.handle(), config_path).build();
 
         println!("STORE: {:?}", store.has("ui_config"));
 
         // Create main window for the application.
-        create_window(&handle, meta::MAIN_WINDOW, "index.html");
+        utils::create_window(&app.handle(), meta::MAIN_WINDOW, "index.html");
 
         Ok(())
     });
@@ -128,84 +111,34 @@ pub fn initialize() {
             //             date,
             //             version,
             //         } => {
-            //             info!("update available {} {:?} {}", body, date, version);
+            //             log::info!("update available {} {:?} {}", body, date, version);
             //         }
             //         // Emitted when the download is about to be started.
-            //         tauri::UpdaterEvent::Pending => info!("update is pending!"),
+            //         tauri::UpdaterEvent::Pending => log::info!("update is pending!"),
             //         tauri::UpdaterEvent::DownloadProgress {
             //             chunk_length,
             //             content_length,
             //         } => {
-            //             info!("downloaded {} of {:?}", chunk_length, content_length);
+            //             log::info!("downloaded {} of {:?}", chunk_length, content_length);
             //         }
             //         // Emitted when the download has finished and the update is about to be installed.
-            //         tauri::UpdaterEvent::Downloaded => info!("update has been downloaded!"),
+            //         tauri::UpdaterEvent::Downloaded => log::info!("update has been downloaded!"),
             //         // Emitted when the update was installed. You can then ask to restart the app.
-            //         tauri::UpdaterEvent::Updated => info!("app has been updated"),
+            //         tauri::UpdaterEvent::Updated => log::info!("app has been updated"),
             //         // Emitted when the app already has the latest version installed
             //         // and an update is not needed.
-            //         tauri::UpdaterEvent::AlreadyUpToDate => info!("app is already up to date"),
+            //         tauri::UpdaterEvent::AlreadyUpToDate => log::info!("app is already up to date"),
             //         // Emitted when there is an error with the updater. We suggest
             //         // to listen to this event even if the default dialog is enabled.
-            //         tauri::UpdaterEvent::Error(error) => info!("failed to update: {}", error),
+            //         tauri::UpdaterEvent::Error(error) => log::info!("failed to update: {}", error),
             //     }
             // }
             _ => {}
         });
 }
 
-const JS_INIT_SCRIPT: &str = r#"
-    (function() {
-        console.info('init script: not yet implemented');
-    })();
-"#;
-
-fn create_window(app: &AppHandle, label: &str, url: &str) {
-    let app_config = config::AppConfig::load();
-    let window_url = WindowUrl::App(PathBuf::from(url));
-    let mut wb = WindowBuilder::new(app, label, window_url);
-
-    wb = wb
-        .initialization_script(JS_INIT_SCRIPT)
-        .user_agent(meta::USER_AGENT)
-        .min_inner_size(620.0, 680.0)
-        .inner_size(940.0, 720.0)
-        .resizable(true)
-        .enable_clipboard_access()
-        .accept_first_mouse(true)
-        .focused(true);
-
-    if app_config.enable_darkmode {
-        wb = wb.theme(Some(tauri::Theme::Dark))
-    } else {
-        wb = wb.theme(Some(tauri::Theme::Light))
-    }
-
-    #[cfg(target_os = "macos")]
-    let window = wb
-        .tabbing_identifier(meta::APP_NAME)
-        .hidden_title(true)
-        .title_bar_style(tauri::TitleBarStyle::Overlay)
-        .build()
-        .expect("error while creating window");
-
-    #[cfg(not(target_os = "macos"))]
-    let window = wb.build().expect("error while creating window");
-
-    // zoom webview
-    utils::zoom_webview(&window, app_config.zoom_factor);
-
-    window
-        .set_title(meta::APP_TITLE)
-        .expect("error while setting window title");
-
-    window.listen("tauri://update-status".to_string(), move |msg| {
-        info!("New status: {:?}", msg);
-    });
-}
-
 fn callback(app: &AppHandle, req: &Request) -> Result<Response, Box<dyn std::error::Error>> {
-    info!("Callback URI: {:?}", req.uri());
+    log::info!("Callback URI: {:?}", req.uri());
     let window = app.get_window(meta::MAIN_WINDOW).unwrap();
     window.show().unwrap();
     window.set_focus().unwrap();

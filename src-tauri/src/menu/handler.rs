@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // SPDX-License-Identifier: MIT
 
+use crate::config::AppConfig;
 use crate::{meta, utils};
 use tauri::api::dialog;
 use tauri::WindowMenuEvent;
@@ -9,13 +10,13 @@ use tauri::WindowMenuEvent;
 const SCALE_FACTOR: f64 = 1.1;
 
 pub fn handle_menu_event(event: WindowMenuEvent) {
-    let mut app_config = crate::config::AppConfig::load();
+    let mut app_config = AppConfig::load();
     let window = event.window();
 
     match event.menu_item_id() {
         "devtools" => window.open_devtools(),
         "reload" => window.eval("location.reload();").unwrap(),
-        // "check_update" => crate::command::check_update(handle, window),
+        "check_update" => dialog::message(Some(&window), "Information", "Not yet implemented!"),
         "preferences" => {
             let js_script = "window.location.replace('/settings')";
             window.eval(js_script).unwrap();

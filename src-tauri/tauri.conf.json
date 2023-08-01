@@ -20,7 +20,7 @@
             },
             "fs": {
                 "all": true,
-                "scope": ["$RESOURCE/*", "$HOME/Tauri App", "$HOME/Tauri App/**/*"]
+                "scope": ["$RESOURCE/*", "$HOME/Tauri App/*"]
             },
             "http": {
                 "all": false,

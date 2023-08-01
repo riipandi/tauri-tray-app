@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { platform, type Platform } from '@tauri-apps/api/os'
 import { Route, Switch } from 'wouter'
 
-import { cn, disableBrowserEvents } from './libraries/utils'
+import { cn } from './libraries/utils'
 import { TailwindIndicator } from './components/common'
 import WindowControls from './components/ui-controls'
 import WelcomeScreen from './screens/welcome'
@@ -17,9 +17,8 @@ export default function App() {
   }, [])
 
   useEffect(() => {
-    disableBrowserEvents('contextmenu')
     fetchOsType()
-  }, [disableBrowserEvents, fetchOsType])
+  }, [fetchOsType])
 
   return (
     <div className={cn('disable-select')}>

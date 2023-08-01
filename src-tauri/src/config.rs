@@ -34,11 +34,17 @@ impl Default for AppConfig {
 }
 
 impl AppConfig {
+    #[allow(dead_code)]
+    fn config_path(handle: tauri::AppHandle) -> std::path::PathBuf {
+        let config_dir = handle.path_resolver().app_config_dir().unwrap();
+        return config_dir.join("settings.json");
+    }
+
     fn config_dir() -> std::path::PathBuf {
         return home_dir().unwrap().join(".config").join(meta::APP_NAME);
     }
 
-    fn config_path() -> std::path::PathBuf {
+    fn custom_config_path() -> std::path::PathBuf {
         return Self::config_dir().join("config.json");
     }
 
@@ -50,26 +56,25 @@ impl AppConfig {
     }
 
     pub fn load() -> Self {
-        let config_path = Self::config_path();
+        let custom_config_path = Self::custom_config_path();
 
-        if !config_path.exists() {
+        if !custom_config_path.exists() {
             Self::create_config_dir();
             return Self::default();
         }
 
-        let config_file = std::fs::File::open(config_path).unwrap();
+        let config_file = std::fs::File::open(custom_config_path).unwrap();
 
         return serde_json::from_reader(config_file).unwrap();
     }
 
     pub fn save(&self) {
-        let config_path = Self::config_path();
+        let custom_config_path = Self::custom_config_path();
 
-        let config_file = std::fs::File::create(config_path).unwrap();
+        let config_file = std::fs::File::create(custom_config_path).unwrap();
         serde_json::to_writer_pretty(config_file, self).unwrap();
     }
 
-    #[allow(dead_code)]
     pub fn dark_mode_state(&self) -> &'static str {
         if self.enable_darkmode {
             return "Disable Dark Mode";

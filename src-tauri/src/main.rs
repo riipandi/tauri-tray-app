@@ -14,6 +14,7 @@ mod command;
 mod config;
 mod menu;
 mod meta;
+mod scripts;
 mod tray;
 mod utils;
 
