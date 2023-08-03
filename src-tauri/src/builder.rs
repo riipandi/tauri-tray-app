@@ -38,9 +38,6 @@ pub fn initialize() {
                 .build(),
         )
         .plugin(tauri_plugin_store::Builder::default().build())
-        // .plugin(tauri_plugin_window::init())
-        // .plugin(tauri_plugin_notification::init())
-        // .plugin(tauri_plugin_autostart::init(MacosLauncher::LaunchAgent, Some(vec!["--flag1", "--flag2"])))
         .plugin(tauri_plugin_positioner::init());
 
     // setup and create window
@@ -54,10 +51,12 @@ pub fn initialize() {
         let config_path = config_dir.join("settings.json");
         let store = StoreBuilder::new(app.handle(), config_path).build();
 
-        println!("STORE: {:?}", store.has("ui_config"));
+        log::info!("STORE: {:?}", store.has("ui_config"));
 
         // Create main window for the application.
         utils::create_window(&app.handle(), meta::MAIN_WINDOW, "index.html");
+
+        log::info!("Platform: {}-{}", meta::PKG_OS, meta::PKG_ARCH);
 
         Ok(())
     });
@@ -70,7 +69,7 @@ pub fn initialize() {
 
     // configure tray menu
     builder = builder
-        .system_tray(tray::create_tray_menu())
+        .system_tray(tray::build_menu())
         .on_system_tray_event(tray::handle_tray_event)
         .on_window_event(|e| {
             match e.event() {

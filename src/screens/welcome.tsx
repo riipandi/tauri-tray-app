@@ -21,10 +21,7 @@ export default function WelcomeScreen() {
   }
 
   const inputRef = useRef<HTMLInputElement>(null)
-  const handleFocus = useCallback(() => {
-    info('Focus triggered from hotkeys')
-    inputRef.current?.focus()
-  }, [inputRef])
+  const handleFocus = useCallback(() => inputRef.current?.focus(), [inputRef])
 
   const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Escape') {

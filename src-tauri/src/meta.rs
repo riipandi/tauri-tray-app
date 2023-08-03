@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 // SPDX-License-Identifier: MIT
 
-// pub const PKG_ARCH: &'static str = std::env::consts::ARCH;
-// pub const PKG_OS: &'static str = std::env::consts::OS;
+pub const PKG_ARCH: &'static str = std::env::consts::ARCH;
+pub const PKG_OS: &'static str = std::env::consts::OS;
 
 pub const APP_NAME: &'static str = env!("CARGO_PKG_NAME");
 pub const APP_TITLE: &'static str = "Tauri App";

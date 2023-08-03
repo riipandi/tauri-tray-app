@@ -9,6 +9,8 @@ pub use self::handler::*;
 
 // macOS only
 pub fn build_menu() -> tauri::Menu {
+    log::debug!("Registering application menu...");
+
     #[cfg(target_os = "macos")]
     let menus = tauri::Menu::new().add_submenu(items::macos_app_menu());
 

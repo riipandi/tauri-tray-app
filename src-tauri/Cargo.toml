@@ -29,11 +29,9 @@ tauri = { version = "1.4", features = [
   "updater",
   "window-all",
 ] }
-# tauri-plugin-os = "2.0.0-alpha.0"
 tauri-plugin-log = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1", features = [
   "colored",
 ] }
-tauri-plugin-store = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 tokio = { version = "1.28", features = ["macros", "time"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = { version = "1.0" }
@@ -55,11 +53,8 @@ objc = { version = "0.2.7" }
 
 # Updater plugin only for desktop apps
 [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
+tauri-plugin-store = { git = "https://github.com/tauri-apps/plugins-workspace", branch = "v1" }
 tauri-plugin-positioner = { version = "1.0", features = ["system-tray"] }
-# tauri-plugin-notification = "2.0.0-alpha"
-# tauri-plugin-window = "2.0.0-alpha.0"
-# tauri-plugin-autostart = "2.0.0-alpha"
-# tauri-plugin-updater = "2.0.0-alpha.0"
 
 [features]
 # this feature is used for production builds or when `devPath` points to the filesystem

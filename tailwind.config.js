@@ -1,6 +1,7 @@
-import type { Config } from 'tailwindcss'
+import { iconsPlugin, getIconCollections } from '@egoist/tailwindcss-icons'
 import colors from 'tailwindcss/colors'
 
+/** @type {import('tailwindcss').Config} */
 export default {
   content: ['src/**/*.{ts,tsx}', 'index.html'],
   darkMode: 'media',
@@ -21,5 +22,6 @@ export default {
     require('@tailwindcss/typography'),
     require('tailwindcss-animate'),
     require('tailwind-scrollbar')({ nocompatible: true }),
+    iconsPlugin({ collections: getIconCollections(['heroicons']) }),
   ],
-} satisfies Config
+}
