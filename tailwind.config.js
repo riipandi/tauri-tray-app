@@ -1,4 +1,5 @@
 import { iconsPlugin, getIconCollections } from '@egoist/tailwindcss-icons'
+import { fontFamily } from 'tailwindcss/defaultTheme'
 import colors from 'tailwindcss/colors'
 
 /** @type {import('tailwindcss').Config} */
@@ -7,6 +8,10 @@ export default {
   darkMode: 'media',
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Inter', ...fontFamily.sans],
+        mono: ['JetBrains Mono', ...fontFamily.mono],
+      },
       colors: {
         'gray': colors.neutral,
         'background-light': colors.neutral[50],
