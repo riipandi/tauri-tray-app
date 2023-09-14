@@ -62,16 +62,7 @@
             "windows": {
                 "allowDowngrades": true,
                 "certificateThumbprint": null,
-                "digestAlgorithm": "sha256",
-                "timestampUrl": "",
-                "nsis": {
-                    "template": "",
-                    "license": "",
-                    "headerImage": "",
-                    "sidebarImage": "",
-                    "installMode": "both",
-                    "installerIcon": "icons/icon.ico"
-                }
+                "digestAlgorithm": "sha256"
             },
             "deb": {
                 "files": {},
