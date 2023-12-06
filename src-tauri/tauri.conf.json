@@ -1,5 +1,5 @@
 {
-    "$schema": "https://github.com/tauri-apps/tauri/releases/download/tauri-build-v1.4.0/schema.json",
+    "$schema": "https://github.com/tauri-apps/tauri/releases/download/tauri-build-v1.5.0/schema.json",
     "build": {
         "beforeDevCommand": "pnpm dev",
         "beforeBuildCommand": "pnpm build",
@@ -80,7 +80,8 @@
             ]
         },
         "security": {
-            "csp": null
+            "csp": null,
+            "dangerousUseHttpScheme": false
         },
         "updater": {
             "active": true,

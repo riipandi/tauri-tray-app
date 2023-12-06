@@ -1,13 +1,13 @@
 import { useCallback, useEffect, useState } from 'react'
-import { platform, type Platform } from '@tauri-apps/api/os'
+import { type Platform, platform } from '@tauri-apps/api/os'
 import { Route, Switch } from 'wouter'
 
-import { cn } from './libraries/utils'
 import { TailwindIndicator } from './components/common'
 import WindowControls from './components/ui-controls'
-import WelcomeScreen from './screens/welcome'
-import SettingScreen from './screens/settings'
+import { cn } from './libraries/utils'
 import NotFoundScreen from './screens/not-found'
+import SettingScreen from './screens/settings'
+import WelcomeScreen from './screens/welcome'
 
 export default function App() {
   const [osType, setOsType] = useState<Platform>('darwin')
@@ -26,14 +26,19 @@ export default function App() {
         platform='darwin'
         className={cn(
           osType === 'darwin' ? 'sticky' : 'hidden',
-          'w-full bg-transparent h-7 z-999 absolute top-0'
+          'z-999 absolute top-0 h-7 w-full bg-transparent'
         )}
       />
-
       <Switch>
-        <Route path='/' children={<WelcomeScreen />} />
-        <Route path='/settings' children={<SettingScreen />} />
-        <Route children={<NotFoundScreen />} />
+        <Route path='/'>
+          <WelcomeScreen />
+        </Route>
+        <Route path='/settings'>
+          <SettingScreen />
+        </Route>
+        <Route>
+          <NotFoundScreen />
+        </Route>
       </Switch>
 
       <TailwindIndicator />

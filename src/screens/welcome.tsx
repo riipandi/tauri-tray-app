@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { invoke } from '@tauri-apps/api/tauri'
-import { info } from 'tauri-plugin-log-api'
 import { TauriEvent } from '@tauri-apps/api/event'
-import { appWindow } from '@tauri-apps/api/window'
 import { register, unregisterAll } from '@tauri-apps/api/globalShortcut'
+import { invoke } from '@tauri-apps/api/tauri'
+import { appWindow } from '@tauri-apps/api/window'
+import { info } from 'tauri-plugin-log-api'
+import { Link } from 'wouter'
 
 import reactLogo from '../assets/react.svg'
-import { cn } from '../libraries/utils'
-import { Link } from 'wouter'
 import { ThemeSwitcher } from '../components/theme-switcher'
+import { cn } from '../libraries/utils'
 
 export default function WelcomeScreen() {
   const [greetMsg, setGreetMsg] = useState<string | undefined>(undefined)
@@ -49,11 +49,11 @@ export default function WelcomeScreen() {
   }, [])
 
   return (
-    <div className='h-screen flex flex-col mx-auto items-center justify-center'>
+    <div className='mx-auto flex h-screen flex-col items-center justify-center'>
       <div className='text-center'>
         <h1 className='text-5xl font-bold dark:text-gray-100'>Welcome to Tauri!</h1>
 
-        <div className='flex flex-wrap justify-center gap-5 mt-16'>
+        <div className='mt-16 flex flex-wrap justify-center gap-5'>
           <span className='h-20 w-20'>
             <img src='/vite.svg' className='h-full w-full' alt='Vite logo' />
           </span>
@@ -65,7 +65,7 @@ export default function WelcomeScreen() {
           </span>
         </div>
 
-        <div className='mt-12 dark:text-gray-100 text-center leading-8'>
+        <div className='mt-12 text-center leading-8 dark:text-gray-100'>
           <p>Click on the Tauri, Vite, and React logos to learn more.</p>
           <p>
             Visit{' '}
@@ -75,7 +75,7 @@ export default function WelcomeScreen() {
             to see if the router is working or not.
           </p>
         </div>
-        <div className='flex items-center justify-center flex-wrap space-x-4 mt-8'>
+        <div className='mt-8 flex flex-wrap items-center justify-center space-x-4'>
           <ThemeSwitcher />
           <form
             className='flex flex-wrap justify-center gap-4'
@@ -91,7 +91,7 @@ export default function WelcomeScreen() {
                     type='text'
                     ref={inputRef}
                     id='greet-input'
-                    className='block dark:text-gray-300 dark:bg-background-dark dark:border-gray-700 px-9 font-medium text-sm rounded-md border-gray-300 shadow-sm focus:border-gray-400 focus:ring focus:ring-gray-200 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500'
+                    className='block rounded-md border-gray-300 px-9 text-sm font-medium shadow-sm focus:border-gray-400 focus:ring focus:ring-gray-200/50 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 dark:border-gray-700 dark:bg-background-dark dark:text-gray-300'
                     onChange={(e) => setName(e.currentTarget.value)}
                     onKeyDown={handleKeyDown}
                     placeholder='Enter a name...'
@@ -113,7 +113,7 @@ export default function WelcomeScreen() {
                     </svg>
                   </div>
                   <div className='pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5'>
-                    <span className='rounded border px-1.5 text-sm dark:text-gray-300 dark:bg-background-dark dark:border-gray-700 text-gray-400 shadow-sm transition-all group-hover:border-primary-500 group-hover:text-primary-500'>
+                    <span className='group-hover:border-primary-500 group-hover:text-primary-500 rounded border px-1.5 text-sm text-gray-400 shadow-sm transition-all dark:border-gray-700 dark:bg-background-dark dark:text-gray-300'>
                       <kbd>⌘</kbd> <kbd>F</kbd>
                     </span>
                   </div>
@@ -123,13 +123,13 @@ export default function WelcomeScreen() {
 
             <button
               type='button'
-              className='rounded-lg border border-gray-300 dark:bg-gray-100 bg-gray-200 px-5 py-2 text-center text-sm font-medium text-gray-600 transition-all hover:border-gray-200 hover:bg-gray-200 focus:ring focus:ring-gray-50 disabled:border-gray-50 disabled:bg-gray-50 disabled:text-gray-400'
+              className='rounded-lg border border-gray-300 bg-gray-200 px-5 py-2 text-center text-sm font-medium text-gray-600 transition-all hover:border-gray-200 hover:bg-gray-200 focus:ring focus:ring-gray-50 disabled:border-gray-50 disabled:bg-gray-50 disabled:text-gray-400 dark:bg-gray-100'
             >
               Say Hello
             </button>
           </form>
         </div>
-        <p className={cn(name === '' ? 'hidden' : 'dark:text-gray-100 mt-8 text-center')}>
+        <p className={cn(name === '' ? 'hidden' : 'mt-8 text-center dark:text-gray-100')}>
           {greetMsg}
         </p>
       </div>

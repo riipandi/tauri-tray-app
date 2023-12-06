@@ -1,5 +1,5 @@
-import { StateStorage } from 'zustand/middleware'
 import { Store } from '@tauri-apps/plugin-store'
+import { StateStorage } from 'zustand/middleware'
 
 // Initialize Tauri data store
 export const cfgStore = new Store('settings.json')

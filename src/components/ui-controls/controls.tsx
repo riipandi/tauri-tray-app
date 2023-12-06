@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { appWindow } from '@tauri-apps/api/window'
 
-import { Icons } from './icons'
 import { cn } from '../../libraries/utils'
+
+import { Icons } from './icons'
 
 export function Windows({ className, ...props }: any) {
   const [isWindowMaximized, setIsWindowMaximized] = useState(false)
@@ -35,7 +36,7 @@ export function Windows({ className, ...props }: any) {
       <button
         onClick={minimizeWindow}
         className={cn(
-          'items-center justify-center inline-flex',
+          'inline-flex items-center justify-center',
           'h-[32px] w-[46px] cursor-default rounded-none bg-transparent text-black/90 hover:bg-black/[.05] active:bg-black/[.03]  dark:text-white dark:hover:bg-white/[.06] dark:active:bg-white/[.04]'
         )}
       >
@@ -44,7 +45,7 @@ export function Windows({ className, ...props }: any) {
       <button
         onClick={maximizeWindow}
         className={cn(
-          'items-center justify-center inline-flex',
+          'inline-flex items-center justify-center',
           'h-[32px] w-[46px] cursor-default rounded-none bg-transparent text-black/90 hover:bg-black/[.05] active:bg-black/[.03]  dark:text-white dark:hover:bg-white/[.06] dark:active:bg-white/[.04]'
         )}
       >
@@ -53,7 +54,7 @@ export function Windows({ className, ...props }: any) {
       <button
         onClick={closeWindow}
         className={cn(
-          'items-center justify-center inline-flex',
+          'inline-flex items-center justify-center',
           'h-[32px] w-[46px] cursor-default rounded-none bg-transparent text-black/90 hover:bg-[#c42b1c] hover:text-white active:bg-[#c42b1c]/90 dark:text-white'
         )}
       >
@@ -98,12 +99,12 @@ export function Gnome({ className, ...props }: React.HTMLProps<HTMLDivElement>) 
   const closeWindow = async () => await appWindow.close()
 
   return (
-    <div className={cn('inline-flex gap-4 items-center justify-center px-2', className)} {...props}>
+    <div className={cn('inline-flex items-center justify-center gap-4 px-2', className)} {...props}>
       <button
         onClick={minimizeWindow}
         className={cn(
-          'items-center justify-center inline-flex',
-          'm-0 aspect-square h-[24px] cursor-default rounded-full bg-[#dadada] p-0 text-[#3d3d3d] hover:bg-[#d1d1d1] active:bg-[#bfbfbf] dark:bg-[#373737] dark:text-white dark:hover:bg-[#424242] dark:active:bg-[#565656]'
+          'inline-flex items-center justify-center',
+          'aspect-square m-0 h-[24px] cursor-default rounded-full bg-[#dadada] p-0 text-[#3d3d3d] hover:bg-[#d1d1d1] active:bg-[#bfbfbf] dark:bg-[#373737] dark:text-white dark:hover:bg-[#424242] dark:active:bg-[#565656]'
         )}
       >
         <Icons.minimizeWin className='w-[9px]' />
@@ -111,8 +112,8 @@ export function Gnome({ className, ...props }: React.HTMLProps<HTMLDivElement>) 
       <button
         onClick={maximizeWindow}
         className={cn(
-          'items-center justify-center inline-flex',
-          'm-0 aspect-square h-[24px] cursor-default rounded-full bg-[#dadada] p-0 text-[#3d3d3d] hover:bg-[#d1d1d1] active:bg-[#bfbfbf] dark:bg-[#373737] dark:text-white dark:hover:bg-[#424242] dark:active:bg-[#565656]'
+          'inline-flex items-center justify-center',
+          'aspect-square m-0 h-[24px] cursor-default rounded-full bg-[#dadada] p-0 text-[#3d3d3d] hover:bg-[#d1d1d1] active:bg-[#bfbfbf] dark:bg-[#373737] dark:text-white dark:hover:bg-[#424242] dark:active:bg-[#565656]'
         )}
       >
         {!isWindowMaximized ? (
@@ -124,8 +125,8 @@ export function Gnome({ className, ...props }: React.HTMLProps<HTMLDivElement>) 
       <button
         onClick={closeWindow}
         className={cn(
-          'items-center justify-center inline-flex',
-          'm-0 aspect-square h-[24px] cursor-default rounded-full bg-[#dadada] p-0 text-[#3d3d3d] hover:bg-[#d1d1d1] active:bg-[#bfbfbf] dark:bg-[#373737] dark:text-white dark:hover:bg-[#424242] dark:active:bg-[#565656]'
+          'inline-flex items-center justify-center',
+          'aspect-square m-0 h-[24px] cursor-default rounded-full bg-[#dadada] p-0 text-[#3d3d3d] hover:bg-[#d1d1d1] active:bg-[#bfbfbf] dark:bg-[#373737] dark:text-white dark:hover:bg-[#424242] dark:active:bg-[#565656]'
         )}
       >
         <Icons.closeWin className='h-2 w-2' />

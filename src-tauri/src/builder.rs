@@ -80,6 +80,11 @@ pub fn initialize() {
                         api.prevent_close();
                     }
                 }
+                // WindowEvent::Focused(false) => {
+                //     // hide the window automaticall when the user
+                //     // clicks out. this is for a matter of taste.
+                //     e.window().hide().unwrap();
+                // }
                 _ => {}
             }
         });

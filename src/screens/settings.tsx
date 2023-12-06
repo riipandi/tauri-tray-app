@@ -1,8 +1,5 @@
-import { useLocation } from 'wouter'
-import { info } from 'tauri-plugin-log-api'
 import { message } from '@tauri-apps/api/dialog'
 import { invoke } from '@tauri-apps/api/tauri'
-
 import {
   Menu,
   MenuContent,
@@ -12,6 +9,9 @@ import {
   MenuSeparator,
   Portal,
 } from '@ark-ui/react'
+import { info } from 'tauri-plugin-log-api'
+import { useLocation } from 'wouter'
+
 import { openWebview } from '../libraries/utils'
 
 interface WithContextMenuProps {
@@ -41,29 +41,29 @@ const WithContextMenu = ({ children, className }: WithContextMenuProps) => {
   return (
     <div className={className}>
       <Menu>
-        <MenuContextTrigger className='bg-white/50 dark:bg-gray-800 w-full h-full min-h-[540px] rounded-lg border-2 border-dashed border-gray-300 p-12 text-center flex flex-col justify-center cursor-default items-center'>
+        <MenuContextTrigger className='flex h-full min-h-[540px] w-full cursor-default flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-white/50 p-12 text-center dark:bg-gray-800'>
           {children}
         </MenuContextTrigger>
         <Portal>
           <MenuPositioner>
-            <MenuContent className='disable-select w-[140px] bg-white dark:bg-background-dark p-2 rounded border border-gray-200 dark:border-gray-800 shadow-sm space-y-1 text-sm'>
+            <MenuContent className='disable-select w-[140px] space-y-1 rounded border border-gray-200 bg-white p-2 text-sm shadow-sm dark:border-gray-800 dark:bg-background-dark'>
               <MenuItem
                 id='back'
-                className='hover:bg-gray-100/90 dark:hover:bg-gray-700 dark:text-foreground-dark px-2 py-1 rounded cursor-default'
+                className='cursor-default rounded px-2 py-1 hover:bg-gray-100/90 dark:text-foreground-dark dark:hover:bg-gray-700'
                 onClick={() => navigate('/')}
               >
                 Back
               </MenuItem>
               <MenuItem
                 id='forward'
-                className='hover:bg-gray-100/90 dark:hover:bg-gray-600 dark:hover:text-gray-500 dark:text-gray-700 px-2 py-1 rounded cursor-default text-gray-600'
+                className='cursor-default rounded px-2 py-1 text-gray-600 hover:bg-gray-100/90 dark:text-gray-700 dark:hover:bg-gray-600 dark:hover:text-gray-500'
                 disabled
               >
                 Forward
               </MenuItem>
               <MenuItem
                 id='reload'
-                className='hover:bg-gray-100/90 dark:hover:bg-gray-700 dark:text-foreground-dark px-2 py-1 rounded cursor-default'
+                className='cursor-default rounded px-2 py-1 hover:bg-gray-100/90 dark:text-foreground-dark dark:hover:bg-gray-700'
                 onClick={() => window.location.reload()}
               >
                 Reload
@@ -71,14 +71,14 @@ const WithContextMenu = ({ children, className }: WithContextMenuProps) => {
               <MenuSeparator />
               <MenuItem
                 id='sample-dialog'
-                className='hover:bg-gray-100/90 dark:hover:bg-gray-700 dark:text-foreground-dark px-2 py-1 rounded cursor-default'
+                className='cursor-default rounded px-2 py-1 hover:bg-gray-100/90 dark:text-foreground-dark dark:hover:bg-gray-700'
                 onClick={handleContextItem}
               >
                 Open Dialog
               </MenuItem>
               <MenuItem
                 id='open-webpage'
-                className='hover:bg-gray-100/90 dark:hover:bg-gray-700 dark:text-foreground-dark px-2 py-1 rounded cursor-default'
+                className='cursor-default rounded px-2 py-1 hover:bg-gray-100/90 dark:text-foreground-dark dark:hover:bg-gray-700'
                 onClick={handleOpenWebpage}
               >
                 Open webpage
@@ -86,7 +86,7 @@ const WithContextMenu = ({ children, className }: WithContextMenuProps) => {
               <MenuSeparator />
               <MenuItem
                 id='inspect'
-                className='hover:bg-gray-100/90 dark:hover:bg-gray-700 dark:text-foreground-dark px-2 py-1 rounded cursor-default'
+                className='cursor-default rounded px-2 py-1 hover:bg-gray-100/90 dark:text-foreground-dark dark:hover:bg-gray-700'
                 onClick={async () => await invoke('open_devtools')}
               >
                 Inspect
@@ -105,19 +105,17 @@ export default function SettingScreen() {
   }
 
   return (
-    <div className='flex h-full w-full min-h-screen flex-col justify-center'>
-      <WithContextMenu className='p-8 sm:p-12 lg:p-20 h-full w-full'>
-        <h1 className='block text-3xl font-bold dark:text-gray-300 dark:text-white sm:text-4xl'>
-          Howdy
-        </h1>
-        <div className='mt-3 text-base sm:text-lg text-gray-700 dark:text-gray-400 sm:mt-4'>
+    <div className='flex h-full min-h-screen w-full flex-col justify-center'>
+      <WithContextMenu className='h-full w-full p-8 sm:p-12 lg:p-20'>
+        <h1 className='block text-3xl font-bold dark:text-gray-300 sm:text-4xl'>Howdy</h1>
+        <div className='mt-3 text-base text-gray-700 dark:text-gray-400 sm:mt-4 sm:text-lg'>
           <p className='leading-8'>
             Right click on your mouse in this area to see custom context menu.
           </p>
           <div className='mt-4'>
             <button
               type='submit'
-              className='rounded-lg border border-gray-300 dark:bg-gray-100 bg-gray-200 px-5 py-2 text-center text-sm font-medium text-gray-600 transition-all hover:border-gray-200 hover:bg-gray-200 focus:ring focus:ring-gray-50 disabled:border-gray-50 disabled:bg-gray-50 disabled:text-gray-400'
+              className='rounded-lg border border-gray-300 bg-gray-200 px-5 py-2 text-center text-sm font-medium text-gray-600 transition-all hover:border-gray-200 hover:bg-gray-200 focus:ring focus:ring-gray-50 disabled:border-gray-50 disabled:bg-gray-50 disabled:text-gray-400 dark:bg-gray-100'
               onClick={handleCheckUpdate}
             >
               Check for Updates

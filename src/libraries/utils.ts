@@ -1,7 +1,6 @@
-import { clsx, type ClassValue } from 'clsx'
-import { twMerge } from 'tailwind-merge'
-
 import { appWindow, WebviewWindow } from '@tauri-apps/api/window'
+import { type ClassValue, clsx } from 'clsx'
+import { twMerge } from 'tailwind-merge'
 import { info } from 'tauri-plugin-log-api'
 
 export function cn(...inputs: ClassValue[]) {

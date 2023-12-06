@@ -1,0 +1,40 @@
+{
+    "$schema": "http://json.schemastore.org/prettierrc",
+    "arrowParens": "always",
+    "bracketSpacing": true,
+    "bracketSameLine": false,
+    "printWidth": 100,
+    "quoteProps": "consistent",
+    "semi": false,
+    "singleQuote": true,
+    "tabWidth": 2,
+    "trailingComma": "es5",
+    "useTabs": false,
+    "overrides": [
+        {
+            "files": ["*.html", "*.css", ".sass"],
+            "options": {
+                "singleQuote": false
+            }
+        },
+        {
+            "files": ["*.json", "*.rs", ".prettierrc"],
+            "options": {
+                "tabWidth": 4
+            }
+        },
+        {
+            "files": ["*.jsx", "*.tsx", "*.mdx"],
+            "options": {
+                "jsxSingleQuote": true
+            }
+        },
+        {
+            "files": ["Makefile", "*.mk"],
+            "options": {
+                "useTabs": true,
+                "tabWidth": 4
+            }
+        }
+    ]
+}

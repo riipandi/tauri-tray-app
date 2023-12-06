@@ -1,5 +1,5 @@
-import { checkUpdate, installUpdate, onUpdaterEvent } from '@tauri-apps/api/updater'
 import { relaunch } from '@tauri-apps/api/process'
+import { checkUpdate, installUpdate, onUpdaterEvent } from '@tauri-apps/api/updater'
 import { info } from 'tauri-plugin-log-api'
 
 const unlisten = await onUpdaterEvent(({ error, status }) => {

@@ -1,7 +1,8 @@
-import { ThemeType, useUIConfigStore } from '../stores/ui-store'
-import { appWindow } from '@tauri-apps/api/window'
 import { invoke } from '@tauri-apps/api/tauri'
+import { appWindow } from '@tauri-apps/api/window'
+
 import { cn } from '../libraries/utils'
+import { ThemeType, useUIConfigStore } from '../stores/ui-store'
 
 export function ThemeSwitcher() {
   const { darkmode, setDarkMode } = useUIConfigStore((state) => state)
@@ -9,8 +10,8 @@ export function ThemeSwitcher() {
   const handleSelect = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     e.preventDefault()
 
-    let windowTheme = await appWindow.theme()
-    let selectedTheme = e.target.value as ThemeType
+    const windowTheme = await appWindow.theme()
+    const selectedTheme = e.target.value as ThemeType
 
     if (windowTheme === 'light' && selectedTheme === 'dark') {
       await invoke('set_darkmode', { enable: true })
@@ -37,7 +38,7 @@ export function ThemeSwitcher() {
         </div>
         <select
           id='theme-switcher'
-          className='block w-full rounded-md dark:text-gray-300 dark:bg-background-dark dark:border-gray-700 border-gray-300 pl-9 text-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:bg-gray-50'
+          className='block w-full rounded-md border-gray-300 pl-9 text-sm focus:border-blue-300 focus:ring focus:ring-blue-200/50 disabled:cursor-not-allowed disabled:bg-gray-50 dark:border-gray-700 dark:bg-background-dark dark:text-gray-300'
           onChange={handleSelect}
           defaultValue={darkmode ? 'dark' : 'light'}
         >

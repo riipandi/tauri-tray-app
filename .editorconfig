@@ -13,7 +13,6 @@ max_line_length = 100
 [*.{prettierrc,json,jsonc,plist,rs}]
 indent_size = 4
 max_line_length = off
-trim_trailing_whitespace = false
 
 [*.txt]
 insert_final_newline = false

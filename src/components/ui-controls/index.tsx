@@ -1,16 +1,17 @@
 import { useCallback, useEffect, useState } from 'react'
-import { type as getOSType, OsType } from '@tauri-apps/api/os'
-import { MacOS, Gnome, Windows } from './controls'
+import { OsType, type as getOSType } from '@tauri-apps/api/os'
+
+import { Gnome, MacOS, Windows } from './controls'
 
 export interface WindowControlsProps {
   platform?: 'windows' | 'darwin' | 'gnome'
   className?: string
-  hideButtons?: boolean
+  // hideButtons?: boolean
 }
 
 const WindowControls = ({
   platform,
-  hideButtons = false,
+  // hideButtons = false,
   className,
   ...props
 }: WindowControlsProps) => {
