@@ -1,0 +1,51 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-action.json
+
+# @reference: https://stackoverflow.com/questions/59813998/github-actions-splitting-workflow-file
+# @reference: https://docs.github.com/en/actions/creating-actions/creating-a-composite-action
+
+name: setup-sdk
+description: Prepare Nodejs environment with pnpm enabled
+
+inputs:
+  nodeVersion:
+    description: 'Specify Nodejs version'
+    required: false
+    default: '20'
+  pnpmVersion:
+    description: 'Specify pnpm version'
+    required: false
+    default: '8'
+  workspacePath:
+    description: 'Specify workspaces path'
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v3
+      with:
+        node-version: ${{ inputs.nodeVersion }}
+
+    - uses: pnpm/action-setup@v2
+      with:
+        version: ${{ inputs.pnpmVersion }}
+        run_install: false
+
+    - name: Get pnpm store directory
+      shell: bash
+      run: echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+    - uses: actions/cache@v3
+      name: Setup pnpm cache
+      with:
+        path: ${{ env.STORE_PATH }}
+        key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+        restore-keys: ${{ runner.os }}-pnpm-store-
+
+    - name: Setup Rust Toolchan
+      uses: dtolnay/rust-toolchain@stable
+
+    - name: Setup Rust cache
+      uses: swatinem/rust-cache@v2
+      with:
+        workspaces: ${{ inputs.workspacePath }}
