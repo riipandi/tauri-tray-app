@@ -1,10 +1,12 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
-import { TauriEvent } from '@tauri-apps/api/event'
-import { register, unregisterAll } from '@tauri-apps/api/globalShortcut'
+import { useCallback, useRef, useState } from 'react'
+import { message } from '@tauri-apps/api/dialog'
 import { invoke } from '@tauri-apps/api/tauri'
-import { appWindow } from '@tauri-apps/api/window'
 import { info } from 'tauri-plugin-log-api'
 import { Link } from 'wouter'
+
+import { Button } from '@/components/ui-elements/button'
+
+import useHotKeys from '@/hooks/useHotKeys'
 
 import reactLogo from '../assets/react.svg'
 import { ThemeSwitcher } from '../components/theme-switcher'
@@ -53,9 +55,6 @@ export default function WelcomeScreen() {
     }
   }
 
-  const inputRef = useRef<HTMLInputElement>(null)
-  const handleFocus = useCallback(() => inputRef.current?.focus(), [inputRef])
-
   const handleKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Escape') {
       e.preventDefault()
@@ -68,18 +67,15 @@ export default function WelcomeScreen() {
     }
   }
 
-  const registerHotKeys = useCallback(() => {
-    register('CmdOrCtrl+F', () => handleFocus()).catch(() => {})
-  }, [])
+  const inputRef = useRef<HTMLInputElement>(null)
+  const handleKeyF = useCallback(() => inputRef.current?.focus(), [inputRef])
+  const handleKeyS = async () => {
+    await message('This hotkeys not yet implemented!')
+  }
 
-  useEffect(() => {
-    registerHotKeys()
-    appWindow.listen(TauriEvent.WINDOW_FOCUS, () => registerHotKeys())
-    appWindow.listen(TauriEvent.WINDOW_BLUR, () => unregisterAll())
-    return () => {
-      unregisterAll()
-    }
-  }, [])
+  // Use the custom hook for registering hotkeys
+  useHotKeys(() => handleKeyF(), 'CmdOrCtrl+F')
+  useHotKeys(() => handleKeyS(), 'CmdOrCtrl+S')
 
   return (
     <div className='mx-auto flex h-screen flex-col items-center justify-center'>
@@ -154,12 +150,7 @@ export default function WelcomeScreen() {
               </div>
             </div>
 
-            <button
-              type='submit'
-              className='rounded-lg border border-gray-300 bg-gray-200 px-5 py-2 text-center text-sm font-medium text-gray-600 transition-all hover:border-gray-200 hover:bg-gray-200 focus:ring focus:ring-gray-50 disabled:border-gray-50 disabled:bg-gray-50 disabled:text-gray-400 dark:bg-gray-100'
-            >
-              Say Hello
-            </button>
+            <Button type='submit'>Say Hello</Button>
           </form>
         </div>
         <p className={cn(name === '' ? 'hidden' : 'mt-8 max-w-2xl text-center dark:text-gray-100')}>

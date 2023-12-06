@@ -1,6 +1,5 @@
 // Copyright 2023-current Aris Ripandi <aris@duck.com>
-// SPDX-License-Identifier: Apache-2.0
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: Apache-2.0 or MIT
 
 use tauri::api::dialog;
 use tauri::http::{Request, Response};
@@ -98,6 +97,7 @@ pub fn initialize() {
     builder
         .invoke_handler(tauri::generate_handler![
             command::open_devtools,
+            command::get_machine_id,
             command::set_darkmode,
             command::check_update,
             command::get_quotes,

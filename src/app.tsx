@@ -29,6 +29,7 @@ export default function App() {
           'z-999 absolute top-0 h-7 w-full bg-transparent'
         )}
       />
+
       <Switch>
         <Route path='/'>
           <WelcomeScreen />

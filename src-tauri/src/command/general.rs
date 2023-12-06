@@ -1,7 +1,7 @@
 // Copyright 2023-current Aris Ripandi <aris@duck.com>
-// SPDX-License-Identifier: Apache-2.0
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: Apache-2.0 or MIT
 
+use machine_uid;
 use tauri::api::dialog;
 
 use crate::utils;
@@ -32,4 +32,9 @@ pub fn set_darkmode(window: tauri::Window, enable: bool) {
 #[tauri::command]
 pub async fn check_update(handle: tauri::AppHandle) {
     utils::check_update(handle).await
+}
+
+#[tauri::command]
+pub fn get_machine_id() -> String {
+    machine_uid::get().unwrap()
 }

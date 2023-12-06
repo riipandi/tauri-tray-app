@@ -1,6 +1,5 @@
 // Copyright 2023-current Aris Ripandi <aris@duck.com>
-// SPDX-License-Identifier: Apache-2.0
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: Apache-2.0 or MIT
 
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]

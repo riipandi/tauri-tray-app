@@ -1,6 +1,5 @@
 // Copyright 2023-current Aris Ripandi <aris@duck.com>
-// SPDX-License-Identifier: Apache-2.0
-// SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: Apache-2.0 or MIT
 
 pub const PKG_ARCH: &'static str = std::env::consts::ARCH;
 pub const PKG_OS: &'static str = std::env::consts::OS;
