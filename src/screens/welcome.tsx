@@ -8,7 +8,30 @@ import { Link } from 'wouter'
 
 import reactLogo from '../assets/react.svg'
 import { ThemeSwitcher } from '../components/theme-switcher'
-import { cn } from '../libraries/utils'
+import { cn, randomNumber } from '../libraries/utils'
+
+type Quote = {
+  id: number
+  quote: string
+  author: string
+}
+
+interface CommonResponse {
+  status_code: number
+  message: string
+}
+interface ApiResponseSingle extends CommonResponse {
+  data?: Quote
+}
+
+interface ApiResponseMany extends CommonResponse {
+  data?: {
+    quotes: Array<Quote>
+    total: number
+    skip: number
+    limit: number
+  }
+}
 
 export default function WelcomeScreen() {
   const [greetMsg, setGreetMsg] = useState<string | undefined>(undefined)
@@ -16,8 +39,18 @@ export default function WelcomeScreen() {
 
   // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
   const greet = async () => {
-    setGreetMsg(await invoke('greet', { name }))
-    info('The Greet button clicked')
+    info('The button clicked')
+    setGreetMsg(undefined)
+
+    try {
+      const quotes = await invoke<ApiResponseMany>('get_quotes')
+      console.info('DEBUG', quotes)
+
+      const resp = await invoke<ApiResponseSingle>('get_single_quote', { id: randomNumber() })
+      setGreetMsg(`Hello ${name}! ${resp.data?.quote}`)
+    } catch (err: any) {
+      setGreetMsg(`Something wrong: ${err.message}`)
+    }
   }
 
   const inputRef = useRef<HTMLInputElement>(null)
@@ -91,7 +124,7 @@ export default function WelcomeScreen() {
                     type='text'
                     ref={inputRef}
                     id='greet-input'
-                    className='block rounded-md border-gray-300 px-9 text-sm font-medium shadow-sm focus:border-gray-400 focus:ring focus:ring-gray-200/50 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 dark:border-gray-700 dark:bg-background-dark dark:text-gray-300'
+                    className='dark:bg-background-dark block rounded-md border-gray-300 px-9 text-sm font-medium shadow-sm focus:border-gray-400 focus:ring focus:ring-gray-200/50 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 dark:border-gray-700 dark:text-gray-300'
                     onChange={(e) => setName(e.currentTarget.value)}
                     onKeyDown={handleKeyDown}
                     placeholder='Enter a name...'
@@ -113,7 +146,7 @@ export default function WelcomeScreen() {
                     </svg>
                   </div>
                   <div className='pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5'>
-                    <span className='group-hover:border-primary-500 group-hover:text-primary-500 rounded border px-1.5 text-sm text-gray-400 shadow-sm transition-all dark:border-gray-700 dark:bg-background-dark dark:text-gray-300'>
+                    <span className='group-hover:border-primary-500 group-hover:text-primary-500 dark:bg-background-dark rounded border px-1.5 text-sm text-gray-400 shadow-sm transition-all dark:border-gray-700 dark:text-gray-300'>
                       <kbd>⌘</kbd> <kbd>F</kbd>
                     </span>
                   </div>
@@ -122,14 +155,14 @@ export default function WelcomeScreen() {
             </div>
 
             <button
-              type='button'
+              type='submit'
               className='rounded-lg border border-gray-300 bg-gray-200 px-5 py-2 text-center text-sm font-medium text-gray-600 transition-all hover:border-gray-200 hover:bg-gray-200 focus:ring focus:ring-gray-50 disabled:border-gray-50 disabled:bg-gray-50 disabled:text-gray-400 dark:bg-gray-100'
             >
               Say Hello
             </button>
           </form>
         </div>
-        <p className={cn(name === '' ? 'hidden' : 'mt-8 text-center dark:text-gray-100')}>
+        <p className={cn(name === '' ? 'hidden' : 'mt-8 max-w-2xl text-center dark:text-gray-100')}>
           {greetMsg}
         </p>
       </div>

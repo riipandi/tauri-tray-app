@@ -3747,9 +3747,11 @@ dependencies = [
 name = "tauri-tray-app"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "cocoa 0.25.0",
  "log",
  "objc",
+ "reqwest",
  "serde",
  "serde_json",
  "simple-home-dir",

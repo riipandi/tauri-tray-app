@@ -7,6 +7,11 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+export function randomNumber(min = 1, max = 100): number {
+  // Generate a random number between min and max (both inclusive)
+  return Math.floor(Math.random() * (max - min + 1)) + min
+}
+
 interface OpenWebviewProps {
   title?: string
   minHeight?: number

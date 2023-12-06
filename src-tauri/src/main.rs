@@ -12,6 +12,7 @@ extern crate objc;
 mod builder;
 mod command;
 mod config;
+mod fetcher;
 mod menu;
 mod meta;
 mod scripts;

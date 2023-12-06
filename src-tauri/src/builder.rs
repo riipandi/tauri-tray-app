@@ -34,6 +34,8 @@ pub fn initialize() {
                 .targets(LOG_TARGETS)
                 .with_colors(ColoredLevelConfig::default())
                 .level_for("tauri", log::LevelFilter::Info)
+                .level_for("hyper", log::LevelFilter::Off)
+                .level_for("sqlx::query", log::LevelFilter::Off)
                 .level(LOG_LEVEL)
                 .build(),
         )
@@ -95,10 +97,11 @@ pub fn initialize() {
     // run the application
     builder
         .invoke_handler(tauri::generate_handler![
-            command::greet,
             command::open_devtools,
             command::set_darkmode,
             command::check_update,
+            command::get_quotes,
+            command::get_single_quote,
         ])
         .build(tauri::generate_context!())
         .expect("error while building tauri application")

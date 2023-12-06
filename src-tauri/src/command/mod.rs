@@ -5,5 +5,7 @@
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 
 mod general;
+mod request;
 
 pub use self::general::*;
+pub use self::request::*;
