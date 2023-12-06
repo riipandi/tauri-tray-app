@@ -19,6 +19,7 @@
         "lint:fix": "eslint \"**/*.{ts,tsx}\" --fix",
         "format:js": "prettier --write \"**/*.{json,js,jsx,ts,tsx,mdx}\" --log-level warn",
         "format:rs": "(cd src-tauri && cargo fmt)",
+        "sync-types": "(cd src-tauri && cargo test) && pnpm format:js",
         "format": "pnpm format:js && pnpm format:rs",
         "tauri": "dotenv -e .env -- tauri"
     },

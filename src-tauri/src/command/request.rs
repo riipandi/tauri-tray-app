@@ -4,10 +4,12 @@
 use reqwest::header::{HeaderMap, HeaderValue};
 use reqwest::header::{ACCEPT, CONTENT_TYPE};
 use serde::{Deserialize, Serialize};
+use ts_rs::TS;
 
 use crate::fetcher::{fetch_api, ApiResponse};
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, TS)]
+#[ts(export, export_to = "../src/types/quote.ts", rename_all = "camelCase")]
 pub struct Quote {
     id: u32,
     quote: String,
@@ -37,7 +39,8 @@ pub async fn get_single_quote(id: Option<u32>) -> Result<ApiResponse<Quote>, Api
     }
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, TS)]
+#[ts(export, export_to = "../src/types/quotes.ts", rename_all = "camelCase")]
 pub struct AllQuotes {
     quotes: Vec<Quote>,
     total: u32,

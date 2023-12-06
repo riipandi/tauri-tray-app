@@ -3,8 +3,14 @@
 
 use reqwest::header::HeaderMap;
 use serde::{Deserialize, Serialize};
+use ts_rs::TS;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, TS)]
+#[ts(
+    export,
+    export_to = "../src/types/api-response.ts",
+    rename_all = "camelCase"
+)]
 pub struct ApiResponse<T> {
     pub status_code: u16,
     pub message: String,
@@ -20,7 +26,11 @@ pub async fn fetch_api<T>(
 where
     T: for<'de> Deserialize<'de>,
 {
-    let client = reqwest::Client::new();
+    // Reqwest Client (https://github.com/seanmonstar/reqwest/pull/463)
+    let client = reqwest::Client::builder()
+        .http1_title_case_headers()
+        .build()?;
+
     let mut request = client.request(method, url).headers(headers);
 
     if let Some(body) = body {
@@ -40,7 +50,8 @@ where
 
         Ok(api_response)
     } else {
-        let error_response: ApiResponse<String> = response.json().await?; // Assuming error response includes a "message" field
+        // Assuming error response includes a "message" field
+        let error_response: ApiResponse<String> = response.json().await?;
         let api_response = ApiResponse {
             status_code: resp_status.as_u16(),
             message: error_response.message,
