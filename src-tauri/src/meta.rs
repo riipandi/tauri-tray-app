@@ -18,6 +18,9 @@ pub const SCHEME_PROTOCOL: &'static str = "x-callback";
 pub const FEEDBACK_URL: &'static str = "https://ripandis.com/feedback?product=tauri-tray-app";
 pub const WEBSITE_URL: &'static str = "https://twitter.com/riipandi";
 
+// Read value from envars, injected at compile time
+// pub const API_BASE_URL: &'static str = env!("TAURI_API_BASE_URL");
+
 // Disable webview native context menu.
 // Optional, injected when webview loaded.
 pub const JS_INIT_SCRIPT: &'static str = r#"

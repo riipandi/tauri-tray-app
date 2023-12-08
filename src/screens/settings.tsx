@@ -13,7 +13,6 @@ import { info } from 'tauri-plugin-log-api'
 import { useLocation } from 'wouter'
 
 import { openWebview } from '../libraries/utils'
-
 interface WithContextMenuProps {
   children: React.ReactNode
   className?: string

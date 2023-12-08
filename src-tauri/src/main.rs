@@ -32,6 +32,8 @@ const LOG_LEVEL: log::LevelFilter = log::LevelFilter::Error;
 
 fn main() {
     let mut builder = tauri::Builder::default();
+    let tauri_ctx = tauri::generate_context!();
+
     let _app_config = utils::config::AppConfig::load();
 
     // register tauri plugins
@@ -110,7 +112,7 @@ fn main() {
             cmd::quotes::get_quotes,
             cmd::quotes::get_single_quote,
         ])
-        .build(tauri::generate_context!())
+        .build(tauri_ctx)
         .expect("error while building tauri application")
         .run(|_app_handle, event| match event {
             RunEvent::ExitRequested { api, .. } => {
