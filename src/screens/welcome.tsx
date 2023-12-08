@@ -100,7 +100,7 @@ export default function WelcomeScreen() {
                     type='text'
                     ref={inputRef}
                     id='greet-input'
-                    className='dark:bg-background-dark block rounded-md border-gray-300 px-9 text-sm font-medium shadow-sm focus:border-gray-400 focus:ring focus:ring-gray-200/50 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 dark:border-gray-700 dark:text-gray-300'
+                    className='block rounded-md border-gray-300 px-9 text-sm font-medium shadow-sm focus:border-gray-400 focus:ring focus:ring-gray-200/50 disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-500 dark:border-gray-700 dark:bg-background-dark dark:text-gray-300'
                     onChange={(e) => setName(e.currentTarget.value)}
                     onKeyDown={handleKeyDown}
                     placeholder='Enter a name...'
@@ -122,7 +122,7 @@ export default function WelcomeScreen() {
                     </svg>
                   </div>
                   <div className='pointer-events-none absolute inset-y-0 right-0 flex items-center px-2.5'>
-                    <span className='group-hover:border-primary-500 group-hover:text-primary-500 dark:bg-background-dark rounded border px-1.5 text-sm text-gray-400 shadow-sm transition-all dark:border-gray-700 dark:text-gray-300'>
+                    <span className='group-hover:border-primary-500 group-hover:text-primary-500 rounded border px-1.5 text-sm text-gray-400 shadow-sm transition-all dark:border-gray-700 dark:bg-background-dark dark:text-gray-300'>
                       <kbd>⌘</kbd> <kbd>F</kbd>
                     </span>
                   </div>

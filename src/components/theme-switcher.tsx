@@ -1,5 +1,4 @@
 import { invoke } from '@tauri-apps/api/tauri'
-import { appWindow } from '@tauri-apps/api/window'
 
 import { cn } from '../libraries/utils'
 import { ThemeType, useUIConfigStore } from '../stores/ui-store'
@@ -10,14 +9,21 @@ export function ThemeSwitcher() {
   const handleSelect = async (e: React.ChangeEvent<HTMLSelectElement>) => {
     e.preventDefault()
 
-    const windowTheme = await appWindow.theme()
+    // Get saved theme (default: auto)
+    const windowTheme = await invoke('plugin:theme|get_theme')
     const selectedTheme = e.target.value as ThemeType
 
     if (windowTheme === 'light' && selectedTheme === 'dark') {
-      await invoke('set_darkmode', { enable: true })
+      // await invoke('set_darkmode', { enable: true })
+      await invoke('plugin:theme|set_theme', {
+        theme: 'dark',
+      })
       setDarkMode(true)
     } else {
-      await invoke('set_darkmode', { enable: false })
+      // await invoke('set_darkmode', { enable: false })
+      await invoke('plugin:theme|set_theme', {
+        theme: 'light',
+      })
       setDarkMode(false)
     }
   }

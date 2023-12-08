@@ -33,4 +33,4 @@ dist-ssr
 
 # Tauri
 .tauri/
-src-tauri/target
+target/

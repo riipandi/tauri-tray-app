@@ -32,7 +32,7 @@ const LOG_LEVEL: log::LevelFilter = log::LevelFilter::Error;
 
 fn main() {
     let mut builder = tauri::Builder::default();
-    let tauri_ctx = tauri::generate_context!();
+    let mut tauri_ctx = tauri::generate_context!();
 
     let _app_config = utils::config::AppConfig::load();
 
@@ -49,7 +49,10 @@ fn main() {
                 .build(),
         )
         .plugin(tauri_plugin_store::Builder::default().build())
-        .plugin(tauri_plugin_positioner::init());
+        .plugin(tauri_plugin_positioner::init())
+        .plugin(plugin_window_theme::ThemePlugin::init(
+            tauri_ctx.config_mut(),
+        ));
 
     // setup and create window
     builder = builder.setup(|app| {
