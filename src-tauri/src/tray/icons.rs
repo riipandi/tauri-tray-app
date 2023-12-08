@@ -4,7 +4,7 @@
 use tauri::Icon;
 
 pub fn tray_icon() -> Icon {
-    Icon::Raw(include_bytes!("../../icons/128x128@2x.png").to_vec())
+    Icon::Raw(include_bytes!("../../icons/tray-icon-256.png").to_vec())
 }
 
 #[cfg(target_os = "macos")]
