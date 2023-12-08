@@ -4,11 +4,10 @@
     "version": "0.1.0",
     "type": "module",
     "scripts": {
-        "dev": "vite",
         "build": "tsc && vite build",
-        "preview": "vite preview",
-        "prepare": "husky install",
-        "generate:icons": "tauri icon app-icon.png",
+        "before-dev": "pnpm sync-types && vite",
+        "before-build": "pnpm sync-types && pnpm build",
+        "generate:icons": "tauri icon ./public/app-icon.png",
         "generate:signkey": "tauri signer generate -w .tauri/myapp_signer.key",
         "build:mac:x64": "dotenv -e .env -- tauri build --target x86_64-apple-darwin",
         "build:mac:arm": "dotenv -e .env -- tauri build --target aarch64-apple-darwin",
@@ -22,6 +21,8 @@
         "sync-types": "(cd src-tauri && cargo test) && pnpm format:js",
         "format:rs": "(cd src-tauri && cargo fmt)",
         "format": "pnpm format:js && pnpm format:rs",
+        "preinstall": "pnpm dlx only-allow pnpm",
+        "prepare": "husky install",
         "test": "vitest --run",
         "test:ui": "vitest --ui",
         "tauri": "dotenv -e .env -- tauri"
@@ -53,7 +54,7 @@
         "@tailwindcss/typography": "^0.5.10",
         "@tauri-apps/cli": "^1.5.7",
         "@testing-library/react": "^14.1.2",
-        "@types/node": "^20.10.3",
+        "@types/node": "^20.10.4",
         "@types/react": "^18.2.42",
         "@types/react-dom": "^18.2.17",
         "@typescript-eslint/eslint-plugin": "^6.13.2",
@@ -82,5 +83,59 @@
         "typescript": "^5.1.6",
         "vite": "^5.0.6",
         "vitest": "^1.0.2"
+    },
+    "prettier": {
+        "arrowParens": "always",
+        "bracketSpacing": true,
+        "bracketSameLine": false,
+        "printWidth": 100,
+        "quoteProps": "consistent",
+        "semi": false,
+        "singleQuote": true,
+        "tabWidth": 2,
+        "trailingComma": "es5",
+        "useTabs": false,
+        "overrides": [
+            {
+                "files": [
+                    "*.html",
+                    "*.css",
+                    ".sass"
+                ],
+                "options": {
+                    "singleQuote": false
+                }
+            },
+            {
+                "files": [
+                    "*.json",
+                    "*.rs",
+                    ".prettierrc"
+                ],
+                "options": {
+                    "tabWidth": 4
+                }
+            },
+            {
+                "files": [
+                    "*.jsx",
+                    "*.tsx",
+                    "*.mdx"
+                ],
+                "options": {
+                    "jsxSingleQuote": true
+                }
+            },
+            {
+                "files": [
+                    "Makefile",
+                    "*.mk"
+                ],
+                "options": {
+                    "useTabs": true,
+                    "tabWidth": 4
+                }
+            }
+        ]
     }
 }

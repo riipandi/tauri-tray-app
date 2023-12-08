@@ -10,6 +10,21 @@ pub const APP_VERSION: &'static str = env!("CARGO_PKG_VERSION");
 
 pub const MAIN_WINDOW: &'static str = "main";
 
-// informational metadata
+// The deeplink url will be: myapp://x-callback
+// Replace `myapp` from `CFBundleURLSchemes` (Info.plist)
+pub const SCHEME_PROTOCOL: &'static str = "x-callback";
+
+// Informational metadata for the application
 pub const FEEDBACK_URL: &'static str = "https://ripandis.com/feedback?product=tauri-tray-app";
 pub const WEBSITE_URL: &'static str = "https://twitter.com/riipandi";
+
+// Disable webview native context menu.
+// Optional, injected when webview loaded.
+pub const JS_INIT_SCRIPT: &'static str = r#"
+    (function() {
+        document.addEventListener("contextmenu",
+            (e) => { e.preventDefault(); return false; },
+            { capture: true }
+        );
+    })();
+"#;

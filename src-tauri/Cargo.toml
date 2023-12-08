@@ -5,7 +5,7 @@ description = "A Tauri application"
 authors = ["you"]
 license = "MIT OR Apache-2.0"
 repository = "http://github.com/riipandi/tauri-tray-app"
-rust-version = "1.70"
+rust-version = "1.74"
 edition = "2021"
 publish = false
 

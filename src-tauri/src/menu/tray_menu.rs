@@ -4,6 +4,15 @@
 use tauri::CustomMenuItem;
 use tauri::{SystemTray, SystemTrayMenu, SystemTrayMenuItem, SystemTraySubmenu};
 
+use tauri::async_runtime::block_on;
+use tauri::{AppHandle, Manager, SystemTrayEvent};
+use tauri_plugin_positioner::{Position, WindowExt};
+
+use crate::meta::{FEEDBACK_URL, WEBSITE_URL};
+use crate::utils::webview::open_browser;
+
+use super::tray_icons;
+
 use crate::meta;
 
 enum TrayIdentifier {
@@ -45,7 +54,7 @@ impl From<String> for TrayIdentifier {
 }
 
 #[cfg(target_os = "macos")]
-pub fn build_menu() -> SystemTray {
+pub fn build_tray_menu() -> SystemTray {
     log::debug!("Registering system tray menu...");
 
     let main_window = CustomMenuItem::new(
@@ -78,4 +87,65 @@ pub fn build_menu() -> SystemTray {
         .add_item(quit);
 
     return SystemTray::new().with_menu(tray_menu);
+}
+
+pub fn tray_menu_event(app: &AppHandle, event: SystemTrayEvent) {
+    tauri_plugin_positioner::on_tray_event(app, &event);
+    match event {
+        SystemTrayEvent::LeftClick {
+            position: _,
+            size: _,
+            ..
+        } => {
+            log::info!("system tray received a left click");
+        }
+        SystemTrayEvent::RightClick {
+            position: _,
+            size: _,
+            ..
+        } => {
+            log::info!("system tray received a right click");
+        }
+        SystemTrayEvent::DoubleClick {
+            position: _,
+            size: _,
+            ..
+        } => {
+            log::info!("system tray received a double click");
+        }
+        SystemTrayEvent::MenuItemClick { id, .. } => {
+            let win: tauri::Window = app.get_window(crate::meta::MAIN_WINDOW).unwrap();
+
+            match id.as_str() {
+                "show_window" => {
+                    if !win.is_visible().unwrap() {
+                        let _ = win.move_window(Position::Center);
+                    }
+                    win.show().unwrap();
+                    win.set_focus().unwrap();
+                }
+                "preferences" => {
+                    if win.is_visible().unwrap() {
+                        win.eval("window.location.replace('/settings')").unwrap();
+                        win.set_focus().unwrap();
+                    } else {
+                        win.show().unwrap();
+                        win.eval("window.location.replace('/settings')").unwrap();
+                        win.set_focus().unwrap();
+                    }
+                }
+                "check_update" => {
+                    // Trigger loading animation
+                    block_on(tray_icons::set_tray_icon(app.clone())).unwrap();
+                }
+                "visit_website" => open_browser(WEBSITE_URL),
+                "send_feedback" => open_browser(FEEDBACK_URL),
+                "quit" => {
+                    app.exit(0);
+                }
+                _ => {}
+            }
+        }
+        _ => {}
+    }
 }

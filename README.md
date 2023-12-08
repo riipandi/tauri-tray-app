@@ -2,7 +2,7 @@
 
 This template should help get you started developing desktop app with tray status using Tauri, React, Tailwind CSS, Typescript, and Vite.
 
-![Screenshot](.//screenshot.jpeg)
+![Screenshot](./public/screenshot.jpeg)
 
 ## Recommended IDE Setup
 

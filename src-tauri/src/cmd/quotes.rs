@@ -6,7 +6,7 @@ use reqwest::header::{ACCEPT, CONTENT_TYPE};
 use serde::{Deserialize, Serialize};
 use ts_rs::TS;
 
-use crate::fetcher::{fetch_api, ApiResponse};
+use crate::utils::fetcher::{fetch_api, ApiResponse};
 
 #[derive(Debug, Serialize, Deserialize, TS)]
 #[ts(export, export_to = "../src/types/quote.ts", rename_all = "camelCase")]

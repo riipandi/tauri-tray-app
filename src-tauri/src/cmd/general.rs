@@ -14,6 +14,19 @@ pub fn open_devtools(window: tauri::Window) {
 }
 
 #[tauri::command]
+pub async fn check_update(handle: tauri::AppHandle) {
+    utils::updater::check_update(handle).await
+}
+
+#[tauri::command]
+pub fn get_machine_id() -> String {
+    match machine_uid::get() {
+        Ok(machine_id) => machine_id,
+        Err(err) => format!("Error getting machine ID: {}", err),
+    }
+}
+
+#[tauri::command]
 pub fn set_darkmode(window: tauri::Window, enable: bool) {
     let theme = window.theme().unwrap();
     let msg;
@@ -27,14 +40,4 @@ pub fn set_darkmode(window: tauri::Window, enable: bool) {
     }
 
     dialog::message(Some(&window), "Information", msg);
-}
-
-#[tauri::command]
-pub async fn check_update(handle: tauri::AppHandle) {
-    utils::check_update(handle).await
-}
-
-#[tauri::command]
-pub fn get_machine_id() -> String {
-    machine_uid::get().unwrap()
 }

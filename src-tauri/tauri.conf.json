@@ -1,8 +1,8 @@
 {
     "$schema": "https://github.com/tauri-apps/tauri/releases/download/tauri-build-v1.5.0/schema.json",
     "build": {
-        "beforeDevCommand": "pnpm sync-types && pnpm dev",
-        "beforeBuildCommand": "pnpm sync-types && pnpm build",
+        "beforeDevCommand": "pnpm before-dev",
+        "beforeBuildCommand": "pnpm before-build",
         "devPath": "http://localhost:1420",
         "distDir": "../dist",
         "withGlobalTauri": false
