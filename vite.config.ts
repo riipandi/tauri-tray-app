@@ -1,3 +1,6 @@
+/// <reference types="vitest" />
+/// <reference types="vite/client" />
+
 import { resolve } from 'node:path'
 
 import react from '@vitejs/plugin-react'
@@ -22,5 +25,11 @@ export default defineConfig(async () => ({
     chunkSizeWarningLimit: 1200,
     reportCompressedSize: false,
     outDir: resolve(__dirname, 'dist'),
+  },
+  test: {
+    globals: true,
+    environment: 'jsdom',
+    cache: { dir: './node_modules/.vitest' },
+    include: ['./**/*.{test,spec}.{ts,tsx}'],
   },
 }))
