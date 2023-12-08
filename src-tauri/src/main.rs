@@ -110,6 +110,7 @@ fn main() {
             cmd::general::open_devtools,
             cmd::general::get_machine_id,
             cmd::general::create_child_window,
+            cmd::general::open_settings_window,
             cmd::general::set_darkmode,
             cmd::general::check_update,
             cmd::quotes::get_quotes,

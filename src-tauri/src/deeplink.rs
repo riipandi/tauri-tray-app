@@ -8,10 +8,10 @@ use tauri::{AppHandle, Manager};
 use crate::meta;
 
 pub fn callback(app: &AppHandle, req: &Request) -> Result<Response, Box<dyn std::error::Error>> {
-    log::info!("Callback URI: {:?}", req.uri());
     let window = app.get_window(meta::MAIN_WINDOW).unwrap();
     window.show().unwrap();
     window.set_focus().unwrap();
+    log::info!("Callback URI: {:?}", req.uri());
     dialog::message(Some(&window), "Welcome Back", "Not yet implemented!");
     todo!()
 }

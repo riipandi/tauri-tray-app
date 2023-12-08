@@ -53,6 +53,33 @@ pub async fn create_child_window(id: String, title: String, window: tauri::Windo
         .unwrap();
 }
 
+#[tauri::command(rename_all = "snake_case", async)]
+pub async fn open_settings_window(window: tauri::Window) {
+    let url = WindowUrl::default();
+
+    let child = WindowBuilder::new(&window, meta::SETTING_WINDOW, url).title("Preferences");
+
+    #[cfg(target_os = "macos")]
+    let child = child.parent_window(window.ns_window().unwrap());
+
+    #[cfg(windows)]
+    let child = child.parent_window(window.hwnd().unwrap());
+
+    child
+        .inner_size(640.0, 560.0)
+        .initialization_script(meta::JS_INIT_SCRIPT)
+        .resizable(false)
+        .minimizable(false)
+        .closable(true)
+        .enable_clipboard_access()
+        .accept_first_mouse(true)
+        .decorations(true)
+        .hidden_title(true)
+        .focused(true)
+        .build()
+        .unwrap();
+}
+
 #[tauri::command(rename_all = "snake_case")]
 pub fn set_darkmode(window: tauri::Window, enable: bool) {
     let theme = window.theme().unwrap();

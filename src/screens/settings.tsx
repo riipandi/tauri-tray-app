@@ -26,11 +26,9 @@ const WithContextMenu = ({ children, className }: WithContextMenuProps) => {
     await message('Not yet implemented', { title: 'Tauri App', type: 'info' })
   }
 
-  const handleOpenChildWindow = async () => {
-    await invoke('create_child_window', { id: 'setting-window', title: 'Setting' })
-  }
-
   const handleOpenWebpage = async () => {
+    // await invoke('create_child_window', { id: 'setting-window', title: 'Setting' })
+
     const sizes = [840, 480]
     openWebview('second-window', 'https://browserleaks.com/ip', {
       title: 'External Site',
@@ -49,10 +47,10 @@ const WithContextMenu = ({ children, className }: WithContextMenuProps) => {
         </MenuContextTrigger>
         <Portal>
           <MenuPositioner>
-            <MenuContent className='disable-select w-[168px] space-y-1 rounded border border-gray-200 bg-white p-2 text-sm shadow-sm dark:border-gray-800 dark:bg-background-dark'>
+            <MenuContent className='disable-select dark:bg-background-dark w-[168px] space-y-1 rounded border border-gray-200 bg-white p-2 text-sm shadow-sm dark:border-gray-800'>
               <MenuItem
                 id='back'
-                className='cursor-default rounded px-2 py-1 hover:bg-gray-100/90 dark:text-foreground-dark dark:hover:bg-gray-700'
+                className='dark:text-foreground-dark cursor-default rounded px-2 py-1 hover:bg-gray-100/90 dark:hover:bg-gray-700'
                 onClick={() => navigate('/')}
               >
                 Back
@@ -66,7 +64,7 @@ const WithContextMenu = ({ children, className }: WithContextMenuProps) => {
               </MenuItem>
               <MenuItem
                 id='reload'
-                className='cursor-default rounded px-2 py-1 hover:bg-gray-100/90 dark:text-foreground-dark dark:hover:bg-gray-700'
+                className='dark:text-foreground-dark cursor-default rounded px-2 py-1 hover:bg-gray-100/90 dark:hover:bg-gray-700'
                 onClick={() => window.location.reload()}
               >
                 Reload
@@ -74,29 +72,29 @@ const WithContextMenu = ({ children, className }: WithContextMenuProps) => {
               <MenuSeparator />
               <MenuItem
                 id='sample-dialog'
-                className='cursor-default rounded px-2 py-1 hover:bg-gray-100/90 dark:text-foreground-dark dark:hover:bg-gray-700'
+                className='dark:text-foreground-dark cursor-default rounded px-2 py-1 hover:bg-gray-100/90 dark:hover:bg-gray-700'
                 onClick={handleContextItem}
               >
                 Open Dialog
               </MenuItem>
               <MenuItem
                 id='open-webpage'
-                className='cursor-default rounded px-2 py-1 hover:bg-gray-100/90 dark:text-foreground-dark dark:hover:bg-gray-700'
+                className='dark:text-foreground-dark cursor-default rounded px-2 py-1 hover:bg-gray-100/90 dark:hover:bg-gray-700'
                 onClick={handleOpenWebpage}
               >
                 Open webpage
               </MenuItem>
               <MenuItem
                 id='open-webpage'
-                className='cursor-default rounded px-2 py-1 hover:bg-gray-100/90 dark:text-foreground-dark dark:hover:bg-gray-700'
-                onClick={handleOpenChildWindow}
+                className='dark:text-foreground-dark cursor-default rounded px-2 py-1 hover:bg-gray-100/90 dark:hover:bg-gray-700'
+                onClick={async () => await invoke('open_settings_window')}
               >
                 Open child window
               </MenuItem>
               <MenuSeparator />
               <MenuItem
                 id='inspect'
-                className='cursor-default rounded px-2 py-1 hover:bg-gray-100/90 dark:text-foreground-dark dark:hover:bg-gray-700'
+                className='dark:text-foreground-dark cursor-default rounded px-2 py-1 hover:bg-gray-100/90 dark:hover:bg-gray-700'
                 onClick={async () => await invoke('open_devtools')}
               >
                 Inspect

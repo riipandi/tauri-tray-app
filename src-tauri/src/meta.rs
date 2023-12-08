@@ -9,6 +9,7 @@ pub const APP_TITLE: &'static str = "Tauri App";
 pub const APP_VERSION: &'static str = env!("CARGO_PKG_VERSION");
 
 pub const MAIN_WINDOW: &'static str = "main";
+pub const SETTING_WINDOW: &'static str = "app-setting";
 
 // The deeplink url will be: myapp://x-callback
 // Replace `myapp` from `CFBundleURLSchemes` (Info.plist)
