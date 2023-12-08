@@ -16,7 +16,7 @@ pub struct Quote {
     author: String,
 }
 
-#[tauri::command(rename_all = "snake_case")]
+#[tauri::command(rename_all = "snake_case", async)]
 pub async fn get_single_quote(id: Option<u32>) -> Result<ApiResponse<Quote>, ApiResponse<String>> {
     let param_id = id.unwrap_or(1); // set default id
     let url = format!("https://dummyjson.com/quotes/{}", param_id);
@@ -48,7 +48,7 @@ pub struct AllQuotes {
     limit: u32,
 }
 
-#[tauri::command]
+#[tauri::command(async)]
 pub async fn get_quotes() -> Result<ApiResponse<AllQuotes>, ApiResponse<String>> {
     let url = String::from("https://dummyjson.com/quotes");
 

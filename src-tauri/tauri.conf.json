@@ -83,8 +83,7 @@
             ]
         },
         "security": {
-            "csp": null,
-            "dangerousUseHttpScheme": false
+            "csp": "default-src 'self'; connect-src ipc: http://ipc.localhost"
         },
         "updater": {
             "active": true,
