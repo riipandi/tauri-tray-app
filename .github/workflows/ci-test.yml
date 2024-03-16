@@ -14,9 +14,6 @@ env:
   NODE_VERSION: 20
   DOTNET_CLI_TELEMETRY_OPTOUT: 1
   CARGO_TERM_COLOR: always
-  SCCACHE_GHA_ENABLED: true
-  RUSTC_WRAPPER: sccache
-  CARGO_INCREMENTAL: 0
   CI: true
 
 # Cancel in progress workflows on pull_requests.
@@ -66,6 +63,10 @@ jobs:
         working-directory: src-tauri
         # run: cargo test --frozen --quiet
         run: cargo nextest run
+        env:
+          SCCACHE_GHA_ENABLED: true
+          RUSTC_WRAPPER: sccache
+          CARGO_INCREMENTAL: 0
 
       - if: ${{ steps.pnpm-cache.outputs.cache-hit != 'true' }}
         name: Build the application
