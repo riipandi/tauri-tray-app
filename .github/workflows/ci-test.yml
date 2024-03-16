@@ -52,6 +52,12 @@ jobs:
           sudo apt -yqq install libgtk-3-dev libappindicator3-dev librsvg2-dev patchelf
           sudo apt -yqq install libwebkit2gtk-4.0-dev libssl-dev libayatana-appindicator3-dev
 
+      - shell: bash
+        name: Install typeshare-cli
+        run: |
+          cargo binstall typeshare-cli --no-confirm
+          cargo binstall cargo-nextest --no-confirm
+
       - name: Check code style
         working-directory: src-tauri
         run: cargo fmt -- --check
@@ -61,10 +67,6 @@ jobs:
         # https://github.com/nextest-rs/reuse-build-partition-example/blob/main/.github/workflows/ci.yml
         # run: cargo test --frozen --quiet
         run: cargo nextest run
-
-      - shell: bash
-        name: Install typeshare-cli
-        run: cargo binstall typeshare-cli --no-confirm
 
       - if: ${{ steps.pnpm-cache.outputs.cache-hit != 'true' }}
         name: Build the application
