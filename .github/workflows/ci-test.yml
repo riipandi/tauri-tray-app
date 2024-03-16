@@ -64,7 +64,6 @@ jobs:
 
       - name: Tests Rust code
         working-directory: src-tauri
-        # https://github.com/nextest-rs/reuse-build-partition-example/blob/main/.github/workflows/ci.yml
         # run: cargo test --frozen --quiet
         run: cargo nextest run
 

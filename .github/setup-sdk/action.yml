@@ -52,9 +52,6 @@ runs:
       with:
         workspaces: ${{ inputs.WORKSPACE_PATH }}
 
-    - name: Setup cargo-nextest
-      uses: taiki-e/install-action@nextest
-
     - name: Setup Cargo binstall
       uses: cargo-bins/cargo-binstall@main
 
