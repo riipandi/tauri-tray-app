@@ -54,6 +54,3 @@ runs:
 
     - name: Setup Cargo binstall
       uses: cargo-bins/cargo-binstall@main
-
-    - name: Run sccache-cache
-      uses: mozilla-actions/sccache-action@v0.0.4
