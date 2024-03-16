@@ -17,9 +17,7 @@
                 </array>
             </dict>
         </array>
-        <key>NSCameraUsageDescription</key>
-        <string>Requires camera access in order to capture and transmit video</string>
-        <key>NSMicrophoneUsageDescription</key>
-        <string>Requires microphone access in order to capture and transmit audio</string>
+        <key>NSUserNotificationsUsageDescription</key>
+        <string>Requires notification access to notify the user</string>
     </dict>
 </plist>

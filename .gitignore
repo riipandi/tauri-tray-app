@@ -34,3 +34,5 @@ dist-ssr
 # Tauri
 .tauri/
 target/
+/src-tauri/gen/
+/src/types/generated.ts

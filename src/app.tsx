@@ -1,48 +1,26 @@
-import { useCallback, useEffect, useState } from 'react'
-import { type Platform, platform } from '@tauri-apps/api/os'
-import { Route, Switch } from 'wouter'
+// Copyright 2023-2024 Aris Ripandi <aris@duck.com>
+// SPDX-License-Identifier: Apache-2.0 or MIT
 
-import { TailwindIndicator } from './components/common'
-import WindowControls from './components/ui-controls'
-import { cn } from './libraries/utils'
-import NotFoundScreen from './screens/not-found'
-import SettingScreen from './screens/settings'
-import WelcomeScreen from './screens/welcome'
+/**
+ * This file contains basic example for using Tauri, Vite, and SolidJS.
+ *
+ * @ref: https://beta.tauri.app/features/commands
+ * @ref: https://beta.tauri.app/references/v2/js/core/namespaceevent
+ */
+
+import { type RouteDefinition, Router } from '@solidjs/router'
+import { type ParentComponent, lazy } from 'solid-js'
+
+export const routes: RouteDefinition[] = [
+  { path: '/', component: lazy(() => import('./screens/welcome')) },
+  { path: '/settings', component: lazy(() => import('./screens/settings')) },
+  { path: '*404', component: lazy(() => import('./screens/not-found')) },
+]
+
+const RootLayout: ParentComponent = ({ children }) => {
+  return <div class="main-container dark:bg-black">{children}</div>
+}
 
 export default function App() {
-  const [osType, setOsType] = useState<Platform>('darwin')
-
-  const fetchOsType = useCallback(async () => {
-    setOsType(await platform())
-  }, [])
-
-  useEffect(() => {
-    fetchOsType()
-  }, [fetchOsType])
-
-  return (
-    <div className={cn('disable-select')}>
-      <WindowControls
-        platform='darwin'
-        className={cn(
-          osType === 'darwin' ? 'sticky' : 'hidden',
-          'z-999 absolute top-0 h-7 w-full bg-transparent'
-        )}
-      />
-
-      <Switch>
-        <Route path='/'>
-          <WelcomeScreen />
-        </Route>
-        <Route path='/settings'>
-          <SettingScreen />
-        </Route>
-        <Route>
-          <NotFoundScreen />
-        </Route>
-      </Switch>
-
-      <TailwindIndicator />
-    </div>
-  )
+  return <Router root={RootLayout}>{routes}</Router>
 }

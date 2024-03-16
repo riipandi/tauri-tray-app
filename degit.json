@@ -1,0 +1,13 @@
+[
+    {
+        "action": "remove",
+        "files": [
+            "LICENSE-APACHE",
+            "LICENSE-MIT",
+            "README.md",
+            "pnpm-lock.yaml",
+            "public/screenshot.jpeg",
+            "src-tauri/Cargo.lock"
+        ]
+    }
+]
