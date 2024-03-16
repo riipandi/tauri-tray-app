@@ -46,7 +46,7 @@ pub fn handle_settings_window<R: Runtime>(handle: &tauri::AppHandle<R>) {
         if handle.get_webview_window(meta::SETTING_WINDOW).is_none() {
             let setting_window =
                 WebviewWindowBuilder::new(handle, meta::SETTING_WINDOW, WebviewUrl::App("/settings".into()))
-                    .title("Preferences")
+                    .title("Settings")
                     .initialization_script(meta::JS_INIT_SCRIPT)
                     .min_inner_size(meta::SETTING_WINDOW_WIDTH, meta::SETTING_WINDOW_HEIGHT)
                     .max_inner_size(meta::SETTING_WINDOW_WIDTH, meta::SETTING_WINDOW_HEIGHT)
@@ -60,6 +60,11 @@ pub fn handle_settings_window<R: Runtime>(handle: &tauri::AppHandle<R>) {
                     .decorations(true)
                     .focused(true)
                     .shadow(true);
+
+            #[cfg(target_os = "macos")]
+            let setting_window = setting_window
+                .title_bar_style(tauri::TitleBarStyle::Overlay)
+                .hidden_title(true);
 
             setting_window
                 .parent(&main_window)

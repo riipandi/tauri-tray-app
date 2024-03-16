@@ -43,7 +43,7 @@ export default function WelcomeScreen() {
           </span>
         </div>
 
-        <div class="mt-12 text-base text-center leading-7 dark:text-gray-100">
+        <div class="mt-12 text-base text-center leading-7 dark:text-neutral-100">
           <p>This is the default screen of Tauri App v{appVersion}</p>
           <p>
             Visit{' '}
@@ -70,13 +70,13 @@ export default function WelcomeScreen() {
                     id="greet-input"
                     onChange={(e) => setName(e.currentTarget.value)}
                     class={clx(
-                      'py-1.5 pl-7 pr-2 block w-full border-gray-200 rounded-md text-base focus:border-blue-500',
-                      'focus:outline-none disabled:opacity-50 disabled:pointer-events-none dark:bg-gray-900',
-                      'dark:border-gray-700 dark:text-gray-400 shadow-sm'
+                      'py-1.5 pl-7 pr-2 block w-full border-neutral-200 rounded-md text-base focus:border-blue-500',
+                      'focus:outline-none disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900',
+                      'dark:border-neutral-700 dark:text-neutral-400 shadow-sm'
                     )}
                     placeholder="Enter a name..."
                   />
-                  <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center px-2 text-gray-500">
+                  <div class="pointer-events-none absolute inset-y-0 left-0 flex items-center px-2 text-neutral-500">
                     <UserIcon class="size-4" strokeWidth={1.6} />
                   </div>{' '}
                 </div>
@@ -85,9 +85,9 @@ export default function WelcomeScreen() {
             <button
               type="submit"
               class={clx(
-                'py-1.5 px-3 inline-flex items-center gap-x-2 text-sm rounded-md border border-gray-200',
-                'bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none',
-                'dark:bg-gray-900 dark:border-gray-700 dark:text-white dark:hover:bg-gray-800 focus:outline-none',
+                'py-1.5 px-3 inline-flex items-center gap-x-2 text-sm rounded-md border border-neutral-200',
+                'bg-white text-neutral-800 shadow-sm hover:bg-neutral-50 disabled:opacity-50 disabled:pointer-events-none',
+                'dark:bg-neutral-900 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-800 focus:outline-none',
                 'focus:border-blue-500 active:border-blue-500'
               )}
             >
@@ -98,17 +98,17 @@ export default function WelcomeScreen() {
             type="button"
             onClick={handleSetting}
             class={clx(
-              'py-1.5 px-2 inline-flex items-center gap-x-2 text-sm rounded-md border border-gray-200',
-              'bg-white text-gray-800 shadow-sm hover:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none',
-              'dark:bg-gray-900 dark:border-gray-700 dark:text-white dark:hover:bg-gray-800 dark:focus:outline-none',
-              'dark:focus:ring-1 dark:focus:ring-gray-600'
+              'p-1.5 inline-flex items-center gap-x-2 text-sm rounded-md border border-neutral-200',
+              'bg-white text-neutral-800 shadow-sm hover:bg-neutral-50 disabled:opacity-50 disabled:pointer-events-none',
+              'dark:bg-neutral-900 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-800 dark:focus:outline-none',
+              'dark:focus:ring-1 dark:focus:ring-neutral-600'
             )}
           >
             <CogIcon class="size-5" strokeWidth={1.6} />
             <span class="sr-only">Settings</span>
           </button>
         </div>
-        <p class="mt-8 text-base max-w-2xl text-center dark:text-gray-100">{greetMsg()}</p>
+        <p class="mt-8 text-base max-w-2xl text-center dark:text-neutral-100">{greetMsg()}</p>
       </div>
     </div>
   )

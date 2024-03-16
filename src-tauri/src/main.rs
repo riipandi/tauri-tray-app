@@ -187,7 +187,8 @@ fn setup_main_window<R: Runtime>(app: &App<R>) -> tauri::Result<WebviewWindow<R>
             .shadow(true)
             .decorations(true)
             .transparent(false)
-            .title_bar_style(tauri::TitleBarStyle::Visible)
+            .title_bar_style(tauri::TitleBarStyle::Overlay)
+            .hidden_title(true)
             .menu(app_menu);
     }
 

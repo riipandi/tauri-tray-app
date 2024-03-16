@@ -102,6 +102,12 @@ html, body {
   scroll-behavior: smooth;
   border-bottom-left-radius: var(--ui-window-border-radius);
   border-bottom-right-radius: var(--ui-window-border-radius);
+  /* Background image */
+  background-attachment: fixed;
+  background-image: url(../images/background.svg);
+  background-position: top right;
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
 }
 
 /* Customize the scrollbar for the main-container */

@@ -5,8 +5,8 @@ pub const MAIN_WINDOW: &'static str = "main";
 pub const TRAY_MENU_ID: &'static str = "tray-menu";
 pub const APP_DB_FILENAME: &'static str = "appdata.db";
 pub const SETTING_WINDOW: &'static str = "settings";
-pub const SETTING_WINDOW_WIDTH: f64 = 570.;
-pub const SETTING_WINDOW_HEIGHT: f64 = 410.;
+pub const SETTING_WINDOW_WIDTH: f64 = 580.;
+pub const SETTING_WINDOW_HEIGHT: f64 = 540.;
 
 // Informational metadata for the application
 pub const FEEDBACK_URL: &'static str = "https://ripandis.com/feedback?product=tauri-tray-app";
