@@ -24,7 +24,6 @@ concurrency:
 
 jobs:
   test-build:
-    # if: github.ref == 'refs/heads/main'
     name: Test Build
     strategy:
       matrix:
