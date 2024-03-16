@@ -40,13 +40,12 @@ to build the application in debug mode, this will enable developer tools.
     - [x] `tauri-plugin-os`
     - [x] `tauri-plugin-process`
     - [x] `tauri-plugin-shell`
-    - [x] `tauri-plugin-window-state`
 - [x] Example secondary child window
 - [ ] Custom titlebar (desktop)
 - [ ] Custom application menu
+- [x] Read values from `.env` file
 - [x] Auto-generated Typescript types
 - [ ] Theme switcher (dark & light mode)
-- [x] Read value from `.env` file (compile time)
 - [x] Global state with [`native_db`][native_db] as backend
 - [x] Frontend app with [SolidJS][solidjs] + [Tailwind CSS][tailwindcss]
 - [x] Frontend lint & format using [Biome][biome]
