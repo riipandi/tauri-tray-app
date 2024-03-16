@@ -13,9 +13,7 @@ use tauri_tray_app::meta;
 
 static DB: Lazy<native_db::DatabaseBuilder> = Lazy::new(|| {
     let mut builder = native_db::DatabaseBuilder::new();
-    builder
-        .define::<state::Settings>()
-        .expect("failed to define model");
+    builder.define::<state::Settings>().expect("failed to define model");
     builder
 });
 
@@ -25,7 +23,7 @@ async fn main() {
     let tauri_ctx = tauri::generate_context!();
     let builder = tauri::Builder::default();
 
-    // This should be called as early in the execution of the app as possible.
+    // Logger plugin should be called as early in the execution of the app as possible.
     let builder = builder.plugin(logger().build());
 
     // Register Tauri plugins
@@ -53,6 +51,16 @@ async fn main() {
         Ok(())
     });
 
+    // Configure window event handlers
+    let builder = builder.on_window_event(|window, event| match event {
+        tauri::WindowEvent::CloseRequested { api, .. } => {
+            // window.app_handle().runtime_handle.set_activation_policy(tauri::ActivationPolicy::Accessory);
+            window.hide().expect("failed to hide window");
+            api.prevent_close();
+        }
+        _ => {}
+    });
+
     // Build Tauri application
     let mut main_app = builder
         .invoke_handler(tauri::generate_handler![
@@ -76,6 +84,7 @@ async fn main() {
 
 fn logger() -> tauri_plugin_log::Builder {
     use tauri_plugin_log::fern::colors::ColoredLevelConfig;
+    use tauri_plugin_log::WEBVIEW_TARGET;
     use tauri_plugin_log::{Target, TargetKind, TimezoneStrategy};
 
     let mut log_plugin_builder = tauri_plugin_log::Builder::new()
@@ -86,29 +95,28 @@ fn logger() -> tauri_plugin_log::Builder {
         .timezone_strategy(TimezoneStrategy::UseUtc)
         .with_colors(ColoredLevelConfig::default());
 
-    let target_stdout = Target::new(TargetKind::Stdout);
-    let target_logdir = Target::new(TargetKind::LogDir { file_name: None });
-
     #[cfg(debug_assertions)]
-    {
-        use tauri_plugin_log::WEBVIEW_TARGET;
-
-        let target_webview = Target::new(TargetKind::Webview)
-            .filter(|metadata| metadata.target() == WEBVIEW_TARGET);
-
-        log_plugin_builder = log_plugin_builder
-            .targets([target_stdout, target_logdir, target_webview])
-            .level(log::LevelFilter::Debug)
-            .clear_targets();
-    }
+    let log_filename = format!("tauri-tray-app-debug.log");
 
     #[cfg(not(debug_assertions))]
-    {
-        log_plugin_builder = log_plugin_builder
-            .targets([target_stdout, target_logdir])
-            .rotation_strategy(tauri_plugin_log::RotationStrategy::KeepAll)
-            .level(log::LevelFilter::Info);
-    }
+    let log_filename = format!("tauri-tray-app.log");
+
+    let target_stdout = Target::new(TargetKind::Stdout);
+    let target_logdir = Target::new(TargetKind::LogDir {
+        file_name: Some(log_filename),
+    });
+    let target_webview = Target::new(TargetKind::Webview).filter(|metadata| metadata.target() == WEBVIEW_TARGET);
+
+    #[cfg(debug_assertions)]
+    let log_level = log::LevelFilter::Debug;
+
+    #[cfg(not(debug_assertions))]
+    let log_level = log::LevelFilter::Info;
+
+    log_plugin_builder = log_plugin_builder
+        .targets([target_stdout, target_logdir, target_webview])
+        .rotation_strategy(tauri_plugin_log::RotationStrategy::KeepAll)
+        .level(log_level);
 
     log_plugin_builder
 }
@@ -120,18 +128,15 @@ fn setup_global_state<R: Runtime>(app: &App<R>) {
 
     let db_file_path = app
         .path()
-        .resolve("data.db", BaseDirectory::AppConfig)
+        .resolve(meta::APP_DB_FILENAME, BaseDirectory::AppConfig)
         .expect("failed to get db file path");
 
     // Create directory if it doesn't exist
-    let config_dir = db_file_path
-        .parent()
-        .expect("failed to get config directory");
+    let config_dir = db_file_path.parent().expect("failed to get config directory");
 
     // Create directory if it doesn't exist
     if !config_dir.exists() {
-        std::fs::create_dir_all(config_dir)
-            .expect("failed to create config directory");
+        std::fs::create_dir_all(config_dir).expect("failed to create config directory");
     }
 
     #[cfg(debug_assertions)]
@@ -153,14 +158,8 @@ fn setup_global_state<R: Runtime>(app: &App<R>) {
     app.handle().manage(db);
 }
 
-fn setup_main_window<R: Runtime>(
-    app: &App<R>,
-) -> tauri::Result<WebviewWindow<R>> {
-    let mut wb = WebviewWindowBuilder::new(
-        app,
-        meta::MAIN_WINDOW,
-        WebviewUrl::default(),
-    );
+fn setup_main_window<R: Runtime>(app: &App<R>) -> tauri::Result<WebviewWindow<R>> {
+    let mut wb = WebviewWindowBuilder::new(app, meta::MAIN_WINDOW, WebviewUrl::default());
 
     #[cfg(all(desktop, not(test)))]
     {
@@ -182,7 +181,7 @@ fn setup_main_window<R: Runtime>(
 
     #[cfg(target_os = "macos")]
     {
-        let app_menu = tauri::menu::Menu::default(app.app_handle())?;
+        let app_menu = tauri_tray_app::core::menu::init(app.app_handle())?;
 
         wb = wb
             .shadow(true)

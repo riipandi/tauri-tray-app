@@ -36,9 +36,7 @@ pub fn get_app_user_agent<R: Runtime>(handle: &AppHandle<R>) -> String {
 
 pub fn handle_settings_window<R: Runtime>(handle: &tauri::AppHandle<R>) {
     if let Some(main_window) = handle.get_webview_window(meta::MAIN_WINDOW) {
-        let is_main_window_visible = main_window
-            .is_visible()
-            .expect("failed to get window visibility");
+        let is_main_window_visible = main_window.is_visible().expect("failed to get window visibility");
 
         if !is_main_window_visible {
             main_window.show().expect("failed to show window");
@@ -46,44 +44,26 @@ pub fn handle_settings_window<R: Runtime>(handle: &tauri::AppHandle<R>) {
         }
 
         if handle.get_webview_window(meta::SETTING_WINDOW).is_none() {
-            let setting_window = WebviewWindowBuilder::new(
-                handle,
-                meta::SETTING_WINDOW,
-                WebviewUrl::App("/settings".into()),
-            )
-            .title("Preferences")
-            .initialization_script(meta::JS_INIT_SCRIPT)
-            .min_inner_size(
-                meta::SETTING_WINDOW_WIDTH,
-                meta::SETTING_WINDOW_HEIGHT,
-            )
-            .max_inner_size(
-                meta::SETTING_WINDOW_WIDTH,
-                meta::SETTING_WINDOW_HEIGHT,
-            )
-            .inner_size(meta::SETTING_WINDOW_WIDTH, meta::SETTING_WINDOW_HEIGHT)
-            .resizable(false)
-            .minimizable(false)
-            .maximizable(false)
-            .closable(true)
-            .enable_clipboard_access()
-            .accept_first_mouse(true)
-            .decorations(true)
-            .focused(true)
-            .shadow(true);
-
-            #[cfg(target_os = "macos")]
-            // let setting_window = setting_window.parent(main_window.ns_window().expect("failed to get parent window"));
-            let setting_window = setting_window
-                .parent(&main_window)
-                .expect("failed to get parent window");
-
-            #[cfg(windows)]
-            let setting_window = setting_window.parent_window(
-                window.hwnd().expect("failed to get parent window"),
-            );
+            let setting_window =
+                WebviewWindowBuilder::new(handle, meta::SETTING_WINDOW, WebviewUrl::App("/settings".into()))
+                    .title("Preferences")
+                    .initialization_script(meta::JS_INIT_SCRIPT)
+                    .min_inner_size(meta::SETTING_WINDOW_WIDTH, meta::SETTING_WINDOW_HEIGHT)
+                    .max_inner_size(meta::SETTING_WINDOW_WIDTH, meta::SETTING_WINDOW_HEIGHT)
+                    .inner_size(meta::SETTING_WINDOW_WIDTH, meta::SETTING_WINDOW_HEIGHT)
+                    .resizable(false)
+                    .minimizable(false)
+                    .maximizable(false)
+                    .closable(true)
+                    .enable_clipboard_access()
+                    .accept_first_mouse(true)
+                    .decorations(true)
+                    .focused(true)
+                    .shadow(true);
 
             setting_window
+                .parent(&main_window)
+                .expect("failed to get parent window")
                 .build()
                 .expect("failed to build setting window");
         } else {

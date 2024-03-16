@@ -8,6 +8,22 @@
   --font-family-sans: ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;
   --font-family-mono: ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
 
+  /* Define font size */
+  --font-size-*: initial;
+  --font-size-xs: 0.625rem; /* 10px */
+  --font-size-sm: 0.75rem; /* 12px */
+  --font-size-base: 0.875rem; /* 14px */
+  --font-size-lg: 1rem; /* 16px */
+  --font-size-xl: 1.125rem; /* 18px */
+  --font-size-2xl: 1.25rem; /* 20px */
+  --font-size-3xl: 1.5rem; /* 24px */
+  --font-size-4xl: 1.875rem; /* 30px */
+  --font-size-5xl: 2.25rem; /* 36px */
+  --font-size-6xl: 3rem; /* 48px */
+  --font-size-7xl: 3.75rem; /* 60px */
+  --font-size-8xl: 4.5rem; /* 72px */
+  --font-size-9xl: 6rem; /* 96px */
+
   /* Custom colors */
   --color-black: rgb(14,17,17);
   --color-red-light: rgb(255,49,38);
@@ -45,8 +61,8 @@
 }
 
 html {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: auto;
+  -moz-osx-font-smoothing: auto;
 }
 
 body {
@@ -94,17 +110,17 @@ html, body {
   height: 10px;
 }
 .main-container::-webkit-scrollbar-track {
-  background-color: rgba(255,255,255,0.8);
+  background-color: rgba(255,255,255,0.1);
 }
 .main-container::-webkit-scrollbar-thumb {
-  border-radius: var(--ui-window-border-radius);
-  background: rgba(0,0,0,0.2);
+  border-radius: 1px;
+  background: rgba(255,255,255,0.2);
 }
 .main-container::-webkit-scrollbar-thumb:hover {
-  background: rgba(0,0,0,0.3);
+  background: rgba(255,255,255,0.15);
 }
 .main-container::-webkit-scrollbar-thumb:active {
-  background: rgba(0,0,0,0.5);
+  background: rgba(255,255,255,0.1);
 }
 
 /* Disable text selection */

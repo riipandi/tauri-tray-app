@@ -2,5 +2,4 @@
 // SPDX-License-Identifier: Apache-2.0 or MIT
 
 pub mod core;
-// pub mod menu;
 pub mod meta;

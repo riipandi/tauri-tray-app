@@ -16,7 +16,17 @@ dotenv-build = "^0.1.1"
 
 [dependencies]
 # https://docs.rs/tauri/2.0.0-beta.11/tauri/#cargo-features
-tauri = { version = "2.0.0-beta.11", features = ["devtools", "image-ico", "image-png", "macos-private-api", "rustls-tls", "test", "tracing", "tray-icon", "webview-data-url"] }
+tauri = { version = "2.0.0-beta.11", features = [
+  "devtools",
+  "image-ico",
+  "image-png",
+  "macos-private-api",
+  "rustls-tls",
+  "test",
+  "tracing",
+  "tray-icon",
+  "webview-data-url"
+] }
 tauri-plugin-dialog = "2.0.0-beta.2"
 tauri-plugin-fs = "2.0.0-beta.2"
 tauri-plugin-http = "2.0.0-beta.2"
@@ -47,13 +57,16 @@ objc = "0.2.7"
 gtk = { version = "0.18", features = ["v3_24"] }
 webkit2gtk = { version = "=2.0.1", features = ["v2_38"] }
 
+# [target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
+# tauri-plugin-updater = "2.0.0-beta.2"
+
 # Optimized for bundle size. If you want faster builds comment out/delete this section.
 # Reference: https://doc.rust-lang.org/cargo/reference/profiles.html
 [profile.release]
 lto = "thin"         # Enable Link Time Optimization.
 opt-level = "s"      # Optimize for binary size.
 codegen-units = 16   # Reduce number of codegen units to increase optimizations.
-panic = "abort"      # Abort on panic.
+panic = "unwind"      # Abort on panic.
 strip = "debuginfo"  # Automatically strip debuginfo from the binary.
 debug = false        # Disable debug on production build.
 

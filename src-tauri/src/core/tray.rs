@@ -14,55 +14,19 @@ use crate::meta;
 pub fn init<R: Runtime>(app: &tauri::App<R>) -> tauri::Result<()> {
     let handle = app.app_handle();
 
-    let toggle_i = MenuItem::with_id(
-        handle,
-        "toggle-window",
-        "Hide Tauri App",
-        true,
-        None::<&str>,
-    )?;
-    let setting_i = MenuItem::with_id(
-        handle,
-        "settings",
-        "Settings...",
-        true,
-        Some("CmdOrCtrl+,"),
-    )?;
+    let toggle_i = MenuItem::with_id(handle, "toggle-window", "Hide Tauri App", true, None::<&str>)?;
+    let setting_i = MenuItem::with_id(handle, "settings", "Settings...", true, Some("CmdOrCtrl+,"))?;
 
     #[cfg(target_os = "macos")]
-    let set_title_i = MenuItem::with_id(
-        handle,
-        "set-tray-title",
-        "Set Title",
-        true,
-        None::<&str>,
-    )?;
+    let set_title_i = MenuItem::with_id(handle, "set-tray-title", "Set Title", true, None::<&str>)?;
 
-    // let help_i = MenuItem::with_id(handle, "help", "Help", true, None::<&str>)?;
+    let remove_tray_i = MenuItem::with_id(handle, "remove-tray", "Remove Tray", true, None::<&str>)?;
     let help_i = Submenu::new(handle, "&Help", true)?;
     let separator = PredefinedMenuItem::separator(handle)?;
-    let quit_i = MenuItem::with_id(
-        handle,
-        "quit",
-        "Quit Tauri App",
-        true,
-        None::<&str>,
-    )?;
+    let quit_i = MenuItem::with_id(handle, "quit", "Quit Tauri App", true, None::<&str>)?;
 
-    let feedback_i = MenuItem::with_id(
-        handle,
-        "feedback",
-        "Send Feedback",
-        true,
-        None::<&str>,
-    )?;
-    let website_i = MenuItem::with_id(
-        handle,
-        "website",
-        "Visit Website",
-        true,
-        None::<&str>,
-    )?;
+    let feedback_i = MenuItem::with_id(handle, "feedback", "Send Feedback", true, None::<&str>)?;
+    let website_i = MenuItem::with_id(handle, "website", "Visit Website", true, None::<&str>)?;
 
     help_i.append_items(&[&feedback_i, &website_i])?;
 
@@ -73,20 +37,21 @@ pub fn init<R: Runtime>(app: &tauri::App<R>) -> tauri::Result<()> {
             &separator,
             #[cfg(target_os = "macos")]
             &set_title_i,
+            &remove_tray_i,
             &separator,
             &setting_i,
+            &separator,
             &help_i,
             &separator,
             &quit_i,
         ],
     )?;
 
-    let tray_icon =
-        Image::from_bytes(include_bytes!("../../icons/tray-icon.png"));
+    let tray_icon = Image::from_bytes(include_bytes!("../../icons/tray-icon.png"));
 
     let _ = TrayIconBuilder::with_id(meta::TRAY_MENU_ID)
         .tooltip("Tauri")
-        .icon(tray_icon.unwrap())
+        .icon(tray_icon.expect("failed to load tray icon"))
         .menu(&tray_menu_items)
         .menu_on_left_click(true)
         .on_menu_event(move |handle, event| match event.id.as_ref() {
@@ -122,12 +87,10 @@ pub fn init<R: Runtime>(app: &tauri::App<R>) -> tauri::Result<()> {
     Ok(())
 }
 
-fn handle_toggle_window<R: Runtime>(
-    menu_item: &MenuItem<R>,
-    app: &tauri::AppHandle<R>,
-) {
+fn handle_toggle_window<R: Runtime>(menu_item: &MenuItem<R>, app: &tauri::AppHandle<R>) {
     if let Some(window) = app.get_webview_window(meta::MAIN_WINDOW) {
         let app_name = &app.app_handle().package_info().name;
+
         let new_title = if window.is_visible().unwrap_or_default() {
             let _ = window.hide();
             format!("Open {app_name}")
@@ -136,6 +99,7 @@ fn handle_toggle_window<R: Runtime>(
             let _ = window.set_focus();
             format!("Hide {app_name}")
         };
-        menu_item.set_text(new_title).unwrap();
+
+        menu_item.set_text(new_title).expect("failed to set menu item text");
     }
 }
