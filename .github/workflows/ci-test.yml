@@ -31,7 +31,7 @@ jobs:
     strategy:
       matrix:
         # https://github.com/actions/runner-images/tree/main/images
-        os: [macos-13-arm64] # macos-11, windows-2019, ubuntu-20.04
+        os: [macos-11] # macos-13-arm64, windows-2019, ubuntu-20.04
         rust-toolchain: [stable] # nightly
       fail-fast: false
 
