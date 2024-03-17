@@ -34,5 +34,9 @@ const RootLayout: ParentComponent = ({ children }) => {
 }
 
 export default function App() {
-  return <Router root={RootLayout}>{routes}</Router>
+  return (
+    <Router root={RootLayout} preload>
+      {routes}
+    </Router>
+  )
 }

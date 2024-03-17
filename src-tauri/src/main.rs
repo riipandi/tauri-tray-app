@@ -213,7 +213,6 @@ fn setup_main_window<R: Runtime>(app: &App<R>) -> tauri::Result<WebviewWindow<R>
     #[cfg(target_os = "macos")]
     {
         let app_menu = tauri_tray_app::core::menu::init(app.app_handle())?;
-
         wb = wb
             .shadow(true)
             .decorations(true)

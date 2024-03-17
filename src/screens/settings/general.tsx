@@ -38,7 +38,7 @@ export default function SettingGeneral() {
 
   return (
     <div class="flex flex-col size-full justify-between pb-4">
-      <section class="space-y-8">
+      <section class="space-y-6">
         <div class="grid grid-cols-2 gap-x-8 gap-y-4">
           <div>
             <h2 class="text-base font-semibold leading-6 dark:text-white">Theme</h2>
@@ -47,7 +47,7 @@ export default function SettingGeneral() {
             </p>
           </div>
 
-          <div class="flex overflow-hidden h-9 bg-white border border-neutral-400 divide-x rounded-md dark:bg-neutral-900 dark:border-neutral-700 dark:divide-neutral-700">
+          <div class="flex overflow-hidden h-8 bg-white border border-neutral-200 divide-x divide-neutral-200 rounded-md dark:bg-neutral-900 dark:border-neutral-700 dark:divide-neutral-700 shadow-sm">
             <button
               type="button"
               class={clx(
