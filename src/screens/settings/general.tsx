@@ -32,10 +32,8 @@ export default function SettingGeneral() {
   }
 
   onMount(async () => {
-    const { theme: currentTheme } = await getSettings()
-    setTheme(
-      currentTheme === 'light' ? Theme.Light : currentTheme === 'dark' ? Theme.Dark : Theme.Auto
-    )
+    const { theme } = await getSettings()
+    setTheme(theme === 'light' ? Theme.Light : theme === 'dark' ? Theme.Dark : Theme.Auto)
   })
 
   return (
