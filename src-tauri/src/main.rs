@@ -81,7 +81,13 @@ async fn main() {
     main_app.set_activation_policy(tauri::ActivationPolicy::Regular);
 
     // Finally, run the application
-    main_app.run(move |_app, _event| {});
+    main_app.run(|_app, event| match event {
+        tauri::RunEvent::ExitRequested { api, .. } => {
+            log::debug!("Exit requested");
+            api.prevent_exit();
+        }
+        _ => {}
+    });
 }
 
 fn logger() -> tauri_plugin_log::Builder {

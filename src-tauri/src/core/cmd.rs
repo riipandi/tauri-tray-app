@@ -8,12 +8,18 @@
 // @ref: https://tauri.app/v1/guides/features/command/#passing-arguments
 
 use tauri::{AppHandle, WebviewWindow};
+use tauri_plugin_notification::NotificationExt;
 
 use crate::core::utils;
 
 #[tauri::command(rename_all = "snake_case")]
-pub fn greet(name: &str) -> String {
-    format!("Hello {name}, this message was sent from Tauri.")
+pub fn greet(name: &str, app: tauri::AppHandle) -> String {
+    let message = format!("Hello {name}, this message was sent from Rust.");
+    let notif_builder = app.notification().builder();
+    if let Err(e) = notif_builder.body(message.clone()).title("Tauri App").show() {
+        log::debug!("failed to show notification: {:?}", e);
+    }
+    message
 }
 
 #[tauri::command(rename_all = "snake_case")]
