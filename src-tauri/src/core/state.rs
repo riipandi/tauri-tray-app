@@ -4,7 +4,7 @@
 use native_db::{native_db, Database, InnerKeyValue};
 use native_model::{native_model, Model};
 use serde::{Deserialize, Serialize};
-use serde_json::json;
+use serde_json::{json, Value as JsonValue};
 
 #[derive(Clone, Serialize, Deserialize, Debug)]
 #[native_model(id = 1, version = 1)]
@@ -57,6 +57,21 @@ pub fn load_settings(db: tauri::State<Database>) -> Vec<serde_json::Value> {
 }
 
 #[tauri::command(rename_all = "snake_case")]
+pub fn get_setting(param: &str, db: tauri::State<Database>) -> JsonValue {
+    let tx = db.r_transaction().expect("failed to create ro transaction");
+    let setting: Option<Settings> = tx.get().primary(param).expect("failed to read setting");
+    setting.map_or_else(
+        || JsonValue::Null, // Return null if setting not found
+        |s| match s.value {
+            SettingsValue::StringValue(val) => json!(val),
+            SettingsValue::BooleanValue(val) => json!(val),
+            SettingsValue::NumberValue(val) => json!(val),
+            SettingsValue::Null => JsonValue::Null,
+        },
+    )
+}
+
+#[tauri::command(rename_all = "snake_case")]
 pub fn save_setting(param: &str, value: &str, db: tauri::State<Database>) {
     let value = match value {
         "null" => SettingsValue::Null,
@@ -67,11 +82,15 @@ pub fn save_setting(param: &str, value: &str, db: tauri::State<Database>) {
             _ => SettingsValue::StringValue(value.to_string()),
         },
     };
-    let param = param.to_string();
-    let setting = Settings { param, value };
-    log::debug!("saving setting: {:?}", setting);
+
+    let setting = Settings {
+        param: param.to_string(),
+        value: value.clone(),
+    };
+
     let tx = db.rw_transaction().expect("failed to create transaction");
     tx.insert(setting).expect("failed to save setting");
     tx.commit().expect("failed to commit setting");
-    log::info!("setting saved successfully");
+
+    log::info!("setting saved successfully: {}", value);
 }

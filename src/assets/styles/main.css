@@ -78,6 +78,8 @@ html, body {
   min-height: 100vh;
   background-color: transparent;
   border-radius: var(--ui-window-border-radius);
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-duration: 300ms;
 }
 
 /* Scrollable app container */

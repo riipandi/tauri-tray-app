@@ -13,7 +13,9 @@ use tokio::sync::Mutex;
 
 #[tauri::command]
 pub fn set_theme<R: Runtime>(app: AppHandle<R>, theme: Theme) -> Result<(), &'static str> {
-    save_theme_value(&app, theme);
+    let db_state: tauri::State<native_db::Database> = app.state();
+    save_theme_value(db_state, theme);
+
     match theme {
         Theme::Auto => {
             async_runtime::spawn(start_proxy(app));
@@ -27,6 +29,7 @@ pub fn set_theme<R: Runtime>(app: AppHandle<R>, theme: Theme) -> Result<(), &'st
             async_runtime::spawn(close_proxy());
         }
     }
+
     Ok(())
 }
 

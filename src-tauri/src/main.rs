@@ -4,6 +4,7 @@
 // Prevents additional console window on Windows in release, DO NOT REMOVE!!
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
+use native_db::Database;
 use once_cell::sync::Lazy;
 use tauri::{App, Manager, Runtime};
 use tauri::{WebviewUrl, WebviewWindow, WebviewWindowBuilder};
@@ -38,7 +39,7 @@ async fn main() {
 
     // Setup Tauri application builder
     let builder = builder.setup(move |app| {
-        setup_global_state(app);
+        setup_application_state(app);
 
         // Setup application menu and tray icon
         #[cfg(all(desktop, not(test)))]
@@ -48,11 +49,11 @@ async fn main() {
 
         setup_main_window(app)?;
 
-        // Set window theme for Linux
         #[cfg(target_os = "linux")]
         {
-            let theme = saved_theme_value(&app);
-            let _ = set_theme(app.clone(), theme);
+            let db_state: tauri::State<Database> = app.state();
+            let theme = theme::saved_theme_value(db_state);
+            let _ = theme::set_theme(app.app_handle(), theme);
         }
 
         Ok(())
@@ -81,6 +82,7 @@ async fn main() {
             cmd::greet,
             state::load_settings,
             state::save_setting,
+            state::get_setting,
         ])
         .build(tauri_ctx)
         .expect("error while running tauri application");
@@ -92,9 +94,10 @@ async fn main() {
     // Finally, run the application
     main_app.run(|app, event| match event {
         tauri::RunEvent::Ready {} => {
-            #[cfg(target_os = "macos")]
+            #[cfg(any(target_os = "macos", target_os = "windows"))]
             {
-                let theme = theme::saved_theme_value(&app);
+                let db_state: tauri::State<Database> = app.state();
+                let theme = theme::saved_theme_value(db_state);
                 let _ = theme::set_theme(app.clone(), theme);
             }
         }
@@ -145,14 +148,18 @@ fn logger() -> tauri_plugin_log::Builder {
     log_plugin_builder
 }
 
-fn setup_global_state<R: Runtime>(app: &App<R>) {
-    use tauri::path::BaseDirectory;
-
+fn setup_application_state<R: Runtime>(app: &App<R>) {
     log::debug!("Setting up global state");
+
+    #[cfg(debug_assertions)]
+    let db_file_name = "appdata-debug.db";
+
+    #[cfg(not(debug_assertions))]
+    let db_file_name = "appdata.db";
 
     let db_file_path = app
         .path()
-        .resolve(meta::APP_DB_FILENAME, BaseDirectory::AppConfig)
+        .resolve(db_file_name, tauri::path::BaseDirectory::AppConfig)
         .expect("failed to get db file path");
 
     // Create directory if it doesn't exist

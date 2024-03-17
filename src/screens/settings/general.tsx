@@ -6,8 +6,8 @@ import { LightbulbIcon, MonitorDotIcon, MoonStarIcon } from 'lucide-solid'
 import { createSignal, onMount } from 'solid-js'
 
 import { Theme } from '@/types/generated'
-import { getSettings, saveSetting } from '@/utils/settings'
 import { clx } from '@/utils/helpers'
+import { getSetting, saveSetting } from '@/utils/settings'
 
 export default function SettingGeneral() {
   const [theme, setTheme] = createSignal<Theme | undefined>(undefined)
@@ -32,7 +32,7 @@ export default function SettingGeneral() {
   }
 
   onMount(async () => {
-    const { theme } = await getSettings()
+    const theme = await getSetting('theme')
     setTheme(theme === 'light' ? Theme.Light : theme === 'dark' ? Theme.Dark : Theme.Auto)
   })
 

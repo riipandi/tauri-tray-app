@@ -3,7 +3,6 @@
 
 pub const MAIN_WINDOW: &'static str = "main";
 pub const TRAY_MENU_ID: &'static str = "tray-menu";
-pub const APP_DB_FILENAME: &'static str = "appdata.db";
 pub const SETTING_WINDOW: &'static str = "settings";
 pub const SETTING_WINDOW_WIDTH: f64 = 580.;
 pub const SETTING_WINDOW_HEIGHT: f64 = 430.;

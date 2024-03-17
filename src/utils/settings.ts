@@ -8,13 +8,13 @@ type SettingTypes = {
 
 export type SettingsParam = keyof SettingTypes
 
+export type Settings = {
+  [param in SettingsParam]: SettingTypes[param] | null
+}
+
 interface SettingsItem {
   param: SettingsParam
   value: Settings[SettingsParam]
-}
-
-export type Settings = {
-  [param in SettingsParam]: SettingTypes[param] | null
 }
 
 export async function saveSetting(param: SettingsParam, value: Settings[SettingsParam]) {
@@ -31,4 +31,8 @@ export async function getSettings(): Promise<Settings> {
     result[param] = value
   }
   return result
+}
+
+export async function getSetting(param: SettingsParam): Promise<Settings[SettingsParam]> {
+  return await invoke<Settings[SettingsParam]>('get_setting', { param })
 }

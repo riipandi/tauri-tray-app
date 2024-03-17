@@ -4763,7 +4763,6 @@ name = "tauri-tray-app"
 version = "0.0.0"
 dependencies = [
  "cocoa 0.25.0",
- "dirs-next",
  "dotenv-build",
  "futures-lite 2.2.0",
  "gtk",

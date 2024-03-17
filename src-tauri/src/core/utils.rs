@@ -38,6 +38,16 @@ pub fn handle_settings_window<R: Runtime>(handle: &tauri::AppHandle<R>) {
     if let Some(main_window) = handle.get_webview_window(meta::MAIN_WINDOW) {
         let is_main_window_visible = main_window.is_visible().expect("failed to get window visibility");
 
+        // Get saved theme from settings
+        // TODO: detect current system theme for auto mode
+        let db_state: tauri::State<native_db::Database> = handle.state();
+        let saved_theme = match super::state::get_setting("theme", db_state).as_str() {
+            Some("light") => Some(tauri::Theme::Light),
+            Some("dark") => Some(tauri::Theme::Dark),
+            Some("auto") => None,
+            _ => None,
+        };
+
         if !is_main_window_visible {
             main_window.show().expect("failed to show window");
             main_window.set_focus().expect("failed to set focus");
@@ -51,6 +61,7 @@ pub fn handle_settings_window<R: Runtime>(handle: &tauri::AppHandle<R>) {
                     .min_inner_size(meta::SETTING_WINDOW_WIDTH, meta::SETTING_WINDOW_HEIGHT)
                     .max_inner_size(meta::SETTING_WINDOW_WIDTH, meta::SETTING_WINDOW_HEIGHT)
                     .inner_size(meta::SETTING_WINDOW_WIDTH, meta::SETTING_WINDOW_HEIGHT)
+                    .theme(saved_theme)
                     .resizable(false)
                     .minimizable(false)
                     .maximizable(false)
