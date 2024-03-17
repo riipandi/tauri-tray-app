@@ -80,6 +80,7 @@ xattr -r -d com.apple.quarantine "/Applications/Tauri App.app"
 - [Publishing Tauri to Apple's App Store](https://thinkgo.io/post/2023/02/publish_tauri_to_apples_app_store)
 - [GTK Installation Docs](https://www.gtk.org/docs/installations/macos)
 - [Tips For Faster Rust Compile Times](https://corrode.dev/blog/tips-for-faster-rust-compile-times)
+- [Tauri State Management](https://tauri.by.simon.hyll.nu/concepts/tauri/state_management)
 
 ## License
 
