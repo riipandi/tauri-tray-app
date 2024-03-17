@@ -5,6 +5,7 @@
     "windows": ["main", "settings"],
     "permissions": [
         "app:default",
+        "dialog:allow-confirm",
         "dialog:allow-message",
         "event:allow-emit",
         "event:allow-emit-to",

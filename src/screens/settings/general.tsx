@@ -1,18 +1,34 @@
 // Copyright 2023-2024 Aris Ripandi <aris@duck.com>
 // SPDX-License-Identifier: Apache-2.0 or MIT
 
+import { confirm, message } from '@tauri-apps/plugin-dialog'
 import { LightbulbIcon, MonitorDotIcon, MoonStarIcon } from 'lucide-solid'
 import { createSignal, onMount } from 'solid-js'
 
 import { Theme } from '@/types/generated'
-import { clx } from '@/utils/helpers'
 import { getSettings, saveSetting } from '@/utils/settings'
+import { clx } from '@/utils/helpers'
 
 export default function SettingGeneral() {
   const [theme, setTheme] = createSignal<Theme | undefined>(undefined)
 
   const handleSwitchTheme = async (theme: Theme) => {
     await saveSetting('theme', theme).then(() => setTheme(theme))
+  }
+
+  const handleResetSettings = async () => {
+    const dialogTitle = 'Reset Application Settings'
+    const confirmation = await confirm('This action cannot be reverted. Are you sure?', {
+      title: dialogTitle,
+      kind: 'warning',
+    })
+
+    if (!confirmation) return
+
+    await message('Application has been reset to default settings.', {
+      title: dialogTitle,
+      kind: 'info',
+    })
   }
 
   onMount(async () => {
@@ -122,6 +138,7 @@ export default function SettingGeneral() {
           <button
             type="submit"
             class="rounded-md bg-red-500 py-1.5 px-3 text-sm text-white shadow-sm hover:bg-red-400 block w-full"
+            onClick={handleResetSettings}
           >
             Reset Default Settings
           </button>

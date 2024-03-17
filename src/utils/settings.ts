@@ -1,5 +1,6 @@
-import type { Theme } from '@/types/generated'
 import { invoke } from '@tauri-apps/api/core'
+
+import type { Theme } from '@/types/generated'
 
 type SettingTypes = {
   theme: Theme
