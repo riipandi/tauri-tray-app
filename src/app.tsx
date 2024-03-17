@@ -13,7 +13,14 @@ import { type ParentComponent, lazy } from 'solid-js'
 
 export const routes: RouteDefinition[] = [
   { path: '/', component: lazy(() => import('./screens/welcome')) },
-  { path: '/settings', component: lazy(() => import('./screens/settings')) },
+  {
+    path: '/settings',
+    component: lazy(() => import('./screens/settings/_layout')),
+    children: [
+      { path: '/', component: lazy(() => import('./screens/settings/general')) },
+      { path: '/updates', component: lazy(() => import('./screens/settings/updates')) },
+    ],
+  },
   { path: '*404', component: lazy(() => import('./screens/not-found')) },
 ]
 

@@ -8,7 +8,7 @@ use once_cell::sync::Lazy;
 use tauri::{App, Manager, Runtime};
 use tauri::{WebviewUrl, WebviewWindow, WebviewWindowBuilder};
 
-use tauri_tray_app::core::{cmd, state};
+use tauri_tray_app::core::{cmd, state, theme};
 use tauri_tray_app::meta;
 
 static DB: Lazy<native_db::DatabaseBuilder> = Lazy::new(|| {
@@ -48,6 +48,13 @@ async fn main() {
 
         setup_main_window(app)?;
 
+        // Set window theme for Linux
+        #[cfg(target_os = "linux")]
+        {
+            let theme = saved_theme_value(&app);
+            let _ = set_theme(app.clone(), theme);
+        }
+
         Ok(())
     });
 
@@ -66,6 +73,8 @@ async fn main() {
     // Build Tauri application
     let mut main_app = builder
         .invoke_handler(tauri::generate_handler![
+            theme::get_theme,
+            theme::set_theme,
             cmd::open_settings_window,
             cmd::open_with_shell,
             cmd::toggle_devtools,
@@ -81,7 +90,14 @@ async fn main() {
     main_app.set_activation_policy(tauri::ActivationPolicy::Regular);
 
     // Finally, run the application
-    main_app.run(|_app, event| match event {
+    main_app.run(|app, event| match event {
+        tauri::RunEvent::Ready {} => {
+            #[cfg(target_os = "macos")]
+            {
+                let theme = theme::saved_theme_value(&app);
+                let _ = theme::set_theme(app.clone(), theme);
+            }
+        }
         tauri::RunEvent::ExitRequested { api, .. } => {
             log::debug!("Exit requested");
             api.prevent_exit();

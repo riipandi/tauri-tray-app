@@ -1,16 +1,17 @@
 // Copyright 2023-2024 Aris Ripandi <aris@duck.com>
 // SPDX-License-Identifier: Apache-2.0 or MIT
 
-import { A } from '@solidjs/router'
 import { getVersion } from '@tauri-apps/api/app'
 import { invoke } from '@tauri-apps/api/core'
 import { CogIcon, UserIcon } from 'lucide-solid'
 import { createSignal } from 'solid-js'
 
-import solidjsLogo from '../assets/images/solid.svg'
-import tauriLogo from '../assets/images/tauri.svg'
-import viteLogo from '../assets/images/vite.svg'
-import { clx } from '../utils/helpers'
+import Link from '@/components/link'
+
+import solidjsLogo from '@/assets/images/solid.svg'
+import tauriLogo from '@/assets/images/tauri.svg'
+import viteLogo from '@/assets/images/vite.svg'
+import { clx } from '@/utils/helpers'
 
 // Get application version from Tauri
 const appVersion = await getVersion()
@@ -47,9 +48,9 @@ export default function WelcomeScreen() {
           <p>This is the default screen of Tauri App v{appVersion}</p>
           <p>
             Visit{' '}
-            <A href="/not-found" class="font-medium text-blue-light hover:text-blue-light/80">
+            <Link href="/not-found" class="font-medium text-blue-light hover:text-blue-light/80">
               this sample page
-            </A>{' '}
+            </Link>{' '}
             to see if the router is working or not.
           </p>
         </div>
