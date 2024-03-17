@@ -54,9 +54,11 @@ async fn main() {
     // Configure window event handlers
     let builder = builder.on_window_event(|window, event| match event {
         tauri::WindowEvent::CloseRequested { api, .. } => {
-            // window.app_handle().runtime_handle.set_activation_policy(tauri::ActivationPolicy::Accessory);
-            window.hide().expect("failed to hide window");
-            api.prevent_close();
+            if window.label() == meta::MAIN_WINDOW {
+                // window.app_handle().runtime_handle.set_activation_policy(tauri::ActivationPolicy::Accessory);
+                window.hide().expect("failed to hide window");
+                api.prevent_close();
+            }
         }
         _ => {}
     });
