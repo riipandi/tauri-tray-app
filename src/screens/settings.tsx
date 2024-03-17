@@ -59,7 +59,7 @@ export default function SettingScreen() {
           </button>
         </div>
       </aside>
-      <main class="ml-44 px-4 pt-10 pb-4 dark:bg-neutral-900 size-full dark:text-white">
+      <main class="ml-44 px-4 pt-10 pb-4 dark:bg-dark-grey size-full dark:text-white">
         <div class="flex flex-col size-full justify-between pb-4">
           <div class="grid grid-cols-2 gap-x-8 gap-y-4">
             <div>

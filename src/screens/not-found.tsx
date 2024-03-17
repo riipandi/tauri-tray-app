@@ -5,7 +5,7 @@ import { A } from '@solidjs/router'
 
 export default function NotFound() {
   return (
-    <div class="mx-auto h-screen flex flex-col dark:bg-black">
+    <div class="mx-auto h-screen flex flex-col bg-transparent disable-select">
       <div class="flex-1 flex flex-col justify-center items-center space-y-8">
         <h1 class="text-2xl font-bold dark:text-white">404 Not Found</h1>
         <div class="mt-6">

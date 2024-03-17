@@ -29,7 +29,7 @@ export default function WelcomeScreen() {
   }
 
   return (
-    <div class="flex flex-col items-center justify-center size-full p-4">
+    <div class="flex flex-col items-center justify-center size-full p-4 disable-select">
       <div class="text-center">
         <div class="mt-16 flex flex-wrap justify-center gap-8">
           <span class="size-16">
@@ -43,7 +43,7 @@ export default function WelcomeScreen() {
           </span>
         </div>
 
-        <div class="mt-12 text-base text-center leading-7 dark:text-neutral-100">
+        <div class="mt-12 text-base text-center leading-7 dark:text-neutral-100 enable-select">
           <p>This is the default screen of Tauri App v{appVersion}</p>
           <p>
             Visit{' '}

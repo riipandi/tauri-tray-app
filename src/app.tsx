@@ -19,7 +19,7 @@ export const routes: RouteDefinition[] = [
 
 const RootLayout: ParentComponent = ({ children }) => {
   return (
-    <div class="main-container dark:bg-black">
+    <div class="main-container dark:bg-dark-grey">
       <div class="absolute w-full h-7 bg-transparent z-10" data-tauri-drag-region />
       {children}
     </div>
