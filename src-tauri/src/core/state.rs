@@ -33,7 +33,6 @@ pub struct AppSettings {
     pub theme: Theme,
     pub zoom_factor: i32,
     pub auto_check_updates: bool,
-    pub exit_to_tray: bool,
 }
 
 impl fmt::Display for SettingsValue {
@@ -128,7 +127,6 @@ pub fn get_app_settings(db: tauri::State<Database>) -> AppSettings {
         theme: Theme::Auto,       // Set a default value for theme
         zoom_factor: 1,           // Set a default value for zoom_factor
         auto_check_updates: true, // Set a default value for auto_check_updates
-        exit_to_tray: false,      // Set a default value for exit_to_tray
     };
 
     for setting in settings {
@@ -146,11 +144,6 @@ pub fn get_app_settings(db: tauri::State<Database>) -> AppSettings {
             "auto_check_updates" => {
                 if let SettingsValue::BooleanValue(auto_check_updates) = setting.value {
                     app_settings.auto_check_updates = auto_check_updates;
-                }
-            }
-            "exit_to_tray" => {
-                if let SettingsValue::BooleanValue(exit_to_tray) = setting.value {
-                    app_settings.exit_to_tray = exit_to_tray;
                 }
             }
             _ => {} // Ignore unknown settings

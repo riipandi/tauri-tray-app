@@ -45,12 +45,13 @@ to build the application in debug mode, this will enable developer tools.
 - [ ] Custom application menu
 - [x] Read values from `.env` file
 - [x] Auto-generated Typescript types
-- [ ] Theme switcher (dark & light mode)
+- [x] Theme switcher (dark & light mode)
+- [x] Application settings with separated window
 - [x] Global state with [`native_db`][native_db] as backend
 - [x] Frontend app with [SolidJS][solidjs] + [Tailwind CSS][tailwindcss]
 - [x] Frontend lint & format using [Biome][biome]
 - [x] Git hooks tasks with [Lefthook][lefthook]
-- [ ] GitHub actions for CI testing and build
+- [x] GitHub actions for CI testing and build
 
 ## Recommended IDE Setup
 
