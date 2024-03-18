@@ -64,8 +64,8 @@ tauri-plugin-updater = "2.0.0-beta.2"
 [profile.release]
 lto = "thin"         # Enable Link Time Optimization.
 opt-level = "s"      # Optimize for binary size.
-codegen-units = 16   # Reduce number of codegen units to increase optimizations.
-panic = "unwind"      # Abort on panic.
+codegen-units = 32   # Reduce number of codegen units to increase optimizations.
+panic = "unwind"     # Abort on panic.
 strip = "debuginfo"  # Automatically strip debuginfo from the binary.
 debug = false        # Disable debug on production build.
 
