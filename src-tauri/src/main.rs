@@ -43,6 +43,7 @@ async fn main() {
         .plugin(tauri_plugin_http::init())
         .plugin(tauri_plugin_notification::init())
         .plugin(tauri_plugin_os::init())
+        .plugin(tauri_plugin_persisted_scope::init())
         .plugin(tauri_plugin_process::init())
         .plugin(tauri_plugin_shell::init());
 

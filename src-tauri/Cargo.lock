@@ -4833,6 +4833,22 @@ dependencies = [
 ]
 
 [[package]]
+name = "tauri-plugin-persisted-scope"
+version = "2.0.0-beta.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2496c14c05a97d2b3699465ac14375249e5e16fc0dce70e0d2a986675ef5f255"
+dependencies = [
+ "aho-corasick",
+ "bincode",
+ "log",
+ "serde",
+ "serde_json",
+ "tauri",
+ "tauri-plugin-fs",
+ "thiserror",
+]
+
+[[package]]
 name = "tauri-plugin-process"
 version = "2.0.0-beta.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4958,6 +4974,7 @@ dependencies = [
  "tauri-plugin-log",
  "tauri-plugin-notification",
  "tauri-plugin-os",
+ "tauri-plugin-persisted-scope",
  "tauri-plugin-process",
  "tauri-plugin-shell",
  "tauri-plugin-updater",
