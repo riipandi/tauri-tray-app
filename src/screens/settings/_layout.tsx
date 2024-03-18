@@ -6,11 +6,12 @@ import { BoltIcon, CircleHelpIcon, LifeBuoyIcon, RefreshCcwDotIcon } from 'lucid
 import type { ParentComponent } from 'solid-js'
 
 import Link from '@/components/link'
+import { DefaultTitleBar } from '@/components/titlebar'
 
 const SettingsLayout: ParentComponent = ({ children }) => {
   return (
     <div class="dark:bg-black disable-select flex flex-1">
-      <div class="absolute w-full h-7 bg-transparent z-10" data-tauri-drag-region />
+      <DefaultTitleBar />
       <aside class="fixed flex flex-col w-44 pt-6 h-screen overflow-y-auto bg-white border-r border-neutral-200 dark:bg-neutral-950 dark:border-neutral-800">
         <div class="mt-4 mx-2">
           <h1 class="mx-2 text-base font-semibold dark:text-white">Settings</h1>

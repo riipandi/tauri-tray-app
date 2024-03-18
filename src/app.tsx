@@ -11,6 +11,8 @@
 import { type RouteDefinition, Router } from '@solidjs/router'
 import { type ParentComponent, lazy } from 'solid-js'
 
+import { DefaultTitleBar } from '@/components/titlebar'
+
 export const routes: RouteDefinition[] = [
   { path: '/', component: lazy(() => import('./screens/welcome')) },
   {
@@ -27,9 +29,9 @@ export const routes: RouteDefinition[] = [
 
 const RootLayout: ParentComponent = ({ children }) => {
   return (
-    <div class="main-container dark:bg-dark-grey">
-      <div class="absolute w-full h-7 bg-transparent z-10" data-tauri-drag-region />
-      {children}
+    <div class="root-container">
+      <DefaultTitleBar />
+      <div class="main-container">{children}</div>
     </div>
   )
 }

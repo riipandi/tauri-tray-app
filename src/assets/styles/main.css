@@ -57,7 +57,9 @@
 
 :root {
   /* Define variables */
-  --ui-titlebar-height: 0px;
+  --ui-titlebar-height: 0px; /* 28px for custom titlebar macOS */
+  --ui-titlebar-color-light: transparent;
+  --ui-titlebar-color-dark: transparent;
   --ui-window-border-radius: 10px;
 }
 
@@ -85,11 +87,11 @@ html, body {
 /* Scrollable app container */
 .root-container {
   width: 100%;
-  height: calc(100vh - var(--ui-titlebar-height));
-  top: var(--ui-titlebar-height);
-  background-color: transparent;
+  height: 100%;
   position: fixed;
   overflow: hidden;
+  top: var(--ui-titlebar-height);
+  height: calc(100vh - var(--ui-titlebar-height));
   border-bottom-left-radius: var(--ui-window-border-radius);
   border-bottom-right-radius: var(--ui-window-border-radius);
 }
@@ -118,18 +120,44 @@ html, body {
   width: 10px;
   height: 10px;
 }
-.main-container::-webkit-scrollbar-track {
-  background-color: rgba(255,255,255,0.1);
-}
 .main-container::-webkit-scrollbar-thumb {
   border-radius: 1px;
-  background: rgba(255,255,255,0.2);
 }
-.main-container::-webkit-scrollbar-thumb:hover {
-  background: rgba(255,255,255,0.15);
+
+@media (prefers-color-scheme: light) {
+  .root-container, .main-container {
+    background-color: rgb(255,255,255);
+  }
+  .main-container::-webkit-scrollbar-track {
+    background-color: rgba(162,162,167,0.5);
+  }
+  .main-container::-webkit-scrollbar-thumb {
+    background-color: rgba(132,132,137,0.6);
+  }
+  .main-container::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(132,132,137,0.8);
+  }
+  .main-container::-webkit-scrollbar-thumb:active {
+    background-color: rgba(132,132,137,1.0);
+  }
 }
-.main-container::-webkit-scrollbar-thumb:active {
-  background: rgba(255,255,255,0.1);
+
+@media (prefers-color-scheme: dark) {
+  .root-container, .main-container {
+    background-color: rgb(38,38,38);
+  }
+  .main-container::-webkit-scrollbar-track {
+    background-color: rgba(255,255,255,0.1);
+  }
+  .main-container::-webkit-scrollbar-thumb {
+    background-color: rgba(255,255,255,0.2);
+  }
+  .main-container::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(255,255,255,0.15);
+  }
+  .main-container::-webkit-scrollbar-thumb:active {
+    background-color: rgba(255,255,255,0.1);
+  }
 }
 
 /* Disable text selection */
@@ -139,7 +167,7 @@ html, body {
   -khtml-user-select: none; /* Konqueror HTML */
   -moz-user-select: none; /* Old versions of Firefox */
   -ms-user-select: none; /* Internet Explorer/Edge */
-  user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+  user-select: none; /* Non-prefixed version */
   cursor: default;
 }
 
@@ -150,6 +178,6 @@ html, body {
   -khtml-user-select: text; /* Konqueror HTML */
   -moz-user-select: text; /* Old versions of Firefox */
   -ms-user-select: text; /* Internet Explorer/Edge */
-  user-select: text; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
+  user-select: text; /* Non-prefixed version */
   cursor: auto;
 }
