@@ -227,6 +227,11 @@ fn setup_main_window<R: Runtime>(app: &App<R>) -> tauri::Result<WebviewWindow<R>
         wb = wb.decorations(true).transparent(true);
     }
 
+    #[cfg(not(debug_assertions))]
+    {
+        wb = wb.initialization_script(meta::JS_INIT_SCRIPT);
+    }
+
     // Finally, build the webview
     wb.build()
 }
