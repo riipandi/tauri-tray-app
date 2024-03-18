@@ -43,6 +43,7 @@ to build the application in debug mode, this will enable developer tools.
 - [x] Example secondary child window
 - [ ] Custom titlebar (desktop)
 - [ ] Custom application menu
+- [ ] Custom application updater
 - [x] Read values from `.env` file
 - [x] Auto-generated Typescript types
 - [x] Theme switcher (dark & light mode)
