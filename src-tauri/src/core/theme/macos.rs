@@ -1,10 +1,11 @@
 // Copyright 2023-2024 Aris Ripandi <aris@duck.com>
 // SPDX-License-Identifier: Apache-2.0 or MIT
 
-use super::{save_theme_value, Theme};
 use cocoa::appkit::{NSAppearance, NSAppearanceNameVibrantDark, NSAppearanceNameVibrantLight, NSWindow};
 use cocoa::base::{id, nil};
 use tauri::{AppHandle, Manager, Runtime};
+
+use super::{save_theme_value, Theme};
 
 #[tauri::command]
 pub fn set_theme<R: Runtime>(app: AppHandle<R>, theme: Theme) -> Result<(), &'static str> {

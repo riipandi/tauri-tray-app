@@ -13,8 +13,10 @@ use crate::meta;
 
 pub fn init<R: Runtime>(app: &tauri::App<R>) -> tauri::Result<()> {
     let handle = app.app_handle();
+    let app_title = &handle.app_handle().package_info().name;
 
-    let toggle_i = MenuItem::with_id(handle, "toggle-window", "Hide Tauri App", true, None::<&str>)?;
+    let toggle_i_label = format!("Hide {app_title}");
+    let toggle_i = MenuItem::with_id(handle, "toggle-window", toggle_i_label, true, None::<&str>)?;
     let setting_i = MenuItem::with_id(handle, "settings", "Settings...", true, Some("CmdOrCtrl+,"))?;
 
     #[cfg(target_os = "macos")]
@@ -23,7 +25,9 @@ pub fn init<R: Runtime>(app: &tauri::App<R>) -> tauri::Result<()> {
     let remove_tray_i = MenuItem::with_id(handle, "remove-tray", "Remove Tray", true, None::<&str>)?;
     let help_i = Submenu::new(handle, "&Help", true)?;
     let separator = PredefinedMenuItem::separator(handle)?;
-    let quit_i = MenuItem::with_id(handle, "quit", "Quit Tauri App", true, None::<&str>)?;
+
+    let quit_i_label = format!("Quit {app_title}");
+    let quit_i = MenuItem::with_id(handle, "quit", quit_i_label, true, None::<&str>)?;
 
     let feedback_i = MenuItem::with_id(handle, "feedback", "Send Feedback", true, None::<&str>)?;
     let website_i = MenuItem::with_id(handle, "website", "Visit Website", true, None::<&str>)?;
@@ -72,7 +76,8 @@ pub fn init<R: Runtime>(app: &tauri::App<R>) -> tauri::Result<()> {
             #[cfg(target_os = "macos")]
             "set-tray-title" => {
                 if let Some(tray) = handle.tray_by_id(meta::TRAY_MENU_ID) {
-                    let _ = tray.set_title(Some("Tauri App"));
+                    let app_title = &handle.app_handle().package_info().name;
+                    let _ = tray.set_title(Some(app_title));
                 }
             }
 

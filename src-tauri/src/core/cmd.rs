@@ -7,19 +7,23 @@
 // To use snake_case in JavaScript, you have to declare it in the tauri::command statement
 // @ref: https://tauri.app/v1/guides/features/command/#passing-arguments
 
-use tauri::{AppHandle, WebviewWindow};
+use anyhow::anyhow;
+use tauri::{AppHandle, Error, WebviewWindow};
 use tauri_plugin_notification::NotificationExt;
 
 use crate::core::utils;
 
 #[tauri::command(rename_all = "snake_case")]
-pub fn greet(name: &str, app: tauri::AppHandle) -> String {
-    let message = format!("Hello {name}, this message was sent from Rust.");
+pub fn greet(name: &str, app: tauri::AppHandle) -> tauri::Result<String> {
+    let app_title = &app.package_info().name;
     let notif_builder = app.notification().builder();
-    if let Err(e) = notif_builder.body(message.clone()).title("Tauri App").show() {
-        log::debug!("failed to show notification: {:?}", e);
+
+    let message = format!("Hello {name}, this message was sent from Rust.");
+    if let Err(e) = notif_builder.body(message.clone()).title(app_title).show() {
+        return Err(Error::Anyhow(anyhow!("failed to show notification: {:?}", e)));
     }
-    message
+
+    Ok(message)
 }
 
 #[tauri::command(rename_all = "snake_case")]

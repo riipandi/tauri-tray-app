@@ -1,11 +1,13 @@
 // Copyright 2023-2024 Aris Ripandi <aris@duck.com>
 // SPDX-License-Identifier: Apache-2.0 or MIT
 
+use anyhow::anyhow;
 use native_db::{native_db, Database, InnerKeyValue};
 use native_model::{native_model, Model};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value as JsonValue};
 use std::fmt;
+use tauri::Error;
 
 use super::theme::Theme;
 
@@ -60,7 +62,7 @@ pub fn get_setting(param: &str, db: tauri::State<Database>) -> JsonValue {
 }
 
 #[tauri::command(rename_all = "snake_case")]
-pub fn save_setting(param: &str, value: &str, db: tauri::State<Database>) -> Result<JsonValue, ()> {
+pub fn save_setting(param: &str, value: &str, db: tauri::State<Database>) -> tauri::Result<JsonValue> {
     let value: JsonValue = serde_json::from_str(value).unwrap_or_else(|_| JsonValue::String(value.to_string()));
 
     let svalue = match value {
@@ -72,11 +74,11 @@ pub fn save_setting(param: &str, value: &str, db: tauri::State<Database>) -> Res
             } else if let Some(f) = n.as_f64() {
                 SettingsValue::NumberValue(f as i32) // Assuming truncation to integer
             } else {
-                return Err(()); // Unable to convert number to i32
+                return Err(Error::Anyhow(anyhow!("Unable to convert number to i32")));
             }
         }
         JsonValue::String(s) => SettingsValue::StringValue(s),
-        _ => return Err(()), // Unsupported value type
+        _ => return Err(Error::Anyhow(anyhow!("Unsupported value type"))),
     };
 
     let param = param.to_string();

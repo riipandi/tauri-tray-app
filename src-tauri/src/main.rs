@@ -56,6 +56,10 @@ async fn main() {
             let _ = theme::set_theme(app.app_handle(), theme);
         }
 
+        // TODO wait until next release
+        // #[cfg(desktop)]
+        // app.handle().plugin(tauri_plugin_updater::Builder::new().build())?;
+
         Ok(())
     });
 
@@ -120,7 +124,7 @@ fn logger() -> tauri_plugin_log::Builder {
         .level_for("hyper", log::LevelFilter::Off)
         .level_for("tao", log::LevelFilter::Off)
         .level_for("reqwest::connect", log::LevelFilter::Off)
-        .timezone_strategy(TimezoneStrategy::UseUtc)
+        .timezone_strategy(TimezoneStrategy::UseLocal)
         .with_colors(ColoredLevelConfig::default());
 
     #[cfg(debug_assertions)]

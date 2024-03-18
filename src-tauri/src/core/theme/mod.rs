@@ -28,9 +28,8 @@ use native_db::Database;
 use serde::{Deserialize, Serialize};
 
 #[tauri::command]
-pub fn get_theme(db: tauri::State<Database>) -> Result<Theme, ()> {
-    let theme = saved_theme_value(db);
-    Ok(theme)
+pub fn get_theme(db: tauri::State<Database>) -> tauri::Result<Theme> {
+    Ok(saved_theme_value(db))
 }
 
 #[typeshare::typeshare]
