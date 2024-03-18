@@ -9,8 +9,13 @@ use once_cell::sync::Lazy;
 use tauri::{App, Manager, Runtime};
 use tauri::{WebviewUrl, WebviewWindow, WebviewWindowBuilder};
 
-use tauri_tray_app::core::{cmd, state, theme};
-use tauri_tray_app::meta;
+// TODO re-enable devtools in the next release
+// #[cfg(debug_assertions)]
+// use std::net::Ipv4Addr;
+// #[cfg(debug_assertions)]
+// use tauri_plugin_devtools::Builder as PluginDevTools;
+
+use tauri_tray_app::{core::*, meta};
 
 static DB: Lazy<native_db::DatabaseBuilder> = Lazy::new(|| {
     let mut builder = native_db::DatabaseBuilder::new();
@@ -24,11 +29,15 @@ async fn main() {
     let tauri_ctx = tauri::generate_context!();
     let builder = tauri::Builder::default();
 
-    // Logger plugin should be called as early in the execution of the app as possible.
-    let builder = builder.plugin(logger().build());
+    // TODO re-enable devtools in the next release
+    // // This should be called as early in the execution of the app as possible
+    // #[cfg(debug_assertions)] // only enable instrumentation in development builds
+    // let builder = builder.plugin(PluginDevTools::default().port(2722).host(Ipv4Addr::UNSPECIFIED).init());
 
-    // Register Tauri plugins
+    // Register Tauri plugins.
+    // Plugin log should be called as early in the execution of the app as possible.
     let builder = builder
+        .plugin(logger().build())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_http::init())
@@ -199,8 +208,6 @@ fn setup_main_window<R: Runtime>(app: &App<R>) -> tauri::Result<WebviewWindow<R>
 
     #[cfg(all(desktop, not(test)))]
     {
-        use tauri_tray_app::core::utils;
-
         let app_title = &app.package_info().name;
         let user_agent = utils::get_app_user_agent(app.handle());
 
@@ -218,6 +225,7 @@ fn setup_main_window<R: Runtime>(app: &App<R>) -> tauri::Result<WebviewWindow<R>
     #[cfg(target_os = "macos")]
     {
         let app_menu = tauri_tray_app::core::menu::init(app.app_handle())?;
+
         wb = wb
             .shadow(true)
             .decorations(true)
@@ -229,7 +237,12 @@ fn setup_main_window<R: Runtime>(app: &App<R>) -> tauri::Result<WebviewWindow<R>
 
     #[cfg(target_os = "windows")]
     {
-        wb = wb.decorations(true).transparent(true);
+        // @ref: https://github.com/tauri-apps/tauri/discussions/5988#discussioncomment-8579762
+        let browser_args = "--enable-features=OverlayScrollbar,msOverlayScrollbarWinStyle";
+        wb = wb
+            .decorations(true)
+            .transparent(true)
+            .additional_browser_args(browser_args);
     }
 
     #[cfg(not(debug_assertions))]

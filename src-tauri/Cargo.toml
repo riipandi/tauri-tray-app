@@ -35,6 +35,7 @@ tauri-plugin-notification = "2.0.0-beta.2"
 tauri-plugin-os = "2.0.0-beta.2"
 tauri-plugin-process = "2.0.0-beta.2"
 tauri-plugin-shell = "2.0.0-beta.2"
+# tauri-plugin-devtools = { git = "https://github.com/crabnebula-dev/devtools" }
 anyhow = { version = "1.0.81", features = ["backtrace"] }
 log = "^0.4"
 native_db = { version = "0.5.3", features = ["chrono", "tokio", "uuid"] }
