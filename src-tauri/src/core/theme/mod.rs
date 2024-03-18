@@ -63,13 +63,11 @@ impl ToString for Theme {
 }
 
 pub fn saved_theme_value(db: tauri::State<Database>) -> Theme {
-    match super::state::get_setting("theme", db).as_str() {
-        Some("light") => Theme::Light,
-        Some("dark") => Theme::Dark,
-        _ => Theme::Auto,
-    }
+    let theme = super::state::get_app_settings(db).theme;
+    log::debug!("saved theme: {:?}", theme);
+    theme
 }
 
 pub fn save_theme_value(db: tauri::State<Database>, theme: Theme) {
-    super::state::save_setting("theme", &theme.to_string(), db);
+    let _ = super::state::save_setting("theme", &theme.to_string(), db);
 }

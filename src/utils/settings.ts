@@ -1,38 +1,26 @@
+import type { AppSettings } from '@/types/generated'
 import { invoke } from '@tauri-apps/api/core'
 
-import type { Theme } from '@/types/generated'
-
-type SettingTypes = {
-  theme: Theme
+type SettingsData = {
+  param: string
+  value: AppSettings[keyof AppSettings][]
 }
 
-export type SettingsParam = keyof SettingTypes
-
-export type Settings = {
-  [param in SettingsParam]: SettingTypes[param] | null
+export async function saveSetting(
+  param: keyof AppSettings,
+  value: AppSettings[keyof AppSettings]
+): Promise<void> {
+  await invoke('save_setting', { param, value: value.toString() })
 }
 
-interface SettingsItem {
-  param: SettingsParam
-  value: Settings[SettingsParam]
+export async function getAppSettings(): Promise<AppSettings> {
+  return await invoke<AppSettings>('get_app_settings')
 }
 
-export async function saveSetting(param: SettingsParam, value: Settings[SettingsParam]) {
-  if (param === 'theme') {
-    await invoke('set_theme', { theme: value })
-  }
-  return await invoke('save_setting', { param, value })
+export async function getSetting<T extends keyof AppSettings>(param: T): Promise<AppSettings[T]> {
+  return await invoke<AppSettings[T]>('get_setting', { param })
 }
 
-export async function getSettings(): Promise<Settings> {
-  const settings = await invoke<SettingsItem[]>('load_settings')
-  const result: Settings = {} as Settings
-  for (const { param, value } of settings) {
-    result[param] = value
-  }
-  return result
-}
-
-export async function getSetting(param: SettingsParam): Promise<Settings[SettingsParam]> {
-  return await invoke<Settings[SettingsParam]>('get_setting', { param })
+export async function getSettingsData(): Promise<SettingsData> {
+  return await invoke<SettingsData>('get_settings_data')
 }

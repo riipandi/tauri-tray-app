@@ -80,9 +80,10 @@ async fn main() {
             cmd::open_with_shell,
             cmd::toggle_devtools,
             cmd::greet,
-            state::load_settings,
             state::save_setting,
             state::get_setting,
+            state::get_app_settings,
+            state::get_settings_data,
         ])
         .build(tauri_ctx)
         .expect("error while running tauri application");

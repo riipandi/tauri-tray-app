@@ -1,10 +1,11 @@
 // Copyright 2023-2024 Aris Ripandi <aris@duck.com>
 // SPDX-License-Identifier: Apache-2.0 or MIT
 
-import Link from '@/components/link'
 import { invoke } from '@tauri-apps/api/core'
-import { BoltIcon, LifeBuoyIcon, RefreshCcwDotIcon } from 'lucide-solid'
+import { BoltIcon, CircleHelpIcon, LifeBuoyIcon, RefreshCcwDotIcon } from 'lucide-solid'
 import type { ParentComponent } from 'solid-js'
+
+import Link from '@/components/link'
 
 const SettingsLayout: ParentComponent = ({ children }) => {
   return (
@@ -36,7 +37,19 @@ const SettingsLayout: ParentComponent = ({ children }) => {
               <RefreshCcwDotIcon class="size-4" strokeWidth={1.6} />
               <span class="mx-2 text-sm font-medium">Updates</span>
             </Link>
+
+            <Link
+              href="/settings/about"
+              activeClass="text-neutral-700 dark:text-neutral-200 bg-neutral-100 dark:bg-neutral-900"
+              inactiveClass="text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 dark:hover:text-neutral-200 hover:text-neutral-700"
+              class="flex items-center px-3 py-2 transition-colors duration-75 transform rounded-md cursor-default"
+            >
+              <CircleHelpIcon class="size-4" strokeWidth={1.6} />
+              <span class="mx-2 text-sm font-medium">About</span>
+            </Link>
           </nav>
+
+          {/* <hr class="my-2 border-neutral-200 dark:border-neutral-600" /> */}
 
           <button
             type="button"

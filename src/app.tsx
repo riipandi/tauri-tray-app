@@ -19,6 +19,7 @@ export const routes: RouteDefinition[] = [
     children: [
       { path: '/', component: lazy(() => import('./screens/settings/general')) },
       { path: '/updates', component: lazy(() => import('./screens/settings/updates')) },
+      { path: '/about', component: lazy(() => import('./screens/settings/about')) },
     ],
   },
   { path: '*404', component: lazy(() => import('./screens/not-found')) },
