@@ -29,6 +29,7 @@
         "tauri": "tauri"
     },
     "dependencies": {
+        "@solid-primitives/keyboard": "^1.2.8",
         "@solidjs/router": "^0.13.1",
         "@tauri-apps/api": ">=2.0.0-beta.6",
         "@tauri-apps/plugin-dialog": ">=2.0.0-beta.2",
@@ -55,7 +56,7 @@
         "rimraf": "^5.0.5",
         "tailwindcss": "4.0.0-alpha.10",
         "typescript": "^5.4.3",
-        "vite-plugin-solid": "^2.10.2",
-        "vite": "^5.2.3"
+        "vite": "^5.2.3",
+        "vite-plugin-solid": "^2.10.2"
     }
 }

@@ -8,8 +8,11 @@
  * @ref: https://beta.tauri.app/references/v2/js/core/namespaceevent
  */
 
+import { createShortcut } from '@solid-primitives/keyboard'
 import { type RouteDefinition, Router } from '@solidjs/router'
+import { invoke } from '@tauri-apps/api/core'
 import { listen } from '@tauri-apps/api/event'
+import { attachConsole } from '@tauri-apps/plugin-log'
 import { type ParentComponent, lazy, onMount } from 'solid-js'
 
 import { DefaultTitleBar } from '@/components/titlebar'
@@ -39,11 +42,22 @@ const RootLayout: ParentComponent = ({ children }) => {
 }
 
 export default function App() {
+  // Register keyboard shortcuts
+  createShortcut(['Meta', ','], () => invoke('open_settings_window'))
+  createShortcut(['Meta', '.'], () => invoke('toggle_devtools'))
+  createShortcut(['Meta', 'R'], () => window.location.reload())
+
   onMount(async () => {
+    // Print logs to the browser console (TargetKind::Webview)
+    const detach = await attachConsole()
+
     // TODO reload component on change, unlisten onCleanup
-    await listen<AppSettings>('settings-updated', ({ payload }) => {
+    const unlisten = await listen<AppSettings>('settings-updated', ({ payload }) => {
       console.info('Settings updated', payload)
     })
+
+    unlisten() // unlisten when component is unmounted
+    detach() // detach the browser console from the log stream
   })
 
   return (

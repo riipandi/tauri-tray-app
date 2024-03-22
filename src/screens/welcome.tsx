@@ -4,7 +4,7 @@
 import { getVersion } from '@tauri-apps/api/app'
 import { invoke } from '@tauri-apps/api/core'
 import { CogIcon, UserIcon } from 'lucide-solid'
-import { Suspense, createSignal } from 'solid-js'
+import { Suspense, createSignal, onMount } from 'solid-js'
 
 import Link from '@/components/link'
 import PageLoader from '@/components/loader'
@@ -14,12 +14,15 @@ import tauriLogo from '@/assets/images/tauri.svg'
 import viteLogo from '@/assets/images/vite.svg'
 import { clx } from '@/utils/helpers'
 
-// Get application version from Tauri
-const appVersion = await getVersion()
-
 export default function WelcomeScreen() {
+  const [appVersion, setAppVersion] = createSignal('')
   const [greetMsg, setGreetMsg] = createSignal('')
   const [name, setName] = createSignal('')
+
+  onMount(async () => {
+    // Get application version from Tauri
+    setAppVersion(await getVersion())
+  })
 
   async function handleGreet() {
     const result = await invoke<string>('greet', { name: name() })
@@ -47,7 +50,7 @@ export default function WelcomeScreen() {
           </div>
 
           <div class="mt-12 text-base text-center leading-7 dark:text-neutral-100 enable-select">
-            <p>This is the default screen of Tauri App v{appVersion}</p>
+            <p>This is the default screen of Tauri App v{appVersion()}</p>
             <p>
               Visit{' '}
               <Link href="/not-found" class="font-medium text-blue-light hover:text-blue-light/80">

@@ -1,14 +1,11 @@
 // Copyright 2023-2024 Aris Ripandi <aris@duck.com>
 // SPDX-License-Identifier: Apache-2.0 or MIT
 
-import { attachConsole } from '@tauri-apps/plugin-log'
 import { render } from 'solid-js/web'
 
 import App from './app'
 import './assets/styles/main.css'
 
-// Print logs to the browser console (TargetKind::Webview)
-const detach = await attachConsole()
 const root = document.getElementById('root') as HTMLElement
 
 if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
@@ -34,5 +31,3 @@ if (!('__TAURI__' in window)) {
 }
 
 render(() => <App />, root)
-
-detach() // detach the browser console from the log stream

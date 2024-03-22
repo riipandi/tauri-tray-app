@@ -20,11 +20,6 @@ export default defineConfig({
       { find: '~', replacement: resolve(__dirname, 'public') },
     ],
   },
-  esbuild: {
-    supported: {
-      'top-level-await': true, // browsers can handle top-level-await features
-    },
-  },
   build: {
     target: 'ES2020',
     chunkSizeWarningLimit: 1024,
