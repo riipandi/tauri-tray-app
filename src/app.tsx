@@ -49,15 +49,16 @@ export default function App() {
 
   onMount(async () => {
     // Print logs to the browser console (TargetKind::Webview)
-    const detach = await attachConsole()
+    // TODO detach the browser console from the log stream when component is unmounted
+    await attachConsole()
 
     // TODO reload component on change, unlisten onCleanup
-    const unlisten = await listen<AppSettings>('settings-updated', ({ payload }) => {
+    await listen<AppSettings>('settings-updated', ({ payload }) => {
       console.info('Settings updated', payload)
     })
 
-    unlisten() // unlisten when component is unmounted
-    detach() // detach the browser console from the log stream
+    // unlisten() // unlisten when component is unmounted
+    // detach() // detach the browser console from the log stream
   })
 
   return (
