@@ -6,8 +6,7 @@ use tauri::{AppHandle, Runtime};
 
 #[tauri::command]
 pub fn set_theme<R: Runtime>(app: AppHandle<R>, theme: Theme) -> Result<(), &'static str> {
-    let db_state: tauri::State<native_db::Database> = app.state();
-    save_theme_value(db_state, theme);
+    save_theme_value(theme, app.clone());
     app.restart();
     Ok(())
 }

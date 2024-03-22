@@ -7,6 +7,18 @@ pub const SETTING_WINDOW: &'static str = "settings";
 pub const SETTING_WINDOW_WIDTH: f64 = 580.;
 pub const SETTING_WINDOW_HEIGHT: f64 = 430.;
 
+pub const LOG_FILENAME: &'static str = if cfg!(debug_assertions) {
+    "tauri-tray-app-debug.log"
+} else {
+    "tauri-tray-app.log"
+};
+
+pub const DB_FILENAME: &'static str = if cfg!(debug_assertions) {
+    "tauri-tray-app-debug.db"
+} else {
+    "tauri-tray-app.db"
+};
+
 // Informational metadata for the application
 pub const FEEDBACK_URL: &'static str = "https://ripandis.com/feedback?product=tauri-tray-app";
 pub const WEBSITE_URL: &'static str = "https://twitter.com/intent/follow?screen_name=riipandi";

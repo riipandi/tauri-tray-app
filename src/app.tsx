@@ -9,9 +9,11 @@
  */
 
 import { type RouteDefinition, Router } from '@solidjs/router'
-import { type ParentComponent, lazy } from 'solid-js'
+import { listen } from '@tauri-apps/api/event'
+import { type ParentComponent, lazy, onMount } from 'solid-js'
 
 import { DefaultTitleBar } from '@/components/titlebar'
+import type { AppSettings } from '@/types/generated'
 
 export const routes: RouteDefinition[] = [
   { path: '/', component: lazy(() => import('./screens/welcome')) },
@@ -37,6 +39,13 @@ const RootLayout: ParentComponent = ({ children }) => {
 }
 
 export default function App() {
+  onMount(async () => {
+    // TODO reload component on change, unlisten onCleanup
+    await listen<AppSettings>('settings-updated', ({ payload }) => {
+      console.info('Settings updated', payload)
+    })
+  })
+
   return (
     <Router root={RootLayout} preload>
       {routes}

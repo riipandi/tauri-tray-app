@@ -8,9 +8,8 @@ use tauri::{AppHandle, Manager, Runtime};
 use super::{save_theme_value, Theme};
 
 #[tauri::command]
-pub fn set_theme<R: Runtime>(app: AppHandle<R>, theme: Theme) -> Result<(), &'static str> {
-    let db_state: tauri::State<native_db::Database> = app.state();
-    save_theme_value(db_state, theme);
+pub fn set_theme<R: Runtime>(theme: Theme, app: AppHandle<R>) -> Result<(), &'static str> {
+    save_theme_value(theme, app.clone());
 
     for window in app.webview_windows().values() {
         let ptr = window.ns_window().map_err(|_| "Invalid window handle")?;

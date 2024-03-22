@@ -7,7 +7,8 @@ use native_model::{native_model, Model};
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value as JsonValue};
 use std::fmt;
-use tauri::Error;
+
+use tauri::{AppHandle, Error, Manager, Runtime, State};
 
 use super::theme::Theme;
 
@@ -47,7 +48,7 @@ impl fmt::Display for SettingsValue {
 }
 
 #[tauri::command(rename_all = "snake_case")]
-pub fn get_setting(param: &str, db: tauri::State<Database>) -> JsonValue {
+pub fn get_setting(param: &str, db: State<Database>) -> JsonValue {
     let tx = db.r_transaction().expect("failed to create ro transaction");
     let setting: Option<Settings> = tx.get().primary(param).expect("failed to read setting");
     setting.map_or_else(
@@ -62,8 +63,9 @@ pub fn get_setting(param: &str, db: tauri::State<Database>) -> JsonValue {
 }
 
 #[tauri::command(rename_all = "snake_case")]
-pub fn save_setting(param: &str, value: &str, db: tauri::State<Database>) -> tauri::Result<JsonValue> {
+pub fn save_setting<R: Runtime>(param: &str, value: &str, app: AppHandle<R>) -> tauri::Result<AppSettings> {
     let value: JsonValue = serde_json::from_str(value).unwrap_or_else(|_| JsonValue::String(value.to_string()));
+    let db: State<native_db::Database> = app.state();
 
     let svalue = match value {
         JsonValue::Null => SettingsValue::Null,
@@ -88,15 +90,19 @@ pub fn save_setting(param: &str, value: &str, db: tauri::State<Database>) -> tau
     let tx = db.rw_transaction().expect("failed to create transaction");
     tx.insert(setting.clone()).expect("failed to save setting");
     tx.commit().expect("failed to commit setting");
+    log::debug!("setting saved successfully: {:?}", setting);
 
-    let setting_json = json!({ "param": &setting.param, "value": &setting.value});
-    log::debug!("setting saved successfully: {:?}", setting_json);
+    // Get final app settings then emit event
+    let app_settings = get_app_settings(db);
+    app.app_handle()
+        .emit("settings-updated", app_settings.clone())
+        .expect("failed to emit save settings event");
 
-    Ok(setting_json)
+    Ok(app_settings)
 }
 
 #[tauri::command(rename_all = "snake_case")]
-pub fn get_settings_data(db: tauri::State<Database>) -> Vec<JsonValue> {
+pub fn get_settings_data(db: State<Database>) -> Vec<JsonValue> {
     let tx = db.r_transaction().expect("failed to create ro transaction");
     let settings = tx.scan().primary().expect("failed to read settings");
     let settings: Vec<Settings> = settings.all().collect();
@@ -120,7 +126,7 @@ pub fn get_settings_data(db: tauri::State<Database>) -> Vec<JsonValue> {
 }
 
 #[tauri::command(rename_all = "snake_case")]
-pub fn get_app_settings(db: tauri::State<Database>) -> AppSettings {
+pub fn get_app_settings(db: State<Database>) -> AppSettings {
     let tx = db.r_transaction().expect("failed to create ro transaction");
     let settings = tx.scan().primary().expect("failed to read settings");
     let settings: Vec<Settings> = settings.all().collect();

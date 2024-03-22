@@ -6,8 +6,8 @@
 
 use native_db::Database;
 use once_cell::sync::Lazy;
-use tauri::{App, Manager, Runtime};
-use tauri::{WebviewUrl, WebviewWindow, WebviewWindowBuilder};
+use tauri::path::BaseDirectory;
+use tauri::{App, Manager, Runtime, WebviewUrl, WebviewWindow, WebviewWindowBuilder};
 
 // TODO re-enable devtools in the next release
 // #[cfg(debug_assertions)]
@@ -63,7 +63,7 @@ async fn main() {
         {
             let db_state: tauri::State<Database> = app.state();
             let theme = theme::saved_theme_value(db_state);
-            let _ = theme::set_theme(app.app_handle(), theme);
+            let _ = theme::set_theme(theme, app.app_handle());
         }
 
         // TODO wait until next release
@@ -113,7 +113,7 @@ async fn main() {
             {
                 let db_state: tauri::State<Database> = app.state();
                 let theme = theme::saved_theme_value(db_state);
-                let _ = theme::set_theme(app.clone(), theme);
+                let _ = theme::set_theme(theme, app.clone());
             }
         }
         tauri::RunEvent::ExitRequested { api, .. } => {
@@ -132,28 +132,25 @@ fn logger() -> tauri_plugin_log::Builder {
     let mut log_plugin_builder = tauri_plugin_log::Builder::new()
         .level_for("tauri", log::LevelFilter::Error)
         .level_for("hyper", log::LevelFilter::Off)
-        .level_for("tao", log::LevelFilter::Off)
         .level_for("reqwest::connect", log::LevelFilter::Off)
+        .level_for("tao", log::LevelFilter::Off)
+        .level_for("tauri::event::plugin", log::LevelFilter::Off)
+        .level_for("tracing::span", log::LevelFilter::Off)
+        .level_for("wry::wkwebview", log::LevelFilter::Off)
         .timezone_strategy(TimezoneStrategy::UseLocal)
         .with_colors(ColoredLevelConfig::default());
 
-    #[cfg(debug_assertions)]
-    let log_filename = format!("tauri-tray-app-debug.log");
-
-    #[cfg(not(debug_assertions))]
-    let log_filename = format!("tauri-tray-app.log");
-
     let target_stdout = Target::new(TargetKind::Stdout);
     let target_logdir = Target::new(TargetKind::LogDir {
-        file_name: Some(log_filename),
+        file_name: Some(String::from(meta::LOG_FILENAME)),
     });
     let target_webview = Target::new(TargetKind::Webview).filter(|metadata| metadata.target() == WEBVIEW_TARGET);
 
-    #[cfg(debug_assertions)]
-    let log_level = log::LevelFilter::Debug;
-
-    #[cfg(not(debug_assertions))]
-    let log_level = log::LevelFilter::Info;
+    let log_level = if cfg!(debug_assertions) {
+        log::LevelFilter::Debug
+    } else {
+        log::LevelFilter::Info
+    };
 
     log_plugin_builder = log_plugin_builder
         .targets([target_stdout, target_logdir, target_webview])
@@ -166,15 +163,9 @@ fn logger() -> tauri_plugin_log::Builder {
 fn setup_application_state<R: Runtime>(app: &App<R>) {
     log::debug!("Setting up global state");
 
-    #[cfg(debug_assertions)]
-    let db_file_name = "appdata-debug.db";
-
-    #[cfg(not(debug_assertions))]
-    let db_file_name = "appdata.db";
-
     let db_file_path = app
         .path()
-        .resolve(db_file_name, tauri::path::BaseDirectory::AppConfig)
+        .resolve(meta::DB_FILENAME, BaseDirectory::AppConfig)
         .expect("failed to get db file path");
 
     // Create directory if it doesn't exist

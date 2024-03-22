@@ -9,8 +9,8 @@ type SettingsData = {
 export async function saveSetting(
   param: keyof AppSettings,
   value: AppSettings[keyof AppSettings]
-): Promise<void> {
-  await invoke('save_setting', { param, value: value.toString() })
+): Promise<AppSettings> {
+  return await invoke<AppSettings>('save_setting', { param, value: value.toString() })
 }
 
 export async function getAppSettings(): Promise<AppSettings> {

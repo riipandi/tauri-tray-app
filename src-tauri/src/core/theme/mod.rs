@@ -26,9 +26,10 @@ pub use self::linux::*;
 
 use native_db::Database;
 use serde::{Deserialize, Serialize};
+use tauri::{AppHandle, Runtime, State};
 
 #[tauri::command]
-pub fn get_theme(db: tauri::State<Database>) -> tauri::Result<Theme> {
+pub fn get_theme(db: State<Database>) -> tauri::Result<Theme> {
     Ok(saved_theme_value(db))
 }
 
@@ -61,12 +62,12 @@ impl ToString for Theme {
     }
 }
 
-pub fn saved_theme_value(db: tauri::State<Database>) -> Theme {
+pub fn saved_theme_value(db: State<Database>) -> Theme {
     let theme = super::state::get_app_settings(db).theme;
     log::debug!("saved theme: {:?}", theme);
     theme
 }
 
-pub fn save_theme_value(db: tauri::State<Database>, theme: Theme) {
-    let _ = super::state::save_setting("theme", &theme.to_string(), db);
+pub fn save_theme_value<R: Runtime>(theme: Theme, app: AppHandle<R>) {
+    let _ = super::state::save_setting("theme", &theme.to_string(), app);
 }
